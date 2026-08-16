@@ -909,15 +909,18 @@ function confirmNftMintSchedule(schedule){
   dialog.showModal();return new Promise(resolve=>{nftMintConfirmResolver=resolve});
 }
 async function requestMintConfirmation(){
-  if(!checked("nftTerminal"))return false;
+  if(!checked("nftTerminal")){status.textContent="[ WAIT ] NFT Portal must be enabled before confirming NFT mint details.";return false}
   if(!isEvmAddress(val("nftContract"))){confirmedMintSignature="";status.textContent="[ WAIT ] NFT Contract Address is required before confirming NFT mint details.";syncMintConfirmationState();form.elements.nftContract?.focus();return false}
-  const schedule=syncNftMintSchedule();if(!schedule.ok||schedule.disabled){status.textContent=`[ WAIT ] ${schedule.error||"Complete valid NFT mint details."}`;if(nftMintMode()==="single"){if(!val("nftMintPrice"))form.elements.nftMintPrice?.focus();else if(!val("nftMintLimit"))form.elements.nftMintLimit?.focus();}return false;}const sig=mintSignature(schedule);if(confirmedMintSignature===sig)return true;
-  // Portal Only / Mint Ended still uses the explicit CONFIRM NFT MINT DETAILS gate,
-  // but historical mint schedule fields are intentionally irrelevant. Clicking the
-  // existing confirmation button commits the current NFT identity + terminal mode
-  // directly, avoiding a second schedule-review modal for a mint that has ended.
-  if(schedule.mode==="terminal"){confirmedMintSignature=sig;status.textContent="[ CONFIRMED ] Portal Only / Mint Ended details confirmed.";syncMintConfirmationState();update();return true}
-  const confirmed=await confirmNftMintSchedule(schedule);if(confirmed){confirmedMintSignature=sig;status.textContent="[ CONFIRMED ] NFT mint details confirmed.";syncMintConfirmationState();return true}status.textContent="[ EDIT ] Review the NFT mint details.";setTimeout(()=>{if(nftMintMode()==="multiple")document.querySelector("#nft-phase-list input")?.focus();else form.elements.nftMintDate?.focus()},0);syncMintConfirmationState();return false}
+  const schedule=syncNftMintSchedule();if(!schedule.ok||schedule.disabled){status.textContent=`[ WAIT ] ${schedule.error||"Complete valid NFT mint details."}`;if(nftMintMode()==="single"){if(!val("nftMintPrice"))form.elements.nftMintPrice?.focus();else if(!val("nftMintLimit"))form.elements.nftMintLimit?.focus();}return false;}
+  const sig=mintSignature(schedule);if(confirmedMintSignature===sig){status.textContent=schedule.mode==="terminal"?"[ CONFIRMED ] Portal Only / Mint Ended details already confirmed.":"[ CONFIRMED ] NFT mint details already confirmed.";syncMintConfirmationState();return true}
+  // Every NFT mode uses the same explicit confirmation dialog. Portal Only simply
+  // presents a no-countdown summary, so historical start/end/price/limit fields are
+  // not required but the user still gets the same visible CONFIRM step.
+  const confirmed=await confirmNftMintSchedule(schedule);
+  if(confirmed){confirmedMintSignature=sig;status.textContent=schedule.mode==="terminal"?"[ CONFIRMED ] Portal Only / Mint Ended details confirmed.":"[ CONFIRMED ] NFT mint details confirmed.";syncMintConfirmationState();update();return true}
+  status.textContent="[ EDIT ] Review the NFT mint details.";
+  if(schedule.mode!=="terminal")setTimeout(()=>{if(nftMintMode()==="multiple")document.querySelector("#nft-phase-list input")?.focus();else form.elements.nftMintDate?.focus()},0);
+  syncMintConfirmationState();return false}
 function closePastScheduleWarning(edit){const dialog=document.querySelector("#nft-past-warning");if(dialog?.open)dialog.close();const schedule=nftMintSchedule();const sig=pastScheduleTimeSignature(schedule);if(sig){pastScheduleAcknowledgedSignature=sig;pastScheduleWarningSignature=sig;}if(edit)setTimeout(()=>{if(nftMintMode()==="multiple")document.querySelector("#nft-phase-list [data-phase-field=startDate]")?.focus();else form.elements.nftMintDate?.focus()},0)}
 function warnIfPastSchedule(){
   if(!checked("nftTerminal"))return;const schedule=nftMintSchedule();if(!schedule.ok||schedule.mode==="terminal"||!schedule.instant||schedule.instant.getTime()>=Date.now())return;
@@ -927,7 +930,7 @@ function warnIfPastSchedule(){
 function mintScheduleTargetChangesTime(target){const name=String(target?.name||"");if(["nftMintDate","nftMintTime","nftMintEndDate","nftMintEndTime","nftMintTimezone"].includes(name))return true;return ["startDate","startTime","endDate","endTime","timezone"].includes(String(target?.dataset?.phaseField||""))}
 function invalidateMintConfirmation({warnPast=false}={}){confirmedMintSignature="";syncNftMintSchedule();syncMintConfirmationState();if(warnPast)setTimeout(warnIfPastSchedule,0)}
 document.querySelector("#nft-mint-edit").addEventListener("click",()=>closeNftMintConfirmation(false));document.querySelector("#nft-mint-confirm-close").addEventListener("click",()=>closeNftMintConfirmation(false));document.querySelector("#nft-mint-proceed").addEventListener("click",()=>closeNftMintConfirmation(true));document.querySelector("#nft-mint-confirm").addEventListener("cancel",event=>{event.preventDefault();closeNftMintConfirmation(false)});
-document.querySelector("#confirm-nft-mint-details").addEventListener("click",()=>requestMintConfirmation());
+document.querySelector("#confirm-nft-mint-details").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();requestMintConfirmation()});
 document.querySelector("#nft-past-warning-edit").addEventListener("click",()=>closePastScheduleWarning(true));document.querySelector("#nft-past-warning-close").addEventListener("click",()=>closePastScheduleWarning(true));document.querySelector("#nft-past-warning-keep").addEventListener("click",()=>closePastScheduleWarning(false));document.querySelector("#nft-past-warning").addEventListener("cancel",event=>{event.preventDefault();closePastScheduleWarning(true)});
 document.querySelector("#mascot-reminder-back")?.addEventListener("click",()=>closeMascotOptionalReminder(false));
 document.querySelector("#mascot-reminder-continue")?.addEventListener("click",()=>{mascotReminderAcknowledged=true;closeMascotOptionalReminder(true)});
