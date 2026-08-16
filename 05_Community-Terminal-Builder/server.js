@@ -3,7 +3,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { generate } = require("./generator");
-const { connectedDeploy, publicStatus: integrationStatus, validateIntegrations, getRenderDeploymentStatus } = require("./connected-deploy");
+const { connectedDeploy, publicStatus: integrationStatus, validateIntegrations, getRenderDeploymentStatus, inspectReleaseTarget } = require("./connected-deploy");
 const { releaseReadiness } = require("./release-readiness");
 const { createReleaseAuthorization, verifyReleaseConfirmation } = require("./release-authorization");
 const { buildFingerprint } = require("./build-fingerprint");
@@ -80,6 +80,12 @@ const server = http.createServer((req,res) => {
 
   if(req.method==="GET" && url.pathname==="/api/integrations") {
     validateIntegrations().then(result=>json(res,200,{ok:true,...result})).catch(error=>json(res,503,{ok:false,error:error.message,code:"INTEGRATION_CHECK_FAILED",...integrationStatus()}));
+    return;
+  }
+  if(req.method==="GET" && url.pathname==="/api/release-target-status") {
+    const repoName=String(url.searchParams.get("repoName")||"").trim();
+    const serviceName=String(url.searchParams.get("serviceName")||"").trim();
+    inspectReleaseTarget({repoName,serviceName}).then(result=>json(res,200,result)).catch(error=>json(res,503,{ok:false,error:error.message,code:"RELEASE_TARGET_STATUS_FAILED"}));
     return;
   }
   if(req.method==="GET" && url.pathname==="/api/render-deploy-status") {

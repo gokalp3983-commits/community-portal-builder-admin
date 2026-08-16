@@ -135,6 +135,32 @@ async function deployRender(fetchImpl,c,{repoUrl,serviceName,releaseMode="update
   const deploy=service._ctbDeploy||service.deploy||null;
   return {serviceId:service.id||service.service?.id||null,serviceName,publicUrl:renderUrl(service),created,deployId:deploy?.id||deploy?.deploy?.id||null,status:deploy?.status||deploy?.deploy?.status||service.status||"deploying"};
 }
+
+async function inspectReleaseTarget(input,{fetchImpl=fetch,env=process.env}={}){
+  const c=envConfig(env);
+  if(!c.enabled)throw new Error("Connected deployments are disabled on this builder.");
+  if(!c.githubToken)throw new Error("GitHub integration is not configured on the builder server.");
+  if(!c.renderKey||!c.renderOwnerId)throw new Error("Render integration is not configured on the builder server.");
+  const repoName=slug(input?.repoName||"");
+  const serviceName=slug(input?.serviceName||"").slice(0,63);
+  if(!repoName||!serviceName)throw new Error("Repository and service names are required.");
+  const owner=await githubIdentity(fetchImpl,c);
+  let repo=null;
+  try{repo=await githubRequest(fetchImpl,c,`/repos/${owner}/${repoName}`)}catch(error){if(error.status!==404)throw error}
+  const services=await renderRequest(fetchImpl,c,`/services?name=${encodeURIComponent(serviceName)}`);
+  const items=Array.isArray(services)?services:Array.isArray(services?.items)?services.items:[];
+  const service=items.map(x=>x?.service||x).find(x=>String(x?.name||"")===serviceName)||null;
+  const repoExists=Boolean(repo),serviceExists=Boolean(service);
+  const state=repoExists&&serviceExists?"existing":!repoExists&&!serviceExists?"new":"partial";
+  return {
+    ok:true,
+    state,
+    suggestedReleaseMode:state==="existing"?"update":state==="new"?"create":null,
+    repo:{exists:repoExists,owner,name:repoName,url:repoExists?String(repo?.html_url||`https://github.com/${owner}/${repoName}`):""},
+    render:{exists:serviceExists,serviceId:service?.id||null,serviceName,publicUrl:serviceExists?renderUrl(service):""}
+  };
+}
+
 async function getRenderDeploymentStatus(serviceId,{fetchImpl=fetch,env=process.env}={}){
   const c=envConfig(env);
   if(!c.enabled)throw new Error("Connected deployments are disabled on this builder.");
@@ -165,4 +191,4 @@ async function connectedDeploy(input,{fetchImpl=fetch,env=process.env}={}){
   const render=await deployRender(fetchImpl,c,{repoUrl:github.repoUrl,serviceName,releaseMode});
   return {ok:true,mode:"protected-release",releaseMode,project:result.project.name,github,render,generatedAt:new Date().toISOString(),warning:"Render may take several minutes to build and assign a public URL."};
 }
-module.exports={connectedDeploy,publicStatus,validateIntegrations,envConfig,relativeFiles,publishGitHub,deployRender,getRenderDeploymentStatus};
+module.exports={connectedDeploy,publicStatus,validateIntegrations,envConfig,relativeFiles,publishGitHub,deployRender,getRenderDeploymentStatus,inspectReleaseTarget};

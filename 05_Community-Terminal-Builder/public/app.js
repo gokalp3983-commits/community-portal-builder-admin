@@ -747,7 +747,40 @@ function resetQuickDeployUi(){
   const box=document.querySelector("#quick-deploy-confirmation"),input=document.querySelector("#quick-deploy-confirmation-text"),confirm=document.querySelector("#confirm-deploy-built-terminal"),deploy=document.querySelector("#deploy-built-terminal");
   box.hidden=true;input.value="";document.querySelector("#quick-deploy-phrase").textContent="";confirm.hidden=true;confirm.disabled=true;deploy.hidden=false;deploy.disabled=false;
 }
-function showBuildComplete(project){const prior=readDeployments()[deploymentId()]||{};const mode=document.querySelector("#connected-release-mode");mode.value=(prior.connected?.serviceId||prior.publicUrl)?"update":(mode.value==="update"?"update":"create");document.querySelector("#built-project").textContent=`${String(project.projectName||"COMMUNITY").toUpperCase()} COMMUNITY PORTAL`;document.querySelector("#built-modules").innerHTML=enabledModuleNames(project).map(x=>`<span>${x}</span>`).join("");setBuiltLiveUrl(prior.publicUrl||"");resetQuickDeployUi();document.querySelector("#quick-deploy-state").textContent=integrationReady?`[ READY ] Generated package is ready. ${mode.value==="create"?"First deployment":"Existing deployment update"} path selected.`:"[ READY ] Generated package is ready. Connected deployment is unavailable; ZIP download remains available.";document.querySelector("#build-complete").showModal()}
+async function showBuildComplete(project){
+  const prior=readDeployments()[deploymentId()]||{};
+  const mode=document.querySelector("#connected-release-mode");
+  mode.value=(prior.connected?.serviceId||prior.publicUrl)?"update":(mode.value==="update"?"update":"create");
+  document.querySelector("#built-project").textContent=`${String(project.projectName||"COMMUNITY").toUpperCase()} COMMUNITY PORTAL`;
+  document.querySelector("#built-modules").innerHTML=enabledModuleNames(project).map(x=>`<span>${x}</span>`).join("");
+  setBuiltLiveUrl(prior.publicUrl||"");
+  resetQuickDeployUi();
+  const state=document.querySelector("#quick-deploy-state");
+  state.textContent=integrationReady?"[ CHECKING ] Detecting whether this release target already exists...":"[ READY ] Generated package is ready. Connected deployment is unavailable; ZIP download remains available.";
+  document.querySelector("#build-complete").showModal();
+  if(!integrationReady)return;
+  try{
+    const base=slugify(project.projectName);
+    const target=`${base}-community-terminal`;
+    const response=await fetch(`/api/release-target-status?repoName=${encodeURIComponent(target)}&serviceName=${encodeURIComponent(target)}`,{cache:"no-store"});
+    const text=await response.text();let data=null;try{data=text?JSON.parse(text):null}catch{}
+    if(!response.ok||!data?.ok)throw new Error(data?.error||text||`Target check returned HTTP ${response.status}`);
+    if(data.state==="existing"){
+      mode.value="update";
+      const all=readDeployments(),id=deploymentId(),current=all[id]||{};
+      all[id]={...current,...(data.repo?.url?{githubUrl:data.repo.url}:{}),...(data.render?.publicUrl?{publicUrl:data.render.publicUrl}:{}),connected:{...(current.connected||{}),...(data.render?.serviceId?{serviceId:data.render.serviceId}:{}),releaseMode:"update"},updatedAt:nowIso()};
+      localStorage.setItem(DEPLOYMENT_KEY,JSON.stringify(all));renderDeploymentRecord(all[id]);setBuiltLiveUrl(all[id].publicUrl||"");
+      state.textContent="[ READY ] Existing GitHub + Render release detected. UPDATE EXISTING RELEASE selected automatically.";
+    }else if(data.state==="new"){
+      mode.value="create";
+      state.textContent="[ READY ] No existing GitHub or Render target found. First deployment path selected.";
+    }else{
+      state.textContent="[ REVIEW ] Deployment target is only partially present (GitHub or Render). Review the release target before deploying.";
+    }
+  }catch(error){
+    state.textContent=`[ READY ] Generated package is ready. ${mode.value==="create"?"First deployment":"Existing deployment update"} path selected. Target auto-detection unavailable: ${error.message}`;
+  }
+}
 
 function mintSignature(schedule){return schedule&&schedule.ok?`${val("nftContract")}|${val("nftCollectionName")}|${val("nftSupply")}|${schedule.mode||"single"}|${schedule.iso}|${schedule.endIso||""}|${schedule.timeZone}|${schedule.price||""}|${schedule.limit||""}|${JSON.stringify((schedule.phases||[]).map(x=>[x.label,x.name,x.startsAt,x.endsAt,x.price,x.limit,x.timezone]))}`:""}
 function pastScheduleTimeSignature(schedule){return schedule&&schedule.ok?`${schedule.mode||"single"}|${schedule.iso||""}|${schedule.endIso||""}|${schedule.timeZone||""}|${JSON.stringify((schedule.phases||[]).map(x=>[x.startsAt||"",x.endsAt||"",x.timezone||""]))}`:""}
@@ -789,9 +822,9 @@ form.addEventListener("submit",async e=>{
   try{
     const project=await payload();saveProjectSnapshot(project);status.textContent="[ BUILD ] Latest configuration saved · generating unified terminal package...";
     const response=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(project)});
-    if(!response.ok){const x=await response.json();throw new Error(x.error||"Generation failed")}
+    if(!response.ok){const text=await response.text();let x=null;try{x=text?JSON.parse(text):null}catch{}throw new Error(x?.error||text||`Generation failed (HTTP ${response.status})`)}
     const blob=await response.blob(); const disposition=response.headers.get("content-disposition")||""; const filename=/filename="([^"]+)"/.exec(disposition)?.[1]||"Community_Terminal.zip"; const fingerprint=response.headers.get("x-ctb-build-fingerprint")||"";
-    if(lastBuild.url)URL.revokeObjectURL(lastBuild.url);lastBuild={url:URL.createObjectURL(blob),filename,project,fingerprint};setCurrentPortalBuildReady(true);const autoSaved=noteGenerated(project,fingerprint);status.textContent=`[ DONE ] Community Portal created${autoSaved?" · project auto-saved":""} · ready to deploy`;if(autoSaved)showAutoSaveToast();showBuildComplete(project);
+    if(lastBuild.url)URL.revokeObjectURL(lastBuild.url);lastBuild={url:URL.createObjectURL(blob),filename,project,fingerprint};setCurrentPortalBuildReady(true);const autoSaved=noteGenerated(project,fingerprint);status.textContent=`[ DONE ] Community Portal created${autoSaved?" · project auto-saved":""} · ready to deploy`;if(autoSaved)showAutoSaveToast();await showBuildComplete(project);
   }catch(err){status.textContent=`[ ERROR ] ${err.message}`}finally{button.disabled=false}
 });
 document.querySelector("#close-build-complete").addEventListener("click",requestBuildModalClose);
