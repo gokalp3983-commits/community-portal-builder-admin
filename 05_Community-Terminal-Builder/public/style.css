@@ -2207,3 +2207,36 @@ body.guided-mode #status:not(:empty){
 #opensea-import-summary:empty{display:none}
 #opensea-import-warning{color:var(--yellow,#ffd84d)!important}
 @media (max-width:720px){.nft-opensea-row{grid-template-columns:1fr}#check-opensea{width:100%}}
+
+
+/* CPB action-button contract — one geometry, color variants only. */
+body.guided-mode .cpb-action-button{
+  min-height:43px!important;
+  padding:0 16px!important;
+  border:1px solid currentColor!important;
+  border-radius:11px!important;
+  font-family:inherit!important;
+  font-size:.70rem!important;
+  font-weight:800!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  white-space:nowrap;
+  box-shadow:none!important;
+  cursor:pointer;
+}
+body.guided-mode .cpb-action-button:hover,body.guided-mode .cpb-action-button:focus-visible{transform:translateY(-1px)}
+body.guided-mode .cpb-action-button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+body.guided-mode .cpb-action-violet{color:#c7b7ff!important;background:rgba(185,156,255,.08)!important;border-color:rgba(185,156,255,.55)!important}
+body.guided-mode .cpb-action-violet:hover,body.guided-mode .cpb-action-violet:focus-visible{background:rgba(185,156,255,.15)!important;box-shadow:0 0 18px rgba(185,156,255,.10)!important}
+body.guided-mode .cpb-action-green{color:#9dff86!important;background:rgba(57,255,20,.075)!important;border-color:rgba(57,255,20,.58)!important}
+body.guided-mode .cpb-action-green:hover,body.guided-mode .cpb-action-green:focus-visible{background:rgba(57,255,20,.14)!important}
+body.guided-mode .cpb-action-yellow{color:#ffe36f!important;background:rgba(255,216,77,.07)!important;border-color:rgba(255,216,77,.58)!important}
+body.guided-mode .cpb-action-yellow:hover,body.guided-mode .cpb-action-yellow:focus-visible{background:rgba(255,216,77,.14)!important}
+body.guided-mode .cpb-action-red{color:#ff8894!important;background:rgba(255,74,86,.07)!important;border-color:rgba(255,74,86,.62)!important}
+body.guided-mode .cpb-action-red:hover,body.guided-mode .cpb-action-red:focus-visible{background:rgba(255,74,86,.14)!important}
+body.guided-mode .cpb-action-neutral{color:#d9e0eb!important;background:rgba(255,255,255,.045)!important;border-color:rgba(255,255,255,.18)!important}
+body.guided-mode .cpb-action-neutral:hover,body.guided-mode .cpb-action-neutral:focus-visible{background:rgba(255,255,255,.085)!important}
+/* OpenSea uses the shared action-button contract; no one-off button dimensions. */
+body.guided-mode #check-opensea{min-height:43px!important;padding:0 16px!important;border-radius:11px!important}
+body.guided-mode #opensea-import-confirm .nft-mint-confirm-actions{align-items:center}
+body.guided-mode #opensea-import-confirm-button{min-width:150px}

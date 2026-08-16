@@ -167,6 +167,11 @@ function stageArray(drop = {}) {
   return [drop.current_stage, drop.next_stage].filter(Boolean);
 }
 
+function phaseNumber(label) {
+  const match = String(label || "").match(/(?:phase|stage)\s*[-#:]?\s*(\d+)/i);
+  return match ? Number(match[1]) : null;
+}
+
 function normalizeDrop(drop = {}) {
   const stages = stageArray(drop).map((stage, index) => ({
     label: first(text(stage.label), text(stage.name), text(stage.stage_name), text(stage.stage_type), text(stage.title), `PHASE ${index + 1}`),
@@ -174,7 +179,24 @@ function normalizeDrop(drop = {}) {
     endsAt: pickTime(stage, ["end_time", "endTime", "ends_at", "endsAt", "end_date", "endDate", "end"]),
     price: priceText(stage),
     limit: limitText(stage),
+    _sourceIndex: index,
   })).filter(stage => stage.startsAt || stage.endsAt || stage.price || stage.limit || stage.label);
+
+  // OpenSea does not guarantee mint-stage array order. CPB phase order is chronological:
+  // earliest start first, then earliest end, then an explicit Phase/Stage number, finally source order.
+  stages.sort((a, b) => {
+    const aStart = a.startsAt ? Date.parse(a.startsAt) : Number.POSITIVE_INFINITY;
+    const bStart = b.startsAt ? Date.parse(b.startsAt) : Number.POSITIVE_INFINITY;
+    if (aStart !== bStart) return aStart - bStart;
+    const aEnd = a.endsAt ? Date.parse(a.endsAt) : Number.POSITIVE_INFINITY;
+    const bEnd = b.endsAt ? Date.parse(b.endsAt) : Number.POSITIVE_INFINITY;
+    if (aEnd !== bEnd) return aEnd - bEnd;
+    const aPhase = phaseNumber(a.label);
+    const bPhase = phaseNumber(b.label);
+    if (aPhase !== null || bPhase !== null) return (aPhase ?? Number.POSITIVE_INFINITY) - (bPhase ?? Number.POSITIVE_INFINITY);
+    return a._sourceIndex - b._sourceIndex;
+  });
+  stages.forEach(stage => { delete stage._sourceIndex; });
   const status = first(text(drop.status), text(drop.state), text(drop.drop_status), text(drop.drop?.status));
   return { status, stages };
 }

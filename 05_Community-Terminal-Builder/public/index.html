@@ -222,7 +222,7 @@
               <div class="nft-opensea-autofill" id="nft-opensea-autofill">
                 <div class="nft-opensea-row">
                   <label><span>OpenSea collection link</span><input name="openSea" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"><small id="open-sea-error" class="field-error" hidden></small></label>
-                  <button id="check-opensea" type="button">CHECK OPENSEA</button>
+                  <button id="check-opensea" class="cpb-action-button cpb-action-violet" type="button">CHECK OPENSEA</button>
                 </div>
                 <small class="nft-opensea-help">NFT Mint data can be filled automatically from OpenSea. Please check all imported information before confirming the NFT Mint details. If auto-fill is unavailable, every field below remains available for manual entry.</small>
                 <output id="opensea-import-status" class="contract-check" aria-live="polite">Paste an OpenSea collection link, then select CHECK OPENSEA.</output>
@@ -259,7 +259,7 @@
                   <input name="nftMintAt" type="hidden">
                   <output id="nft-mint-check" class="contract-check" aria-live="polite">Complete the NFT mint schedule.</output>
                   <div class="nft-mint-explicit-confirm">
-                    <button id="confirm-nft-mint-details" type="button">CONFIRM NFT MINT DETAILS</button>
+                    <button id="confirm-nft-mint-details" class="cpb-action-button cpb-action-green" type="button">CONFIRM NFT MINT DETAILS</button>
                     <output id="nft-mint-confirmed-state" class="contract-check" aria-live="polite">Mint details still need confirmation.</output>
                   </div>
                 </div>
@@ -323,7 +323,7 @@
           <p id="opensea-import-warning" class="nft-mint-confirm-note" hidden></p>
         </div>
         <div class="nft-mint-confirm-actions">
-          <button id="opensea-import-confirm-button" type="button">CONFIRM IMPORT</button>
+          <button id="opensea-import-confirm-button" class="cpb-action-button cpb-action-green" type="button">CONFIRM IMPORT</button>
         </div>
       </div>
     </dialog>
@@ -340,8 +340,8 @@
           </div>
         </div>
         <div class="nft-mint-confirm-actions">
-          <button id="nft-past-warning-edit" type="button">GO BACK AND EDIT</button>
-          <button id="nft-past-warning-keep" type="button">KEEP THIS SCHEDULE</button>
+          <button id="nft-past-warning-edit" class="cpb-action-button cpb-action-yellow" type="button">GO BACK AND EDIT</button>
+          <button id="nft-past-warning-keep" class="cpb-action-button cpb-action-green" type="button">KEEP THIS SCHEDULE</button>
         </div>
       </div>
     </dialog>
@@ -354,8 +354,8 @@
           <p>Disabling the NFT Portal will remove the NFT module from this generated Community Portal. Your entered NFT contract and mint configuration will remain saved and can be restored by enabling the module again.</p>
         </div>
         <div class="nft-mint-confirm-actions nft-disable-actions">
-          <button id="nft-disable-keep" type="button">KEEP NFT PORTAL</button>
-          <button id="nft-disable-confirm" type="button">DISABLE NFT PORTAL</button>
+          <button id="nft-disable-keep" class="cpb-action-button cpb-action-green" type="button">KEEP NFT PORTAL</button>
+          <button id="nft-disable-confirm" class="cpb-action-button cpb-action-red" type="button">DISABLE NFT PORTAL</button>
         </div>
       </div>
     </dialog>
@@ -375,8 +375,8 @@
           <p class="nft-mint-confirm-note">The Builder will not silently alter these values. Confirm only when the mint details are final.</p>
         </div>
         <div class="nft-mint-confirm-actions">
-          <button id="nft-mint-edit" type="button">CHANGE</button>
-          <button id="nft-mint-proceed" type="button">CONFIRM</button>
+          <button id="nft-mint-edit" class="cpb-action-button cpb-action-yellow" type="button">CHANGE</button>
+          <button id="nft-mint-proceed" class="cpb-action-button cpb-action-green" type="button">CONFIRM</button>
         </div>
       </div>
     </dialog>
@@ -401,9 +401,9 @@
           <small>This authorization is one-time and expires after five minutes.</small>
         </div>
         <div class="build-actions final-product-actions">
-          <button id="deploy-built-terminal" type="button">DEPLOY PORTAL</button>
-          <button id="confirm-deploy-built-terminal" type="button" hidden>CONFIRM &amp; DEPLOY PORTAL</button>
-          <button id="close-build-complete-action" type="button">CLOSE</button>
+          <button id="deploy-built-terminal" class="cpb-action-button cpb-action-green" type="button">DEPLOY PORTAL</button>
+          <button id="confirm-deploy-built-terminal" class="cpb-action-button cpb-action-green" type="button" hidden>CONFIRM &amp; DEPLOY PORTAL</button>
+          <button id="close-build-complete-action" class="cpb-action-button cpb-action-neutral" type="button">CLOSE</button>
         </div>
         <p class="build-note">Secure deployment is handled automatically by Community Portal Builder.</p>
       </div>
@@ -415,8 +415,8 @@
         <strong id="deployment-close-title">Keep this deployment open?</strong>
         <p>Closing now may interrupt the current deployment flow before CPB confirms that your portal is live.</p>
         <div class="deployment-close-actions">
-          <button id="keep-deployment-open" type="button">KEEP DEPLOYMENT OPEN</button>
-          <button id="close-deployment-anyway" type="button">CLOSE ANYWAY</button>
+          <button id="keep-deployment-open" class="cpb-action-button cpb-action-green" type="button">KEEP DEPLOYMENT OPEN</button>
+          <button id="close-deployment-anyway" class="cpb-action-button cpb-action-red" type="button">CLOSE ANYWAY</button>
         </div>
       </div>
     </dialog>
@@ -441,7 +441,7 @@
       </div>
       <div class="deployment-success-actions">
         <a id="deployment-success-open" class="deployment-success-open" aria-disabled="true">OPEN PORTAL</a>
-        <form method="dialog"><button type="submit" id="deployment-success-close" value="close">CLOSE</button></form>
+        <form method="dialog"><button type="submit" id="deployment-success-close" class="cpb-action-button cpb-action-neutral" value="close">CLOSE</button></form>
       </div>
     </div>
   </dialog>

@@ -158,12 +158,12 @@ function syncTerminalBaseline({fresh=false}={}){
     for(const name of ["whaleTracker","memeIntel","timeline","communityPulse"])setModuleState(name,{checked:fresh?false:baselineModuleMemory[name],disabled:false,state:"optional"});
   }else if(mode==="nft"){
     for(const name of ["liveMarket","whaleTracker","memeIntel"])setModuleState(name,{checked:false,disabled:true,state:"unavailable"});
+    for(const name of ["timeline","communityPulse"])setModuleState(name,{checked:false,disabled:true,state:"unavailable"});
     setModuleState("nftTerminal",{checked:true,disabled:true,state:"required"});
-    for(const name of ["timeline","communityPulse"])setModuleState(name,{checked:fresh?false:baselineModuleMemory[name],disabled:false,state:"optional"});
   }else{
     setModuleState("liveMarket",{checked:true,disabled:true,state:"required"});
     setModuleState("nftTerminal",{checked:true,disabled:true,state:"required"});
-    for(const name of ["whaleTracker","memeIntel","timeline","communityPulse"])setModuleState(name,{checked:fresh?false:baselineModuleMemory[name],disabled:false,state:"optional"});
+    for(const name of ["whaleTracker","memeIntel","timeline","communityPulse"])setModuleState(name,{checked:fresh?true:(baselineModuleMemory[name]||moduleInput(name)?.checked),disabled:false,state:"optional"});
   }
   confirmedMintSignature="";nftExplicitlyDisabled=false;syncNftConfigVisibility();syncMintConfirmationState();syncTokenRequirement();
 }
@@ -653,7 +653,7 @@ document.querySelectorAll('.terminal-baseline-options label').forEach(label=>lab
   baselineSelectionHandled=true;
   update();
   status.textContent=`Baseline selected · ${input.value==="both"?"Token + NFT":input.value.toUpperCase()} portal`;
-  if(firstChoice){window.setTimeout(()=>document.querySelector("#guided-modules")?.scrollIntoView({behavior:"smooth",block:"start"}),180)}
+  if(firstChoice){const target=input.value==="nft"?"#guided-nft-mint":"#guided-modules";window.setTimeout(()=>document.querySelector(target)?.scrollIntoView({behavior:"smooth",block:"start"}),180)}
 }));
 
 form.elements.projectName?.addEventListener("input",()=>update());

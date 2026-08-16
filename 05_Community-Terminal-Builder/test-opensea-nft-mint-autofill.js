@@ -13,6 +13,17 @@ assert.ok(app.includes("applyOpenSeaMintSchedule")&&app.includes('setValue("nftM
 assert.ok(app.includes("renderOpenSeaImportConfirmation"),"Successful auto-fill must show confirmation dialog");
 const drop=normalizeDrop({status:"active",stages:[{name:"ALLOWLIST",start_time:"2026-08-20T10:00:00Z",end_time:"2026-08-20T12:00:00Z",price:0,max_mint_per_wallet:2},{name:"PUBLIC",start_time:"2026-08-20T12:00:00Z",end_time:"2026-08-22T12:00:00Z",price:"0.05",currency_symbol:"ETH",wallet_limit:5}]});
 assert.equal(drop.stages.length,2);assert.equal(drop.stages[0].price,"FREE");assert.equal(drop.stages[1].price,"0.05 ETH");assert.equal(drop.stages[1].limit,"5");
+const rotated=normalizeDrop({stages:[
+  {name:"PHASE 3",start_time:"2026-08-23T10:00:00Z",end_time:"2026-08-24T10:00:00Z",price:"0.03"},
+  {name:"PHASE 1",start_time:"2026-08-20T10:00:00Z",end_time:"2026-08-21T10:00:00Z",price:"0.01"},
+  {name:"PHASE 2",start_time:"2026-08-21T10:00:00Z",end_time:"2026-08-22T10:00:00Z",price:"0.02"},
+]});
+assert.deepEqual(rotated.stages.map(s=>s.label),["PHASE 1","PHASE 2","PHASE 3"],"OpenSea stages must be ordered chronologically before filling CPB phases");
+assert.ok(app.includes('for(const name of ["timeline","communityPulse"])setModuleState(name,{checked:false,disabled:true,state:"unavailable"})'),"NFT-only baseline must disable Timeline and Community Pulse");
+assert.ok(app.includes('const target=input.value==="nft"?"#guided-nft-mint":"#guided-modules"'),"NFT-only baseline must jump directly to NFT Mint");
+assert.ok(app.includes('checked:fresh?true:'),"Token + NFT fresh baseline must start with all optional modules enabled");
+assert.ok(html.includes('id="check-opensea" class="cpb-action-button cpb-action-violet"'),"CHECK OPENSEA must use standard CPB action-button geometry");
+assert.ok(html.includes('id="opensea-import-confirm-button" class="cpb-action-button cpb-action-green"'),"CONFIRM IMPORT must use standard CPB action-button geometry");
 (async()=>{
   process.env.OPENSEA_API_KEY="test-key";
   const responses=[
