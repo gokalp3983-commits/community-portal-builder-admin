@@ -2928,3 +2928,22 @@ html,body{background:#000000!important;background-color:#000000!important;backgr
   color:var(--green,#39ff14)!important;
   text-shadow:0 0 8px rgba(57,255,20,.45)!important;
 }
+
+
+/* V20 — keep NFT sales cards compact vertically while stretching full sidebar width */
+.nft-sales-list,
+.sales-list,
+#nftSalesList {
+  align-items: stretch !important;
+}
+
+.nft-sale-card,
+.sale-card,
+#nftSalesList > *,
+.nft-sales-list > *,
+.sales-list > * {
+  width: 100% !important;
+  max-width: none !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+}
