@@ -371,8 +371,17 @@ async function removeMascotBackground(){
   const samples=[];const take=(x,y)=>{const i=(y*w+x)*4;samples.push([d[i],d[i+1],d[i+2]])};
   for(let x=0;x<w;x+=Math.max(1,Math.floor(w/24))){take(x,0);take(x,h-1)}
   for(let y=0;y<h;y+=Math.max(1,Math.floor(h/24))){take(0,y);take(w-1,y)}
-  const bg=[0,1,2].map(c=>Math.round(samples.reduce((s,p)=>s+p[c],0)/samples.length));
-  const tolerance=52,soft=26,visited=new Uint8Array(w*h),queue=[];
+  // Use the dominant edge colour instead of averaging every border pixel.
+  // Averaging can be pulled toward the artwork itself when a mascot touches an edge,
+  // which makes a clearly solid background survive the REMOVE BACKGROUND action.
+  const buckets=new Map();
+  for(const [r,g,b] of samples){
+    const key=`${Math.round(r/24)*24},${Math.round(g/24)*24},${Math.round(b/24)*24}`;
+    buckets.set(key,(buckets.get(key)||0)+1);
+  }
+  const dominant=[...buckets.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||"0,0,0";
+  const bg=dominant.split(",").map(Number);
+  const tolerance=58,soft=34,visited=new Uint8Array(w*h),queue=[];
   const distanceAt=(x,y)=>{const i=(y*w+x)*4,dr=d[i]-bg[0],dg=d[i+1]-bg[1],db=d[i+2]-bg[2];return Math.sqrt(dr*dr+dg*dg+db*db)};
   const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(visited[n]||distanceAt(x,y)>tolerance+soft)return;visited[n]=1;queue.push(n)};
   for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
@@ -898,6 +907,7 @@ function mintSignature(schedule){return schedule&&schedule.ok?`${val("nftContrac
 function pastScheduleTimeSignature(schedule){return schedule&&schedule.ok?`${schedule.mode||"single"}|${schedule.iso||""}|${schedule.endIso||""}|${schedule.timeZone||""}|${JSON.stringify((schedule.phases||[]).map(x=>[x.startsAt||"",x.endsAt||"",x.timezone||""]))}`:""}
 function hasMascotSelection(){return Boolean(processedMascot||persistedMascot||mascotInput?.files?.[0])}
 function closeMascotOptionalReminder(result){const dialog=document.querySelector("#mascot-optional-reminder");if(dialog?.open)dialog.close();const resolve=mascotReminderResolver;mascotReminderResolver=null;if(resolve)resolve(result)}
+function focusMascotBrandingArea(){const section=document.querySelector("#guided-brand");if(section){section.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>{const control=section.querySelector(".upload-control");if(control){control.setAttribute("tabindex","-1");control.focus({preventScroll:true})}},350)}else mascotInput?.focus()}
 function confirmMascotOptionalReminder(){if(hasMascotSelection()||mascotReminderAcknowledged)return Promise.resolve(true);const dialog=document.querySelector("#mascot-optional-reminder");if(!dialog)return Promise.resolve(true);if(!dialog.open)dialog.showModal();return new Promise(resolve=>{mascotReminderResolver=resolve})}
 
 function closeNftMintConfirmation(result){const dialog=document.querySelector("#nft-mint-confirm");if(dialog.open)dialog.close();const resolve=nftMintConfirmResolver;nftMintConfirmResolver=null;if(resolve)resolve(result)}
@@ -941,6 +951,7 @@ function invalidateMintConfirmation({warnPast=false}={}){confirmedMintSignature=
 document.querySelector("#nft-mint-edit").addEventListener("click",()=>closeNftMintConfirmation(false));document.querySelector("#nft-mint-confirm-close").addEventListener("click",()=>closeNftMintConfirmation(false));document.querySelector("#nft-mint-proceed").addEventListener("click",()=>closeNftMintConfirmation(true));document.querySelector("#nft-mint-confirm").addEventListener("cancel",event=>{event.preventDefault();closeNftMintConfirmation(false)});
 document.querySelector("#nft-past-warning-edit").addEventListener("click",()=>closePastScheduleWarning(true));document.querySelector("#nft-past-warning-close").addEventListener("click",()=>closePastScheduleWarning(true));document.querySelector("#nft-past-warning-keep").addEventListener("click",()=>closePastScheduleWarning(false));document.querySelector("#nft-past-warning").addEventListener("cancel",event=>{event.preventDefault();closePastScheduleWarning(true)});
 document.querySelector("#mascot-reminder-back")?.addEventListener("click",()=>closeMascotOptionalReminder(false));
+document.querySelector("#mascot-reminder-close")?.addEventListener("click",()=>closeMascotOptionalReminder(false));
 document.querySelector("#mascot-reminder-continue")?.addEventListener("click",()=>{mascotReminderAcknowledged=true;closeMascotOptionalReminder(true)});
 document.querySelector("#mascot-optional-reminder")?.addEventListener("cancel",event=>{event.preventDefault();closeMascotOptionalReminder(false)});
 const mintScheduleBlock=document.querySelector("#nft-mint-schedule");
@@ -955,7 +966,7 @@ async function handleCreatePortalSubmit(e){
     const schedule=syncNftMintSchedule();if(!schedule.ok||schedule.disabled){status.textContent=`[ WAIT ] ${schedule.error||"Complete the NFT mint schedule."}`;return}
     if(confirmedMintSignature!==mintSignature(schedule)){status.textContent="[ WAIT ] Confirm NFT Mint Details before creating the terminal.";syncMintConfirmationState();document.querySelector("#confirm-nft-mint-details")?.focus();return}
   }
-  if(!await confirmMascotOptionalReminder()){status.textContent="[ REVIEW ] Mascot/logo is optional. Add one if desired, then create the portal when ready.";mascotInput?.focus();return}
+  if(!await confirmMascotOptionalReminder()){status.textContent="[ REVIEW ] Mascot/logo is optional. Add one if desired, then create the portal when ready.";focusMascotBrandingArea();return}
   status.textContent="[ SAVE ] Saving latest configuration..."; button.disabled=true;
   try{
     const project=await payload();saveProjectSnapshot(project);status.textContent="[ BUILD ] Latest configuration saved · generating unified terminal package...";

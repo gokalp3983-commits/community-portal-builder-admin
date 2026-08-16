@@ -3450,3 +3450,16 @@ body{color:var(--portal-copy)!important;font-family:Inter,ui-sans-serif,system-u
   .online-status{margin-top:3px!important}
 }
 
+
+
+/* CPB OpenSea V15 — generated NFT Additional Links */
+.nft-additional-links{display:grid!important;gap:8px!important;margin:8px 0 0!important;padding:0!important;border:0!important;background:transparent!important}
+.nft-extra-link{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;padding:13px 16px!important;border:1px solid rgba(103,232,249,.24)!important;border-radius:13px!important;background:linear-gradient(135deg,rgba(10,17,29,.94),rgba(7,11,19,.78))!important;color:#fff!important;text-decoration:none!important;box-shadow:inset 3px 0 0 rgba(103,232,249,.55)!important;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}
+.nft-extra-link:hover,.nft-extra-link:focus-visible{border-color:rgba(103,232,249,.56)!important;box-shadow:inset 3px 0 0 var(--portal-aqua),0 0 20px rgba(103,232,249,.08)!important;transform:translateY(-1px)!important;outline:none!important}
+.nft-extra-link.is-highlighted{border-color:rgba(255,77,109,.44)!important;box-shadow:inset 3px 0 0 var(--portal-red,#ff4d6d)!important;background:linear-gradient(135deg,rgba(31,10,17,.92),rgba(10,12,20,.82))!important}
+.nft-extra-link.is-highlighted:hover,.nft-extra-link.is-highlighted:focus-visible{border-color:rgba(255,77,109,.78)!important;box-shadow:inset 3px 0 0 var(--portal-red,#ff4d6d),0 0 20px rgba(255,77,109,.10)!important}
+.nft-extra-link-label{color:var(--portal-aqua)!important;font-size:.73rem!important;font-weight:950!important;letter-spacing:.06em!important;text-transform:uppercase!important;white-space:nowrap!important}
+.nft-extra-link.is-highlighted .nft-extra-link-label{color:var(--portal-red,#ff4d6d)!important}
+.nft-extra-link-copy{color:#fff!important;font-size:.80rem!important;font-weight:760!important;min-width:0!important;overflow-wrap:anywhere!important}
+.nft-extra-link-action{color:var(--portal-muted)!important;font-size:.69rem!important;font-weight:900!important;letter-spacing:.05em!important;white-space:nowrap!important}
+@media(max-width:680px){.nft-extra-link{grid-template-columns:1fr!important;gap:5px!important}.nft-extra-link-action{justify-self:start!important}}

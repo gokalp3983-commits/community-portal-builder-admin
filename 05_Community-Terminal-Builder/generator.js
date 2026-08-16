@@ -130,6 +130,19 @@ function normalize(input) {
   };
 }
 function js(value) { return JSON.stringify(value, null, 2); }
+function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, (ch) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
+function nftAdditionalLinksMarkup(p) {
+  const items = Array.isArray(p.links?.additionalLinks) ? p.links.additionalLinks : [];
+  if (!items.length) return "";
+  const rows = items.map((item) => {
+    const label = escapeHtml(item.label || "LINK");
+    const copy = escapeHtml(item.text || item.label || "Open link");
+    const url = escapeHtml(item.url || "#");
+    const cls = item.highlight ? " nft-extra-link is-highlighted" : " nft-extra-link";
+    return `        <a class="${cls.trim()}" href="${url}" target="_blank" rel="noopener noreferrer"><span class="nft-extra-link-label">${label}</span><span class="nft-extra-link-copy">${copy}</span><span class="nft-extra-link-action">OPEN ↗</span></a>`;
+  }).join("\n");
+  return `      <section id="additionalLinks" class="nft-additional-links" aria-label="Additional project links">\n${rows}\n      </section>\n`;
+}
 function mintDisplayFromIso(value) {
   const raw = text(value);
   const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/);
@@ -307,6 +320,11 @@ function transformModuleFile(moduleName, relativeName, data, p) {
       .replaceAll("__CTB_NFT_SUPPLY__", String(nftSupply))
       .replaceAll("__CTB_MINT_FEE__", mintFeeDisplay(p.nftSettings.mintPrice))
       .replaceAll("__CTB_MINT_LIMIT__", mintLimitDisplay(p.nftSettings.mintLimit));
+
+    if (relativeName === "public/terminal.html") {
+      const additional = nftAdditionalLinksMarkup(p);
+      source = source.replace(/(\s*<\/section>\s*)(<section class="blockscout-wallet-check")/, `$1${additional}$2`);
+    }
 
     if (relativeName === "server.js") {
       if (p.nftSettings.mode === "terminal") source = source.replace('app.get("/", (req, res) => {\n  renderProjectPage("index.html", "/", req, res);\n});', 'app.get("/", (req, res) => {\n  renderProjectPage("terminal.html", "/terminal", req, res);\n});');
