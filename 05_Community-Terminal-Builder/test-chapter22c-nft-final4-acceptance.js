@@ -9,7 +9,7 @@ const multiJs=read("03_NFT-Collection-Terminal-Multi-Phase","public","countdown.
 const builderCss=read("05_Community-Terminal-Builder","public","style.css");
 const builderJs=read("05_Community-Terminal-Builder","public","app.js");
 assert(!multiIndex.includes('__CTB_X_URL__'),"multi countdown must not expose project X access card");
-for(const html of [singleIndex,multiIndex]){assert(html.includes('VISIT OPENSEA'));assert(html.includes('VISIT NFT PORTAL'));assert(!html.includes('[ VISIT OPENSEA ]'));assert(html.includes('cpb-nft-final4'));}
+for(const html of [singleIndex,multiIndex]){assert(html.includes('VISIT OPENSEA'));assert(html.includes('VISIT NFT PORTAL'));assert(!html.includes('[ VISIT OPENSEA ]'));assert(html.includes('cpb-nft-final6'));}
 assert(multiJs.includes('pageState.textContent = "MINT COMPLETE"'),"multi page state must show MINT COMPLETE after final phase");
 assert(multiJs.includes('pageState.textContent = "MINT LIVE"'),"multi page state must show MINT LIVE while active");
 assert(multiCss.includes('border:1px solid rgba(180,140,255,.68)!important'),"phase borders must be purple");

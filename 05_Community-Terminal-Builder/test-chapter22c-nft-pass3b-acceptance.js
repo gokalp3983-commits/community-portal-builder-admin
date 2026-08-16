@@ -5,8 +5,8 @@ for(const name of ["03_NFT-Collection-Terminal","03_NFT-Collection-Terminal-Mult
   const pub=path.join(root,name,"public");
   const html=fs.readFileSync(path.join(pub,"terminal.html"),"utf8");
   const css=fs.readFileSync(path.join(pub,"style.css"),"utf8");
-  assert(html.includes("style.css?v=cpb-nft-final4"),`${name}: NFT style cache version missing`);
-  assert(html.includes("script.js?v=cpb-nft-final4"),`${name}: NFT script cache version missing`);
+  assert(html.includes("style.css?v=cpb-nft-final6"),`${name}: NFT style cache version missing`);
+  assert(html.includes("script.js?v=cpb-nft-final6"),`${name}: NFT script cache version missing`);
   assert(!/\[\s*LIVE\s*\][^<]*Tracking the/.test(html),`${name}: legacy LIVE tracking prefix returned`);
   assert(css.includes("CPB NFT PORTAL — PASS 3B ACCEPTANCE LOCK"),`${name}: pass 3B CSS lock missing`);
   assert(css.includes(".nft-sales-window{position:relative!important;top:auto!important;height:auto!important;min-height:100vh!important;align-self:stretch!important"),`${name}: sales sidebar stretch lock missing`);
@@ -22,8 +22,8 @@ try{
  const generatedRoot=path.join(dir,"PORTALCAT_Community_Terminal");
  const html=fs.readFileSync(path.join(generatedRoot,"03_NFT-Collection-Terminal/public/terminal.html"),"utf8");
  const footer=fs.readFileSync(path.join(generatedRoot,"03_NFT-Collection-Terminal/public/canonical-footer.js"),"utf8");
- assert(html.includes('/nft/style.css?v=cpb-nft-final4'),"Generated NFT style cache-buster was stripped");
- assert(html.includes('/nft/script.js?v=cpb-nft-final4'),"Generated NFT script cache-buster was stripped");
+ assert(html.includes('/nft/style.css?v=cpb-nft-final6'),"Generated NFT style cache-buster was stripped");
+ assert(html.includes('/nft/script.js?v=cpb-nft-final6'),"Generated NFT script cache-buster was stripped");
  assert(footer.includes('var nftGrid=document.querySelector(".nft-terminal-workspace")'),"Generated NFT footer runtime does not target full workspace");
  assert(!html.includes('<span class="green">[ LIVE ]</span> Tracking the'),"Generated legacy tracking prefix present");
 } finally {fs.rmSync(dir,{recursive:true,force:true});}
