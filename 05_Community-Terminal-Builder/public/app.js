@@ -544,6 +544,69 @@ document.querySelector("#remove-mascot-background")?.addEventListener("click",as
 document.querySelector("#use-original-mascot")?.addEventListener("click",()=>{useOriginalMascot();update();scheduleRecoveryDraft()});
 
 function setValue(name,value){const el=form.elements[name];if(!el)return;if(el.type==="checkbox")el.checked=Boolean(value);else el.value=value??""}
+
+function setImportedValue(name,value,{overwrite=false}={}){
+  if(value===null||value===undefined||String(value).trim()==="")return false;
+  const el=form.elements[name];if(!el)return false;
+  if(!overwrite&&String(el.value||"").trim())return false;
+  setValue(name,value);return true;
+}
+function renderOpenSeaImportReview(result,applied){
+  const box=document.querySelector("#opensea-import-review");if(!box)return;
+  box.replaceChildren();
+  const nft=result?.nft||{};
+  const title=document.createElement("strong");title.textContent="IMPORTED — REVIEW THESE FIELDS BELOW";box.appendChild(title);
+  const grid=document.createElement("div");grid.className="opensea-import-review-grid";
+  const items=[
+    ["Collection",nft.collectionName],["Chain",nft.chainLabel||nft.chain],["Contract",nft.contractAddress?shortAddress(nft.contractAddress):"Not returned"],
+    ["Supply",nft.supply||"Not returned"],["Symbol",nft.symbol||"Review manually"],["Website",nft.links?.website||"Not returned"],
+    ["X / Twitter",nft.links?.x||"Not returned"],["Image",nft.imageUrl?"Available on OpenSea":"Not returned"]
+  ];
+  for(const [label,value] of items){const row=document.createElement("div");const l=document.createElement("span");const v=document.createElement("b");l.textContent=label;v.textContent=value||"—";row.append(l,v);grid.appendChild(row)}
+  box.appendChild(grid);
+  const note=document.createElement("p");
+  const count=Object.values(applied||{}).filter(Boolean).length;
+  note.textContent=`${count} builder fields were filled without overwriting existing values. Review/edit the normal CPB fields, add or confirm the project logo, then create the portal.`;
+  box.appendChild(note);
+  const warnings=Array.isArray(result?.warnings)?result.warnings:[];
+  if(warnings.length){const warn=document.createElement("p");warn.className="opensea-import-warnings";warn.textContent=`Check: ${warnings.join(" ")}`;box.appendChild(warn)}
+  box.hidden=false;
+}
+async function importOpenSeaIntoBuilder(){
+  const input=document.querySelector("#opensea-import-url"),button=document.querySelector("#opensea-import-button"),out=document.querySelector("#opensea-import-status");
+  const raw=String(input?.value||"").trim();
+  if(!raw){out.className="contract-check fail";out.textContent="[ WAIT ] Paste an OpenSea collection URL first.";input?.focus();return}
+  button.disabled=true;out.className="contract-check wait";out.textContent="[ IMPORTING ] Reading verified collection data from OpenSea…";
+  try{
+    const response=await fetch(`/api/import-opensea?url=${encodeURIComponent(raw)}`);
+    const result=await response.json();if(!response.ok||!result.ok)throw new Error(result.error||"OpenSea import failed");
+    const nft=result.nft||{},applied={};
+    const baseline=terminalBaseline();
+    if(!baseline){setTerminalBaseline("nft");syncTerminalBaseline({fresh:true});baselineSelectionHandled=true;applied.baseline=true}
+    else if(baseline==="token"){rememberOptionalModules();setTerminalBaseline("both");syncTerminalBaseline({fresh:false});baselineSelectionHandled=true;applied.baseline=true}
+    applied.openSea=setImportedValue("openSea",nft.openSeaUrl,{overwrite:true});syncOpenSeaValidation();
+    applied.projectName=setImportedValue("projectName",nft.collectionName);
+    applied.description=setImportedValue("description",nft.description);
+    applied.collectionName=setImportedValue("nftCollectionName",nft.collectionName);if(applied.collectionName)nftAutoFields.collectionName=true;
+    applied.supply=setImportedValue("nftSupply",nft.supply);if(applied.supply)nftAutoFields.supply=true;
+    applied.contract=setImportedValue("nftContract",nft.contractAddress);
+    applied.standard=setImportedValue("nftStandard",nft.standard);
+    applied.symbol=setImportedValue("nftSymbol",nft.symbol);
+    applied.ticker=setImportedValue("ticker",nft.symbol);
+    applied.website=setImportedValue("website",nft.links?.website);
+    applied.x=setImportedValue("x",nft.links?.x);
+    applied.telegram=setImportedValue("telegram",nft.links?.telegram);
+    if(!nftMintMode()){setValue("nftMintMode","terminal");syncNftMintModeUI();applied.portalMode=true}
+    syncTerminalIdentity();syncNftContractState({fromContractInput:true});syncNftConfigVisibility();syncMintConfirmationState();syncNftMintSchedule();
+    if(applied.contract)scheduleNftDiscovery();
+    update();scheduleRecoveryDraft();renderOpenSeaImportReview(result,applied);
+    const chainCheck=nft.chainLabel&&!/robinhood/i.test(nft.chainLabel)?` · Check chain: ${nft.chainLabel}`:"";
+    out.className="contract-check pass";out.textContent=`[ IMPORTED ] ${nft.collectionName||nft.slug} loaded from OpenSea${chainCheck}. Review/edit below before creating the portal.`;
+    status.textContent=`[ IMPORTED ] OpenSea NFT data loaded · review/edit the builder fields before CREATE PORTAL.`;
+    document.querySelector("#guided-project")?.scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(error){out.className="contract-check fail";out.textContent=`[ ERROR ] ${error.message}`;status.textContent=`[ ERROR ] OpenSea import failed: ${error.message}`}
+  finally{button.disabled=false}
+}
 function applyPayload(p){
   confirmedMintSignature="";pastScheduleWarningSignature="";nftExplicitlyDisabled=Boolean(p.nftContract&&!p.features?.nftTerminal);lastNftContractValue=String(p.nftContract||"").trim();
   setValue("projectName",p.projectName);setValue("ticker",p.ticker);setValue("version",p.version||"1.0.0");setValue("description",p.description);setValue("promptUser",terminalIdentityFromTicker(p.ticker));setValue("promptHost","robinhood");setValue("ecosystem",p.ecosystem||"Robinhood Chain");setValue("tokenContract",p.tokenContract);setValue("nftContract",p.nftContract);setValue("dexScreenerChainId",p.dexScreenerChainId||"robinhood");setValue("blockscoutApiBase",p.blockscoutApiBase||"https://robinhoodchain.blockscout.com/api/v2");
@@ -602,6 +665,9 @@ document.querySelectorAll('.terminal-baseline-options label').forEach(label=>lab
   status.textContent=`Baseline selected · ${input.value==="both"?"Token + NFT":input.value.toUpperCase()} portal`;
   if(firstChoice){window.setTimeout(()=>document.querySelector("#guided-modules")?.scrollIntoView({behavior:"smooth",block:"start"}),180)}
 }));
+
+document.querySelector("#opensea-import-button")?.addEventListener("click",importOpenSeaIntoBuilder);
+document.querySelector("#opensea-import-url")?.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();importOpenSeaIntoBuilder()}});
 
 form.elements.projectName?.addEventListener("input",()=>update());
 form.elements.ticker?.addEventListener("input",()=>{syncTerminalIdentity();update()});

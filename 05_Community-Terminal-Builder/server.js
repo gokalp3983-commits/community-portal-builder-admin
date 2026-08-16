@@ -8,6 +8,7 @@ const { releaseReadiness } = require("./release-readiness");
 const { createReleaseAuthorization, verifyReleaseConfirmation } = require("./release-authorization");
 const { buildFingerprint } = require("./build-fingerprint");
 const { discoverNftContract } = require("./nft/contract-discovery");
+const { importOpenSeaCollection } = require("./opensea-import");
 
 const VERSION = "1.3.2-b";
 const PORT = Number(process.env.PORT || 3050);
@@ -75,6 +76,17 @@ const server = http.createServer((req,res) => {
     discoverNftContract(address)
       .then(result=>json(res,200,result))
       .catch(error=>json(res,502,{ok:false,error:error.message,code:error.code||"NFT_DISCOVERY_UNAVAILABLE"}));
+    return;
+  }
+
+  if(req.method==="GET" && url.pathname==="/api/import-opensea") {
+    const openSeaUrl=String(url.searchParams.get("url")||"").trim();
+    importOpenSeaCollection(openSeaUrl)
+      .then(result=>json(res,200,result))
+      .catch(error=>{
+        const status=error.code==="OPENSEA_URL_REQUIRED"||String(error.code||"").startsWith("INVALID_OPENSEA")?400:error.code==="OPENSEA_COLLECTION_NOT_FOUND"?404:502;
+        json(res,status,{ok:false,error:error.message,code:error.code||"OPENSEA_IMPORT_UNAVAILABLE"});
+      });
     return;
   }
 

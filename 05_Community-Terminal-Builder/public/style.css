@@ -2192,3 +2192,30 @@ body.guided-mode #status:not(:empty){
   border-color:var(--green)!important;
   background:rgba(57,255,20,.05)!important;
 }
+
+/* OpenSea NFT auto-import — focused admin-builder addition. */
+.opensea-import-panel{
+  border-color:rgba(101,223,255,.38)!important;
+  background:linear-gradient(145deg,rgba(6,22,27,.96),rgba(4,14,18,.96))!important;
+  box-shadow:0 0 0 1px rgba(101,223,255,.04) inset,0 14px 34px rgba(0,0,0,.16)!important;
+}
+.opensea-import-panel .section-heading>span{color:var(--cyan)!important;border-color:rgba(101,223,255,.38)!important}
+.opensea-import-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;margin-top:14px}
+.opensea-import-url{min-width:0}
+#opensea-import-button{min-height:43px;white-space:nowrap;color:var(--cyan);border-color:rgba(101,223,255,.6);background:rgba(101,223,255,.06)}
+#opensea-import-button:hover,#opensea-import-button:focus-visible{background:rgba(101,223,255,.12);box-shadow:0 0 16px rgba(101,223,255,.12)}
+#opensea-import-button:disabled{opacity:.55;cursor:wait}
+#opensea-import-status{display:block;margin-top:12px}
+.opensea-import-review{margin-top:12px;padding:13px 14px;border:1px solid rgba(57,255,20,.22);border-radius:10px;background:rgba(57,255,20,.025)}
+.opensea-import-review>strong{display:block;color:var(--green);font-size:.82rem;letter-spacing:.055em;margin-bottom:10px}
+.opensea-import-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 14px}
+.opensea-import-review-grid>div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.055)}
+.opensea-import-review-grid span{color:var(--muted);font-size:.76rem}
+.opensea-import-review-grid b{color:var(--text);font-size:.76rem;text-align:right;overflow-wrap:anywhere}
+.opensea-import-review p{margin:10px 0 0;color:var(--muted);font-size:.76rem;line-height:1.55}
+.opensea-import-review .opensea-import-warnings{color:var(--yellow,#ffd84d)}
+@media(max-width:760px){
+  .opensea-import-controls{grid-template-columns:1fr}
+  #opensea-import-button{width:100%}
+  .opensea-import-review-grid{grid-template-columns:1fr}
+}

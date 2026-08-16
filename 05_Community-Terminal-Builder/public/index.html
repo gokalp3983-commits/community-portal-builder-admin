@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#020806">
   <title>Community Portal Builder</title>
-  <link rel="stylesheet" href="style.css?v=22c-pass1229">
+  <link rel="stylesheet" href="style.css?v=opensea-import1">
 </head>
 <body class="guided-mode">
   <script src="cpb-boot.js"></script>
@@ -142,6 +142,17 @@
         <div class="workspace">
 
           <div class="form-stack">
+            <section class="panel opensea-import-panel" id="opensea-auto-import" aria-labelledby="opensea-auto-import-title">
+              <div class="section-heading"><span>OS</span><h2 id="opensea-auto-import-title">OPENSEA NFT AUTO-IMPORT</h2><small>PASTE → IMPORT → REVIEW</small></div>
+              <p class="guided-step-note">Paste an OpenSea collection URL. CPB will import the collection metadata it can verify, then place it into the existing fields below for your review before portal creation.</p>
+              <div class="opensea-import-controls">
+                <label class="opensea-import-url"><span>OpenSea collection URL</span><input id="opensea-import-url" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"></label>
+                <button id="opensea-import-button" type="button">IMPORT NFT DATA</button>
+              </div>
+              <output id="opensea-import-status" class="contract-check wait" aria-live="polite">Paste an OpenSea collection URL to begin.</output>
+              <div id="opensea-import-review" class="opensea-import-review" hidden></div>
+            </section>
+
             <section class="panel" data-section="identity" id="guided-project" data-simple-stage="01" data-simple-title="PROJECT" data-simple-subtitle="NAME &amp; IDENTITY">
               <div class="section-heading"><span>01</span><h2>PROJECT</h2><small>NAME, IDENTITY &amp; DESCRIPTION</small></div><p class="guided-step-note">Start with the basics. CPB handles the portal identity automatically.</p>
               <fieldset class="terminal-baseline simple-only" id="terminal-baseline">
@@ -397,7 +408,7 @@
         </div>
       </div>
     </dialog>
-  <script src="app.js?v=22c-pass1229"></script>
+  <script src="app.js?v=opensea-import1"></script>
   <div id="auto-save-toast" class="auto-save-toast" role="status" aria-live="polite"><strong>Saved</strong> Latest project configuration saved ✓</div>
   <div id="deployment-toast" class="deployment-toast" role="status" aria-live="polite" hidden><strong>Deployment started</strong><span>Your website is being deployed. Please wait until the deployment completes successfully before making further release changes.</span></div>
 

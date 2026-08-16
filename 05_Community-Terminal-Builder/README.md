@@ -269,3 +269,12 @@ Simplified mode now begins with a required **Terminal Baseline** choice: **Token
 ### NFT NEW UI Pass 3B acceptance lock (16 Aug 2026)
 
 Generated module route prefixing now preserves asset query strings so redeploys cannot silently reuse stale NFT CSS/JS. The canonical generated footer detects the NFT two-column workspace and spans below both the main portal and Market Update sidebar. The deployment-success CLOSE action uses the standard red CPB close styling.
+
+## OpenSea NFT auto-import
+
+The Admin Builder can import collection metadata from an OpenSea collection URL through the server-side `/api/import-opensea` endpoint. OpenSea credentials are never exposed to browser code.
+
+- Optional production environment variable: `OPENSEA_API_KEY`
+- If `OPENSEA_API_KEY` is not configured, the server requests an OpenSea instant free-tier key and caches it in memory until close to expiry.
+- Imported values are placed into the existing CPB fields without overwriting non-empty user values. The user reviews/edits the normal builder fields before creating the portal.
+
