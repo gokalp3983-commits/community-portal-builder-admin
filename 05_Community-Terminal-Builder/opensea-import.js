@@ -118,6 +118,67 @@ function normalizeCollection(collection = {}, { slug, url }, contractDetails = {
   };
 }
 
+
+function pickTime(stage, keys) {
+  for (const key of keys) {
+    const value = stage?.[key];
+    if (value === null || value === undefined || value === "") continue;
+    if (typeof value === "number") {
+      const ms = value > 1e12 ? value : value * 1000;
+      const date = new Date(ms);
+      if (!Number.isNaN(date.getTime())) return date.toISOString();
+    }
+    const date = new Date(String(value));
+    if (!Number.isNaN(date.getTime())) return date.toISOString();
+  }
+  return null;
+}
+
+function priceText(stage = {}) {
+  const direct = first(stage.price, stage.mint_price, stage.mintPrice, stage.cost);
+  if (direct !== null && typeof direct !== "object") {
+    const raw = String(direct).trim();
+    if (raw === "0" || /^0(?:\.0+)?$/.test(raw)) return "FREE";
+    const symbol = first(text(stage.currency_symbol), text(stage.currency), text(stage.payment_token?.symbol), text(stage.paymentToken?.symbol));
+    return symbol ? `${raw} ${symbol}` : raw;
+  }
+  const obj = direct && typeof direct === "object" ? direct : first(stage.payment_token, stage.paymentToken);
+  if (obj && typeof obj === "object") {
+    const amount = first(obj.display_amount, obj.displayAmount, obj.amount, obj.value, obj.price);
+    const symbol = first(text(obj.symbol), text(obj.currency), text(obj.token_symbol));
+    if (amount !== null && amount !== undefined) {
+      const raw = String(amount).trim();
+      if (raw === "0" || /^0(?:\.0+)?$/.test(raw)) return "FREE";
+      return symbol ? `${raw} ${symbol}` : raw;
+    }
+  }
+  return null;
+}
+
+function limitText(stage = {}) {
+  const value = first(stage.max_mint_per_wallet, stage.max_mint_per_address, stage.max_per_wallet, stage.maxPerWallet, stage.wallet_limit, stage.walletLimit, stage.mint_limit, stage.mintLimit, stage.max_mintable);
+  return value === null || value === undefined ? null : String(value);
+}
+
+function stageArray(drop = {}) {
+  const candidates = [drop.stages, drop.drop_stages, drop.mint_stages, drop.mintStages, drop.phases, drop.drop?.stages, drop.data?.stages];
+  const list = candidates.find(Array.isArray);
+  if (list) return list;
+  return [drop.current_stage, drop.next_stage].filter(Boolean);
+}
+
+function normalizeDrop(drop = {}) {
+  const stages = stageArray(drop).map((stage, index) => ({
+    label: first(text(stage.label), text(stage.name), text(stage.stage_name), text(stage.stage_type), text(stage.title), `PHASE ${index + 1}`),
+    startsAt: pickTime(stage, ["start_time", "startTime", "starts_at", "startsAt", "start_date", "startDate", "start"]),
+    endsAt: pickTime(stage, ["end_time", "endTime", "ends_at", "endsAt", "end_date", "endDate", "end"]),
+    price: priceText(stage),
+    limit: limitText(stage),
+  })).filter(stage => stage.startsAt || stage.endsAt || stage.price || stage.limit || stage.label);
+  const status = first(text(drop.status), text(drop.state), text(drop.drop_status), text(drop.drop?.status));
+  return { status, stages };
+}
+
 async function importOpenSeaCollection(input, options = {}) {
   const fetchImpl = options.fetchImpl || fetch;
   const parsed = parseOpenSeaCollectionUrl(input);
@@ -128,6 +189,17 @@ async function importOpenSeaCollection(input, options = {}) {
     signal: AbortSignal.timeout(10000),
   });
   const collection = await responseJson(response, "OpenSea collection");
+
+  let dropDetails = {};
+  try {
+    const dropResponse = await fetchImpl(`${OPENSEA_API_BASE}/drops/${encodeURIComponent(parsed.slug)}`, {
+      headers,
+      signal: AbortSignal.timeout(8000),
+    });
+    if (dropResponse.ok) dropDetails = await responseJson(dropResponse, "OpenSea drop");
+  } catch {
+    dropDetails = {};
+  }
 
   const baseContract = contractFromCollection(collection);
   let contractDetails = {};
@@ -144,10 +216,11 @@ async function importOpenSeaCollection(input, options = {}) {
   }
 
   const nft = normalizeCollection(collection, parsed, contractDetails);
+  nft.drop = normalizeDrop(dropDetails);
   const warnings = [];
   if (!nft.contractAddress) warnings.push("OpenSea did not return a contract address. Add it manually before creating the portal.");
   if (!nft.symbol) warnings.push("Collection symbol was not returned. Review the project ticker manually.");
-  if (!nft.website) warnings.push("No project website was returned by OpenSea.");
+  if (!nft.links.website) warnings.push("No project website was returned by OpenSea.");
 
   return {
     ok: true,
@@ -161,5 +234,6 @@ async function importOpenSeaCollection(input, options = {}) {
 module.exports = {
   parseOpenSeaCollectionUrl,
   normalizeCollection,
+  normalizeDrop,
   importOpenSeaCollection,
 };

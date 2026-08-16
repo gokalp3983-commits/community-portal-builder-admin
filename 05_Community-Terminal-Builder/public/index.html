@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#020806">
   <title>Community Portal Builder</title>
-  <link rel="stylesheet" href="style.css?v=opensea-import1">
+  <link rel="stylesheet" href="style.css?v=opensea-autofill2">
 </head>
 <body class="guided-mode">
   <script src="cpb-boot.js"></script>
@@ -142,17 +142,6 @@
         <div class="workspace">
 
           <div class="form-stack">
-            <section class="panel opensea-import-panel" id="opensea-auto-import" aria-labelledby="opensea-auto-import-title">
-              <div class="section-heading"><span>OS</span><h2 id="opensea-auto-import-title">OPENSEA NFT AUTO-IMPORT</h2><small>PASTE → IMPORT → REVIEW</small></div>
-              <p class="guided-step-note">Paste an OpenSea collection URL. CPB will import the collection metadata it can verify, then place it into the existing fields below for your review before portal creation.</p>
-              <div class="opensea-import-controls">
-                <label class="opensea-import-url"><span>OpenSea collection URL</span><input id="opensea-import-url" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"></label>
-                <button id="opensea-import-button" type="button">IMPORT NFT DATA</button>
-              </div>
-              <output id="opensea-import-status" class="contract-check wait" aria-live="polite">Paste an OpenSea collection URL to begin.</output>
-              <div id="opensea-import-review" class="opensea-import-review" hidden></div>
-            </section>
-
             <section class="panel" data-section="identity" id="guided-project" data-simple-stage="01" data-simple-title="PROJECT" data-simple-subtitle="NAME &amp; IDENTITY">
               <div class="section-heading"><span>01</span><h2>PROJECT</h2><small>NAME, IDENTITY &amp; DESCRIPTION</small></div><p class="guided-step-note">Start with the basics. CPB handles the portal identity automatically.</p>
               <fieldset class="terminal-baseline simple-only" id="terminal-baseline">
@@ -179,7 +168,7 @@
               <div class="section-heading"><span>02</span><h2>TOKEN &amp; NFT</h2><small>PROJECT CONTRACTS</small></div><p class="guided-step-note">Contract fields follow your selected portal baseline. Token projects use Token CA; NFT projects unlock NFT contract and collection details.</p>
               <div class="grid">
                 <label class="span-2 contract-field simple-token-config"><span>Token contract address <b class="evm-badge">EVM</b></span><input name="tokenContract" placeholder="0x..." autocomplete="off" spellcheck="false"><small class="field-help">Required for token-based portals. NFT-only projects do not need this field.</small><output id="token-format-check" class="contract-check wait" aria-live="polite">Enter a 42-character 0x contract address.</output><output id="contract-check" class="contract-check wait" aria-live="polite">Market check starts after a valid EVM address is entered.</output></label>
-                <label class="span-2 contract-field simple-nft-config"><span>NFT contract address <b class="evm-badge">EVM</b></span><input name="nftContract" placeholder="0x..." autocomplete="off" spellcheck="false"><small class="field-help">Available when your portal includes NFTs. A valid NFT contract also starts safe Robinhood Chain discovery.</small><output id="nft-contract-check" class="contract-check" aria-live="polite">NFT contract not added yet.</output><output id="nft-discovery-check" class="contract-check" aria-live="polite">Collection discovery starts after you add the NFT contract.</output><input type="hidden" name="nftStandard"><input type="hidden" name="nftSymbol"><input type="hidden" name="nftMetadataUriMethod"></label>
+                <label class="span-2 contract-field simple-nft-config"><span>NFT contract address <b class="evm-badge">EVM</b></span><input id="nft-contract-mirror" placeholder="Automatically taken from NFT Mint Details" readonly aria-readonly="true" tabindex="-1"><small class="field-help">Automatically synchronized from NFT Mint Details below. Enter or import the NFT CA there.</small><output id="nft-contract-check" class="contract-check" aria-live="polite">NFT contract not added yet.</output><output id="nft-discovery-check" class="contract-check" aria-live="polite">Collection discovery starts after you add the NFT contract.</output><input type="hidden" name="nftStandard"><input type="hidden" name="nftSymbol"><input type="hidden" name="nftMetadataUriMethod"></label>
                 <div class="span-2 simple-nft-locked" role="note"><strong>NFT details are inactive</strong><span>Select an NFT or Token + NFT baseline to add an NFT contract, OpenSea collection link, and mint details.</span></div>
                 <label class="advanced-field"><span>DexScreener chain ID</span><input name="dexScreenerChainId" value="robinhood"></label>
                 <label class="advanced-field"><span>Blockscout API base</span><input name="blockscoutApiBase" value="https://robinhoodchain.blockscout.com/api/v2"></label>
@@ -214,7 +203,6 @@
                 <label><span>Telegram</span><input name="telegram" placeholder="Paste Telegram URL"></label>
                 <label class="advanced-field"><span>Explorer</span><input name="explorer" placeholder="Paste URL"></label>
                 <label class="advanced-field"><span>DexScreener</span><input name="dexScreener" placeholder="Paste DexScreener URL"></label>
-                <label class="nft-config"><span>OpenSea collection link</span><input name="openSea" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"><small class="field-help simple-only">Paste the full OpenSea collection URL.</small><small id="open-sea-error" class="field-error" hidden></small></label>
                 <input type="hidden" name="openSeaSlug" value="">
 
               </div>
@@ -231,7 +219,16 @@
             <section class="panel nft-config" data-section="nft-mint" id="guided-nft-mint" data-simple-stage="03" data-simple-title="NFT MINT" data-simple-subtitle="COLLECTION / LAUNCH">
               <div class="section-heading"><span>05</span><h2>NFT MINT DETAILS</h2><small>COLLECTION &amp; LAUNCH CONFIGURATION</small></div>
               <p class="guided-step-note">Configure the NFT collection and launch schedule, then explicitly confirm the mint details before creating the portal.</p>
+              <div class="nft-opensea-autofill" id="nft-opensea-autofill">
+                <div class="nft-opensea-row">
+                  <label><span>OpenSea collection link</span><input name="openSea" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"><small id="open-sea-error" class="field-error" hidden></small></label>
+                  <button id="check-opensea" type="button">CHECK OPENSEA</button>
+                </div>
+                <small class="nft-opensea-help">NFT Mint data can be filled automatically from OpenSea. Please check all imported information before confirming the NFT Mint details. If auto-fill is unavailable, every field below remains available for manual entry.</small>
+                <output id="opensea-import-status" class="contract-check" aria-live="polite">Paste an OpenSea collection link, then select CHECK OPENSEA.</output>
+              </div>
               <div class="grid">
+                <label class="span-2 contract-field nft-mint-contract-field"><span>NFT contract address <b class="evm-badge">EVM</b></span><input name="nftContract" placeholder="0x..." autocomplete="off" spellcheck="false"><small class="field-help">Enter manually, or let CHECK OPENSEA fill it when OpenSea returns a verified collection contract.</small></label>
                 <label><span>NFT collection name</span><input name="nftCollectionName" placeholder="Optional — derived from project name"></label>
                 <label><span>NFT total supply</span><input name="nftSupply" type="number" min="1" step="1" placeholder="Enter total supply"></label>
                 <div class="span-2 nft-mint-schedule" id="nft-mint-schedule">
@@ -315,6 +312,21 @@
     </footer>
     <button id="back-to-top" class="back-to-top simple-only" type="button" aria-label="Back to top" title="Back to top">↑</button>
   </main>
+
+    <dialog id="opensea-import-confirm" class="nft-mint-confirm" aria-labelledby="opensea-import-confirm-title">
+      <div class="nft-mint-confirm-panel">
+        <div class="nft-mint-confirm-head"><span>OpenSea auto-fill</span><button id="opensea-import-confirm-close" type="button" aria-label="Close">×</button></div>
+        <div class="nft-mint-confirm-body">
+          <strong id="opensea-import-confirm-title">NFT DATA FILLED AUTOMATICALLY FROM OPENSEA</strong>
+          <p>OpenSea data has been placed into the existing NFT Mint fields. Please check every imported value before using CONFIRM NFT MINT DETAILS. Any field that OpenSea could not provide remains available for manual entry.</p>
+          <div id="opensea-import-summary" class="nft-time-review"></div>
+          <p id="opensea-import-warning" class="nft-mint-confirm-note" hidden></p>
+        </div>
+        <div class="nft-mint-confirm-actions">
+          <button id="opensea-import-confirm-button" type="button">CONFIRM IMPORT</button>
+        </div>
+      </div>
+    </dialog>
 
     <dialog id="nft-past-warning" class="nft-mint-confirm" aria-labelledby="nft-past-warning-title">
       <div class="nft-mint-confirm-panel">
@@ -408,7 +420,7 @@
         </div>
       </div>
     </dialog>
-  <script src="app.js?v=opensea-import1"></script>
+  <script src="app.js?v=opensea-autofill2"></script>
   <div id="auto-save-toast" class="auto-save-toast" role="status" aria-live="polite"><strong>Saved</strong> Latest project configuration saved ✓</div>
   <div id="deployment-toast" class="deployment-toast" role="status" aria-live="polite" hidden><strong>Deployment started</strong><span>Your website is being deployed. Please wait until the deployment completes successfully before making further release changes.</span></div>
 
