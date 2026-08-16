@@ -95,6 +95,18 @@ function normalizeCollection(collection = {}, { slug, url }, contractDetails = {
   const x = twitter ? (/^https?:\/\//i.test(twitter) ? twitter : `https://x.com/${twitter.replace(/^@/, "")}`) : null;
   const telegram = first(text(collection.telegram_url), text(collection.telegram));
   const website = first(text(collection.external_url), text(collection.website_url), text(collection.website));
+  const discord = first(text(collection.discord_url), text(collection.discord));
+  const instagramRaw = first(text(collection.instagram_username), text(collection.instagram));
+  const instagram = instagramRaw ? (/^https?:\/\//i.test(instagramRaw) ? instagramRaw : `https://instagram.com/${instagramRaw.replace(/^@/, "")}`) : null;
+  const wiki = first(text(collection.wiki_url), text(collection.wiki));
+  const mediumRaw = first(text(collection.medium_username), text(collection.medium));
+  const medium = mediumRaw ? (/^https?:\/\//i.test(mediumRaw) ? mediumRaw : `https://medium.com/@${mediumRaw.replace(/^@/, "")}`) : null;
+  const additionalLinks = [
+    discord ? { label: "DISCORD", text: "Join Discord", url: discord, highlight: false } : null,
+    instagram ? { label: "INSTAGRAM", text: "View Instagram", url: instagram, highlight: false } : null,
+    wiki ? { label: "WIKI", text: "View project wiki", url: wiki, highlight: false } : null,
+    medium ? { label: "MEDIUM", text: "Read on Medium", url: medium, highlight: false } : null,
+  ].filter(Boolean);
   const supply = first(collection.total_supply, collection.totalSupply, collection.supply);
   const name = first(text(collection.name), text(contractDetails.name));
   const standard = first(text(contract.standard), text(contractDetails.contract_standard), text(contractDetails.standard));
@@ -114,7 +126,7 @@ function normalizeCollection(collection = {}, { slug, url }, contractDetails = {
     chainLabel: normalizeChain(chainRaw),
     standard,
     symbol,
-    links: { website, x, telegram },
+    links: { website, x, telegram, additionalLinks },
   };
 }
 
@@ -210,7 +222,7 @@ function phaseNumber(label) {
   return match ? Number(match[1]) : null;
 }
 
-function normalizeDrop(drop = {}) {
+function normalizeDrop(drop = {}, now = Date.now()) {
   const stages = stageArray(drop).map((stage, index) => {
     const label = stageLabel(stage, index);
     return {
@@ -240,7 +252,13 @@ function normalizeDrop(drop = {}) {
   });
   stages.forEach(stage => { delete stage._sourceIndex; });
   const status = first(text(drop.status), text(drop.state), text(drop.drop_status), text(drop.drop?.status));
-  return { status, stages };
+  const statusComplete = /ended|complete|completed|finished|closed/i.test(String(status || ""));
+  const allStagesEnded = stages.length > 0 && stages.every(stage => {
+    if (!stage.endsAt) return false;
+    const end = Date.parse(stage.endsAt);
+    return Number.isFinite(end) && end <= now;
+  });
+  return { status, stages, mintComplete: statusComplete || allStagesEnded };
 }
 
 async function importOpenSeaCollection(input, options = {}) {
