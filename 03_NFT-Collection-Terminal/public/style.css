@@ -1,0 +1,2683 @@
+:root{
+  --bg:#020806;
+  --panel:#03100b;
+  --green:#39ff14;
+  --yellow:#ff6a00;
+  --cyan:#65dfff;
+  --blue:#68c8ff;
+  --orange:#ff8a00;
+  --red:#ff5a67;
+  --muted:#708a7b;
+  --line:#194b2d;
+}
+
+*{
+  box-sizing:border-box
+}
+
+html,
+body{
+  min-height:100%
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#e8fff0;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-size:15px;
+  line-height:1.48
+}
+
+button,
+input{
+  font:inherit
+}
+
+.shell{
+  width:min(1100px,calc(100% - 24px));
+  margin:12px auto
+}
+
+.terminal{
+  min-height:calc(100vh - 24px);
+  border:1px solid var(--line);
+  background:#020806;
+  padding:22px 20px 18px
+}
+
+.module-title {
+	text-align: center;
+	color: var(--green);
+	font-size: 1.15rem;
+	font-weight: 600;
+	margin: 14px 0 12px;
+	letter-spacing: 0.5.px;
+}
+
+.header{
+  text-align:center
+}
+
+.mascot{
+  display:block;
+  width:64px;
+  height:64px;
+  object-fit:contain;
+  margin:0 auto 10px
+}
+
+.header-divider{
+  height:1px;
+  margin:0 0 12px;
+  background:var(--blue)
+}
+
+h1,
+h2,
+p{
+  margin:0
+}
+
+h1{
+  color:var(--yellow);
+  font-size:clamp(1.05rem,2vw,1.38rem);
+  font-weight:700
+}
+
+h2{
+  margin-top:13px;
+  color:var(--yellow);
+  font-size:clamp(.95rem,1.5vw,1.08rem);
+  font-weight:700
+}
+
+.subtitle{
+  margin-top:8px;
+  color:#fff;
+  font-size:.92em
+}
+
+.boot{
+  margin:18px 0 14px;
+  min-height:190px;
+  border-top:1px solid rgba(25,75,45,.7);
+  border-bottom:1px solid rgba(25,75,45,.7);
+  padding:14px 0
+}
+
+.line{
+  font-variant-ligatures:none;
+  min-height:1.48em;
+  white-space:pre-wrap
+}
+
+.green{color:var(--green)}
+.yellow{color:var(--yellow)}
+.cyan{color:var(--cyan)}
+.orange{color:var(--orange)}
+.red{color:var(--red)}
+.muted{color:var(--muted)}
+
+.modules{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:14px 0 18px
+}
+
+.module{
+  border:1px solid var(--line);
+  background:#03100b;
+  color:inherit;
+  padding:14px 15px;
+  text-align:left;
+  cursor:pointer
+}
+
+.module:hover,
+.module:focus-visible{
+  border-color:var(--green);
+  outline:none
+}
+
+.module-command{
+  color:var(--cyan);
+  font-weight:700
+}
+
+.module-title{
+  margin-top:6px;
+  color:var(--yellow);
+  font-weight:700
+}
+
+.module-copy{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:.86em;
+  line-height:1.45
+}
+
+.module-status{
+  display:inline-block;
+  margin-top:10px;
+  color:var(--green);
+  font-size:.79em
+}
+
+.output{
+  min-height:78px;
+  margin:10px 0 12px
+}
+
+.prompt{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  border-bottom:1px solid var(--green);
+  padding:8px 0 6px
+}
+
+.prompt-label{
+  color:var(--green);
+  white-space:nowrap
+}
+
+#commandInput{
+  width:100%;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:#fff;
+  caret-color:var(--green)
+}
+
+.footer-version{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(57,255,20,.48);
+  color:var(--yellow);
+  text-align:center;
+  font-size:.82em
+}
+
+.footer-version strong{
+  color:var(--green)
+}
+
+.footer{
+  padding:11px 4px 0;
+  color:var(--muted);
+  text-align:center;
+  font-size:.72em;
+  line-height:1.45
+}
+
+@media(max-width:760px){
+  body{
+    font-size:14px
+  }
+
+  .shell{
+    width:min(100% - 8px,1100px);
+    margin:4px auto
+  }
+
+  .terminal{
+    min-height:calc(100vh - 8px);
+    padding:14px 12px
+  }
+
+  .modules{
+    grid-template-columns:1fr
+  }
+
+  .prompt{
+    align-items:flex-start
+  }
+
+  .prompt-label{
+    padding-top:1px
+  }
+}
+
+
+.module.developing{
+  border-color:rgba(204,255,0,.42)
+}
+
+.module.developing:hover,
+.module.developing:focus-visible{
+  border-color:var(--yellow)
+}
+
+.developing-status{
+  color:var(--yellow)
+}
+.market-panel{
+  margin-top:18px;
+  border-top:1px solid rgba(255,176,32,.62);
+  border-bottom:1px solid rgba(255,176,32,.34);
+  padding:11px 0 10px;
+  color:var(--orange);
+  text-align:left;
+  font-variant-ligatures:none;
+}
+
+.market-line{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  min-height:1.48em;
+  white-space:normal;
+}
+
+.market-tag{
+  flex:0 0 auto;
+  color:var(--orange);
+}
+
+.market-tag.error{
+  color:var(--red);
+}
+
+.market-line strong{
+  color:var(--orange);
+  font-weight:700;
+  overflow-wrap:anywhere;
+}
+
+.market-updated-line{
+  color:rgba(255,176,32,.72);
+  font-size:.82em;
+}
+
+.market-updated-line strong{
+  color:rgba(255,176,32,.82);
+}
+
+.boot{
+  margin-top:0;
+  border-top:0;
+}
+
+@media(max-width:760px){
+  .market-panel{
+    margin-top:14px;
+    padding:9px 0 8px;
+  }
+
+  .market-line{
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:4px 7px;
+  }
+}
+
+
+.community-header{
+  text-align:center;
+}
+
+.community-mascot{
+  width:42px;
+  height:42px;
+  margin-bottom:7px;
+}
+
+.community-divider{
+  width:100%;
+  overflow:hidden;
+  color:var(--orange);
+  opacity:.9;
+  white-space:nowrap;
+  line-height:1;
+  letter-spacing:.02em;
+  user-select:none;
+}
+
+.community-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:22px;
+  margin:12px 0 7px;
+  flex-wrap:wrap;
+}
+
+.community-title-row h1{
+  color:var(--yellow);
+  font-size:clamp(1.05rem,2vw,1.42rem);
+  letter-spacing:.02em;
+}
+
+.online-status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--green);
+  font-size:.82em;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.online-dot{
+  animation:online-pulse 2.4s ease-in-out infinite;
+}
+
+.community-subtitle{
+  margin:0 0 11px;
+  color:#fff;
+  font-size:.88em;
+}
+
+@keyframes online-pulse{
+  0%,100%{opacity:1}
+  50%{opacity:.35}
+}
+
+@media(max-width:560px){
+  .community-title-row{
+    gap:7px;
+    flex-direction:column;
+    margin:10px 0 7px;
+  }
+
+  .community-divider{
+    font-size:.72em;
+  }
+
+  .community-subtitle{
+    line-height:1.5;
+  }
+}
+
+
+.market-updated-line{
+  font-size:inherit;
+  line-height:inherit;
+  color:var(--orange);
+}
+
+
+.market-line{
+  display:grid;
+  grid-template-columns:
+    max-content
+    11ch
+    1ch
+    minmax(0,1fr);
+  column-gap:8px;
+  align-items:baseline;
+  min-height:1.48em;
+}
+
+.market-tag{
+  white-space:nowrap;
+}
+
+.market-label{
+  white-space:nowrap;
+}
+
+.market-colon{
+  text-align:center;
+  color:var(--orange);
+}
+
+.market-value{
+  min-width:0;
+  color:var(--orange);
+  overflow-wrap:anywhere;
+}
+
+.market-updated-line{
+  font-size:inherit;
+  line-height:inherit;
+  color:var(--orange);
+}
+
+@media(max-width:520px){
+  .market-line{
+    grid-template-columns:
+      max-content
+      10ch
+      1ch
+      minmax(0,1fr);
+    column-gap:5px;
+    font-size:.92em;
+  }
+}
+
+
+/* =========================================================
+   COMMUNITY TERMINAL COMMUNITY TERMINAL — CANONICAL PAGE STRUCTURE
+   Existing visual classes remain the source of appearance.
+   ========================================================= */
+
+/* Entire outer outline */
+.terminal-frame{
+  display:block;
+}
+
+/* Major shared page areas */
+.terminal-area{
+  width:100%;
+  min-width:0;
+}
+
+.terminal-header{
+  display:block;
+}
+
+.terminal-live-panel{
+  display:block;
+}
+
+.terminal-application{
+  display:block;
+}
+
+.terminal-output-area{
+  display:block;
+}
+
+.terminal-modules{
+  display:block;
+}
+
+.terminal-prompt{
+  display:block;
+}
+
+.terminal-footer{
+  display:block;
+}
+
+/* Reusable page-specific application regions */
+.application-area{
+  width:100%;
+  min-width:0;
+}
+
+/* Explicit command-card order */
+.terminal-modules .modules{
+  display:grid;
+}
+
+.terminal-modules [data-module="whales"]{
+  order:1;
+}
+
+.terminal-modules [data-module="nft"]{
+  order:2;
+}
+
+.terminal-modules [data-module="eligibility"]{
+  order:3;
+}
+
+
+/* =========================================================
+   v1.4.1 FINAL LANDING PAGE POLISH
+   ========================================================= */
+
+/* Keep terminal output and clickable modules visually connected */
+.terminal-output-area{
+  margin-bottom:0 !important;
+  padding-bottom:0 !important;
+}
+
+.terminal-output-area .boot,
+.terminal-output-area .output{
+  margin-bottom:0 !important;
+}
+
+.terminal-modules{
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
+
+.terminal-modules .modules{
+  margin-top:0 !important;
+  padding-top:8px !important;
+}
+
+/* Lowercase help retains the same emphasis */
+.help{
+  text-transform:none !important;
+}
+
+/* Brighter, more readable disclaimer while preserving hierarchy */
+.terminal-footer .footer{
+  color:rgba(255,255,255,.72) !important;
+}
+
+.terminal-footer .footer-version{
+  color:var(--yellow);
+}
+
+
+/* =========================================================
+   v1.4.2 VISIBLE FIXES
+   ========================================================= */
+
+/* Boot output should size itself to its actual lines */
+.terminal-output-area .boot{
+  min-height:0 !important;
+  margin-bottom:0 !important;
+  padding-bottom:8px !important;
+}
+
+/* Do not reserve space for an empty command-output div */
+.terminal-output-area .output:empty{
+  display:none !important;
+}
+
+.terminal-output-area .output{
+  min-height:0 !important;
+  margin:0 !important;
+}
+
+/* Cards begin immediately after the READY divider */
+.terminal-modules .modules{
+  margin-top:0 !important;
+  padding-top:8px !important;
+}
+
+/* Clearly brighter footer disclaimer */
+.terminal-footer .footer{
+  color:#d8e0dc !important;
+  opacity:1 !important;
+}
+
+
+/* =========================================================
+   NFT COLLECTION TERMINAL — MODULE-SPECIFIC STYLES
+   Shared shell comes from the Landing Page master stylesheet.
+   ========================================================= */
+
+#terminal-application{
+  width:100%;
+}
+:root{
+  --bg:#010403;
+  --panel:#020805;
+  --green:#39ff14;
+  --yellow:#ff6a00;
+  --cyan:#42f5e9;
+  --orange:#ff8a00;
+  --red:#ff5f5f;
+  --text:#d9ffe0;
+  --muted:#7f9c85;
+  --line:rgba(57,255,20,.24);
+}
+
+*{box-sizing:border-box}
+
+html,body{margin:0;min-height:100%}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  font-size:15px;
+}
+
+.nft-module .shell{
+  width:min(100% - 20px,1100px);
+  margin:10px auto;
+}
+
+.nft-module .terminal{
+  min-height:calc(100vh - 20px);
+  border:1px solid rgba(57,255,20,.72);
+  background:var(--panel);
+  padding:20px 24px;
+}
+
+.nft-module .header{text-align:center}
+
+.nft-module .mascot{
+  display:block;
+  width:72px;
+  height:72px;
+  object-fit:cover;
+  margin:0 auto 9px;
+}
+
+.header-divider{
+  height:1px;
+  background:rgba(204,255,0,.72);
+  margin:0 0 10px;
+}
+
+h1,h2,h3,p{margin-top:0}
+
+h1{
+  margin-bottom:5px;
+  color:var(--yellow);
+  font-size:1.3rem;
+}
+
+h2{
+  margin-bottom:7px;
+  color:var(--green);
+  font-size:1.15rem;
+}
+
+.subtitle{
+  margin-bottom:0;
+  color:var(--orange);
+}
+
+.nft-module .market-panel{
+  margin-top:18px;
+  border-top:1px solid rgba(255,176,32,.62);
+  border-bottom:1px solid rgba(255,176,32,.34);
+  padding:11px 0 10px;
+  color:var(--orange);
+}
+
+.nft-module .market-line{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  min-height:1.48em;
+  flex-wrap:wrap;
+}
+
+.market-tag{
+  color:var(--orange);
+  font-weight:700;
+}
+
+.market-tag.error{color:var(--red)}
+
+.market-line strong{
+  color:var(--orange);
+  overflow-wrap:anywhere;
+}
+
+.market-updated-line{
+  color:rgba(255,176,32,.72);
+  font-size:.82em;
+}
+
+.official-mint{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:11px 0;
+  border-bottom:1px solid var(--line);
+  flex-wrap:wrap;
+}
+
+.official-mint-label{
+  color:var(--green);
+  font-weight:700;
+}
+
+a{
+  color:var(--cyan);
+  font-weight:700;
+  text-decoration:none;
+  overflow-wrap:anywhere;
+}
+
+a:hover,a:focus-visible{
+  color:var(--yellow);
+  text-decoration:underline;
+}
+
+.boot{
+  margin:0 0 14px;
+  border-bottom:1px solid var(--line);
+  padding:14px 0;
+}
+
+.line{min-height:1.5em}
+
+.green{color:var(--green)}
+.orange{color:var(--orange)}
+
+.countdown-panel{
+  border:1px solid rgba(255,176,32,.45);
+  padding:16px;
+  margin-bottom:14px;
+}
+
+.metric-label{
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.countdown-value{
+  color:var(--orange);
+  font-size:1.15rem;
+  font-weight:700;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.metric,
+.launch-panel{
+  border:1px solid var(--line);
+  padding:14px;
+}
+
+.metric-value{
+  color:var(--yellow);
+  font-size:1.2rem;
+  font-weight:700;
+}
+
+.status-waiting{color:var(--orange)}
+.status-live{color:var(--green)}
+
+.launch-panel{margin-bottom:14px}
+
+.launch-panel h3{
+  color:var(--yellow);
+  font-size:1rem;
+  margin-bottom:12px;
+}
+
+.info-row{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid rgba(57,255,20,.12);
+}
+
+.info-row:last-child{border-bottom:0}
+
+.info-row span{color:var(--muted)}
+
+.tracking-note{
+  border:1px solid rgba(255,176,32,.34);
+  padding:12px;
+  margin-bottom:14px;
+  color:var(--muted);
+}
+
+.nft-module .prompt{
+  border-top:1px solid var(--line);
+  padding-top:14px;
+  color:var(--green);
+}
+
+.nft-module .footer-version{
+  margin-top:18px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.82em;
+}
+
+.nft-module .footer{
+  margin-top:10px;
+  text-align:center;
+  color:var(--muted);
+  font-size:.78em;
+  line-height:1.5;
+}
+
+@media(max-width:720px){
+  body{font-size:14px}
+
+  .nft-module .shell{
+    width:min(100% - 8px,1100px);
+    margin:4px auto;
+  }
+
+  .nft-module .terminal{
+    min-height:calc(100vh - 8px);
+    padding:14px 12px;
+  }
+
+  .metrics{grid-template-columns:1fr}
+
+  .info-row{
+    grid-template-columns:1fr;
+    gap:3px;
+  }
+
+  .nft-module .market-panel{
+    margin-top:14px;
+    padding:9px 0 8px;
+  }
+}
+
+
+.mint-dashboard{
+  border:1px solid var(--line);
+  padding:14px;
+  margin-bottom:14px;
+}
+
+.dashboard-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.dashboard-header h3{
+  margin:0;
+  color:var(--yellow);
+  font-size:1rem;
+}
+
+.collapsible-panel-controls{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.panel-toggle{
+  border:1px solid rgba(57,255,20,.42);
+  background:transparent;
+  color:var(--green);
+  padding:5px 8px;
+  font:inherit;
+  font-size:.78em;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.panel-toggle:hover,
+.panel-toggle:focus-visible{
+  border-color:var(--green);
+  background:rgba(57,255,20,.07);
+}
+
+.collapsed-panel-summary{
+  color:var(--muted);
+  font-size:.86em;
+  line-height:1.55;
+  padding-top:8px;
+  border-top:1px solid rgba(57,255,20,.14);
+}
+
+.collapsible-panel.is-collapsed .dashboard-header{
+  margin-bottom:7px;
+}
+
+
+.data-status{
+  color:var(--orange);
+  font-size:.82em;
+  font-weight:700;
+}
+
+.data-status.live{
+  color:var(--green);
+}
+
+.progress-block{
+  margin-bottom:14px;
+}
+
+.progress-labels{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:7px;
+  color:var(--muted);
+}
+
+.progress-labels strong{
+  color:var(--orange);
+}
+
+.progress-track{
+  height:10px;
+  border:1px solid rgba(57,255,20,.32);
+  background:rgba(57,255,20,.06);
+  overflow:hidden;
+}
+
+.progress-fill{
+  height:100%;
+  background:var(--green);
+  transition:width .35s ease;
+}
+
+.compact-value{
+  font-size:.88rem;
+  overflow-wrap:anywhere;
+}
+
+@media(max-width:720px){
+  .dashboard-header{
+    align-items:flex-start;
+  }
+
+  .collapsible-panel-controls{
+    width:100%;
+    justify-content:space-between;
+  }
+}
+
+
+.collection-market{
+  border:1px solid var(--line);
+  padding:14px;
+  margin-bottom:14px;
+}
+
+.collection-metrics{
+  margin-bottom:0;
+}
+
+.api-note{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,176,32,.24);
+  color:var(--orange);
+  font-size:.82em;
+}
+
+.api-note code{
+  color:var(--yellow);
+}
+
+
+.collection-status-wrap{
+  display:flex;
+  align-items:flex-end;
+  flex-direction:column;
+  gap:3px;
+}
+
+.collection-updated{
+  color:var(--muted);
+  font-size:.72em;
+}
+
+.powered-by{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  text-align:center;
+  color:var(--muted);
+  font-size:.82em;
+}
+
+@media(max-width:720px){
+  .collection-status-wrap{
+    align-items:flex-start;
+  }
+}
+
+
+.nft-whales-panel{
+  border:1px solid var(--line);
+  padding:14px;
+  margin-bottom:14px;
+}
+
+.whale-summary{
+  margin-bottom:14px;
+}
+
+.whale-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);
+  gap:16px;
+}
+
+.whale-column h4{
+  color:var(--yellow);
+  margin:0 0 10px;
+  font-size:.92rem;
+}
+
+.whale-table-wrap{
+  overflow-x:auto;
+}
+
+.whale-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.86em;
+}
+
+.whale-table th,
+.whale-table td{
+  padding:7px 6px;
+  border-bottom:1px solid rgba(57,255,20,.12);
+  text-align:left;
+}
+
+.whale-table th{
+  color:var(--muted);
+  font-weight:400;
+}
+
+.whale-table td:nth-child(1),
+.whale-table td:nth-child(3),
+.whale-table td:nth-child(4){
+  color:var(--green);
+}
+
+.distribution-row{
+  margin-bottom:11px;
+}
+
+.distribution-label{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:5px;
+  font-size:.82em;
+}
+
+.distribution-label span{color:var(--muted)}
+.distribution-label strong{color:var(--text)}
+
+.distribution-track{
+  height:10px;
+  border:1px solid rgba(57,255,20,.25);
+  background:rgba(57,255,20,.05);
+}
+
+.distribution-fill{
+  height:100%;
+  background:var(--green);
+}
+
+.lookup-title{
+  margin-top:20px !important;
+}
+
+.wallet-lookup{
+  display:flex;
+  gap:8px;
+}
+
+.wallet-lookup input{
+  min-width:0;
+  flex:1;
+  border:1px solid rgba(57,255,20,.35);
+  background:#010403;
+  color:var(--text);
+  padding:9px 10px;
+  font:inherit;
+}
+
+.wallet-lookup button{
+  border:1px solid var(--green);
+  background:transparent;
+  color:var(--green);
+  padding:9px 12px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.wallet-lookup button:hover{
+  background:rgba(57,255,20,.08);
+}
+
+.wallet-result{
+  margin-top:10px;
+  min-height:58px;
+  border:1px solid rgba(57,255,20,.16);
+  padding:10px;
+  color:var(--muted);
+  line-height:1.55;
+}
+
+@media(max-width:820px){
+  .whale-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:520px){
+  .wallet-lookup{
+    flex-direction:column;
+  }
+}
+
+
+.wallet-address-cell{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+
+.wallet-address{
+  color:var(--text);
+}
+
+.copy-wallet-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border:1px solid rgba(66,245,233,.35);
+  background:transparent;
+  color:var(--cyan);
+  padding:0;
+  font:inherit;
+  line-height:1;
+  cursor:pointer;
+}
+
+.copy-wallet-button:hover,
+.copy-wallet-button:focus-visible{
+  border-color:var(--cyan);
+  color:var(--yellow);
+  background:rgba(66,245,233,.08);
+}
+
+.copy-wallet-button.copied{
+  border-color:var(--green);
+  color:var(--green);
+}
+
+.copy-wallet-button.copy-error{
+  border-color:var(--red);
+  color:var(--red);
+}
+
+
+.whale-table th:nth-child(1),
+.whale-table td:nth-child(1),
+.whale-table th:nth-child(3),
+.whale-table td:nth-child(3),
+.whale-table th:nth-child(4),
+.whale-table td:nth-child(4),
+.whale-table th:nth-child(5),
+.whale-table td:nth-child(5){
+  text-align:center;
+}
+
+.numeric-cell{
+  text-align:center;
+}
+
+
+
+/* Shared COMMUNITY TERMINAL Community Terminal header */
+.community-header{
+  text-align:center;
+}
+
+.community-mascot{
+  width:42px;
+  height:42px;
+  margin:0 auto 7px;
+}
+
+.community-divider{
+  width:100%;
+  overflow:hidden;
+  color:var(--orange);
+  opacity:.9;
+  white-space:nowrap;
+  line-height:1;
+  letter-spacing:.02em;
+  user-select:none;
+}
+
+.community-title-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:22px;
+  margin:12px 0 7px;
+  flex-wrap:wrap;
+}
+
+.community-title-row h1{
+  margin:0;
+  color:var(--yellow);
+  font-size:clamp(1.05rem,2vw,1.42rem);
+  letter-spacing:.02em;
+}
+
+.online-status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--green);
+  font-size:.82em;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.online-dot{
+  animation:online-pulse 2.4s ease-in-out infinite;
+}
+
+.community-subtitle{
+  margin:0 0 11px;
+  color:#fff;
+  font-size:.88em;
+}
+
+.module-identity{
+  margin:12px 0 0;
+  text-align:center;
+  color:var(--green);
+  font-size:.96rem;
+  font-weight:700;
+}
+
+/* Landing-page-style LIVE panel alignment */
+.nft-module .market-line{
+  display:grid;
+  grid-template-columns:
+    max-content
+    11ch
+    1ch
+    minmax(0,1fr);
+  column-gap:8px;
+  align-items:baseline;
+  min-height:1.48em;
+}
+
+.market-tag,
+.market-label{
+  white-space:nowrap;
+}
+
+.market-colon{
+  text-align:center;
+  color:var(--orange);
+}
+
+.market-value{
+  min-width:0;
+  color:var(--orange);
+  overflow-wrap:anywhere;
+}
+
+.market-updated-line{
+  font-size:inherit;
+  line-height:inherit;
+  color:var(--orange);
+}
+
+@keyframes online-pulse{
+  0%,100%{opacity:1}
+  50%{opacity:.35}
+}
+
+@media(max-width:560px){
+  .community-title-row{
+    flex-direction:column;
+    gap:7px;
+    margin:10px 0 7px;
+  }
+
+  .community-divider{
+    font-size:.72em;
+  }
+
+  .community-subtitle{
+    line-height:1.5;
+  }
+
+  .nft-module .market-line{
+    grid-template-columns:
+      max-content
+      10ch
+      1ch
+      minmax(0,1fr);
+    column-gap:5px;
+    font-size:.92em;
+  }
+}
+
+
+/* Reassert exact Landing Page shell */
+#terminal-frame{
+  width:min(1100px,calc(100% - 24px));
+  min-height:calc(100vh - 24px);
+  margin:12px auto;
+  border:1px solid var(--green);
+  background:var(--bg);
+}
+
+#terminal-header,
+#terminal-live-panel,
+#terminal-application,
+#terminal-prompt,
+#terminal-footer{
+  width:100%;
+  min-width:0;
+}
+
+#terminal-application{
+  flex:1 0 auto;
+}
+
+@media(max-width:560px){
+  #terminal-frame{
+    width:calc(100% - 2px);
+    min-height:calc(100vh - 2px);
+    margin:1px auto;
+  }
+}
+
+
+/* v2.4.2 exact landing-template fixes */
+#terminal-frame.shell.terminal-frame{
+  width:min(1100px,calc(100% - 24px)) !important;
+  min-height:calc(100vh - 24px) !important;
+  margin:12px auto !important;
+  border:1px solid var(--green) !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+}
+
+#terminal-frame > .terminal{
+  width:100% !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+#terminal-live-panel .market-line{
+  display:grid !important;
+  grid-template-columns:14ch 17ch 1ch minmax(0,1fr) !important;
+  column-gap:8px !important;
+  align-items:baseline !important;
+  min-height:1.48em !important;
+}
+
+#terminal-live-panel .market-tag,
+#terminal-live-panel .market-label{
+  white-space:nowrap !important;
+}
+
+#terminal-live-panel .market-colon{
+  display:block !important;
+  text-align:center !important;
+}
+
+#terminal-live-panel .market-value{
+  display:block !important;
+  width:auto !important;
+  min-width:0 !important;
+  margin:0 !important;
+  text-align:left !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+
+#terminal-footer .footer-version{
+  color:var(--yellow) !important;
+}
+
+#terminal-footer .powered-by{
+  margin-top:12px;
+  text-align:center;
+}
+
+#terminal-footer .footer{
+  color:#d8e0dc !important;
+  opacity:1 !important;
+}
+
+@media(max-width:560px){
+  #terminal-frame.shell.terminal-frame{
+    width:calc(100% - 2px) !important;
+    min-height:calc(100vh - 2px) !important;
+    margin:1px auto !important;
+  }
+
+  #terminal-live-panel .market-line{
+    grid-template-columns:14ch 10ch 1ch minmax(0,1fr) !important;
+    column-gap:5px !important;
+    font-size:.92em !important;
+  }
+}
+
+
+/* Always-on OpenSea NFT sales feed */
+.nft-sales-panel{
+  border:1px solid var(--line);
+  padding:14px;
+  margin-bottom:14px;
+  background:rgba(3,16,11,.45);
+}
+
+.sales-intro{
+  margin:0 0 12px;
+  color:var(--muted);
+  font-size:.84em;
+}
+
+.nft-sales-list{
+  display:grid;
+  gap:9px;
+  max-height:430px;
+  overflow:auto;
+  padding-right:4px;
+}
+
+.nft-sale-row{
+  border:1px solid rgba(57,255,20,.18);
+  background:rgba(2,8,6,.72);
+  padding:10px 11px;
+}
+
+.nft-sale-header{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto;
+  gap:10px;
+  align-items:baseline;
+  margin-bottom:6px;
+}
+
+.nft-sale-id{ color:var(--yellow); }
+.nft-sale-price{ color:var(--green); }
+.nft-sale-time{ color:var(--muted); font-size:.78em; white-space:nowrap; }
+
+.nft-sale-detail{
+  display:flex;
+  gap:10px;
+  font-size:.82em;
+  line-height:1.45;
+}
+
+.nft-sale-detail span{
+  width:52px;
+  flex:0 0 52px;
+  color:var(--muted);
+}
+
+.nft-sale-detail strong{
+  color:#e8fff0;
+  font-weight:500;
+}
+
+.nft-sale-link{
+  display:inline-block;
+  margin-top:7px;
+  color:#ffffff;
+  font-size:.84em;
+  text-decoration:none;
+  text-shadow:0 0 5px rgba(255,255,255,.18);
+}
+
+.nft-sale-link:hover,
+.nft-sale-link:focus-visible{
+  color:var(--cyan);
+  text-decoration:underline;
+  outline:none;
+}
+
+.nft-sale-placeholder{
+  color:var(--muted);
+  padding:10px 0;
+}
+
+
+/* Premium NFT sale emphasis: at least 25% above the current OpenSea floor.
+   Cyan is reserved for premium-event emphasis; dimensions and alignment are unchanged. */
+.nft-sale-row--large{
+  position:relative;
+  border-color:rgba(66,245,233,.92);
+  background:
+    linear-gradient(90deg,rgba(66,245,233,.12),rgba(57,255,20,.025) 55%,rgba(66,245,233,.07));
+  box-shadow:
+    0 0 0 1px rgba(66,245,233,.22) inset,
+    0 0 14px rgba(66,245,233,.18);
+  animation:nft-large-sale-pulse 2.2s ease-in-out infinite;
+}
+
+.nft-sale-row--large::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.10) 50%,transparent 65%);
+  transform:translateX(-130%);
+  animation:nft-large-sale-sweep 3.4s ease-in-out infinite;
+}
+
+.nft-sale-row--large .nft-sale-price{
+  color:var(--cyan);
+  text-shadow:0 0 9px rgba(66,245,233,.55);
+}
+
+.nft-sale-large-badge{
+  margin:-1px 0 7px;
+  color:var(--cyan);
+  font-size:.72em;
+  font-weight:700;
+  letter-spacing:.065em;
+  text-shadow:0 0 8px rgba(66,245,233,.45);
+}
+
+/* Extra emphasis for exceptional NFT sales at 2.00x floor or higher.
+   This layer changes only decoration; card dimensions/grid alignment stay unchanged. */
+.nft-sale-row--double{
+  border-color:rgba(66,245,233,1);
+  background:
+    linear-gradient(90deg,rgba(66,245,233,.17),rgba(57,255,20,.02) 48%,rgba(66,245,233,.10));
+  box-shadow:
+    0 0 0 1px rgba(66,245,233,.42) inset,
+    0 0 20px rgba(66,245,233,.30);
+}
+
+.nft-sale-row--double .nft-sale-id,
+.nft-sale-row--double .nft-sale-price{
+  color:var(--cyan);
+  text-shadow:0 0 10px rgba(66,245,233,.58);
+}
+
+.nft-sale-large-badge--double{
+  display:inline-block;
+  max-width:100%;
+  box-sizing:border-box;
+  padding:4px 7px;
+  border:1px solid rgba(66,245,233,.78);
+  background:rgba(66,245,233,.075);
+  color:var(--cyan);
+  text-shadow:0 0 10px rgba(66,245,233,.66);
+}
+
+@keyframes nft-large-sale-pulse{
+  0%,100%{
+    box-shadow:0 0 0 1px rgba(66,245,233,.22) inset,0 0 8px rgba(66,245,233,.12);
+  }
+  50%{
+    box-shadow:0 0 0 1px rgba(66,245,233,.42) inset,0 0 20px rgba(66,245,233,.34);
+  }
+}
+
+@keyframes nft-large-sale-sweep{
+  0%,55%{ transform:translateX(-130%); opacity:0; }
+  65%{ opacity:1; }
+  85%,100%{ transform:translateX(130%); opacity:0; }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .nft-sale-row--large,
+  .nft-sale-row--large::before{
+    animation:none;
+  }
+}
+
+#nftSalesStatus.stale{ color:var(--orange); }
+#nftSalesStatus.error{ color:var(--red); }
+
+@media(max-width:720px){
+  .nft-sale-header{
+    grid-template-columns:1fr auto;
+  }
+  .nft-sale-time{
+    grid-column:1 / -1;
+  }
+  .nft-sales-list{
+    max-height:520px;
+  }
+}
+
+/* Separate always-on NFT Sales Tracker window */
+.nft-terminal-workspace{
+  width:min(1510px,calc(100% - 24px));
+  margin:12px auto;
+  display:grid;
+  grid-template-columns:minmax(0,1100px) minmax(310px,390px);
+  gap:14px;
+  align-items:start;
+}
+
+.nft-terminal-workspace #terminal-frame.shell.terminal-frame{
+  width:100% !important;
+  margin:0 !important;
+}
+
+.nft-sales-window{
+  position:sticky;
+  top:12px;
+  min-width:0;
+  border:1px solid var(--green);
+  background:var(--bg);
+  box-shadow:0 0 18px rgba(57,255,20,.08);
+}
+
+.nft-sales-window::before{
+  content:var(--nft-terminal-label, "MARKET UPDATE");
+  display:block;
+  padding:9px 12px;
+  border-bottom:1px solid rgba(57,255,20,.35);
+  color:var(--green);
+  font-size:.9em;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-align:center;
+}
+
+.nft-sales-window .nft-sales-panel{
+  margin:0;
+  border:0;
+  background:transparent;
+  padding:14px;
+}
+
+.nft-sales-window .dashboard-header{
+  align-items:flex-start;
+  gap:10px;
+}
+
+.nft-sales-window .dashboard-header h3{
+  color:var(--yellow);
+  font-size:1em;
+}
+
+.nft-sales-window .collection-status-wrap{
+  text-align:right;
+}
+
+.nft-sales-window .nft-sales-list{
+  max-height:calc(100vh - 190px);
+  min-height:260px;
+}
+
+@media(max-width:1220px){
+  .nft-terminal-workspace{
+    width:min(1100px,calc(100% - 24px));
+    grid-template-columns:1fr;
+  }
+  .nft-sales-window{
+    position:static;
+  }
+  .nft-sales-window .nft-sales-list{
+    max-height:520px;
+    min-height:0;
+  }
+}
+
+@media(max-width:560px){
+  .nft-terminal-workspace{
+    width:calc(100% - 2px);
+    margin:1px auto;
+    gap:8px;
+  }
+}
+
+
+/* Prominent floor summary inside the always-on NFT Sales Tracker */
+.sales-floor-summary{
+  display:block;
+  margin:0 0 14px;
+  padding:11px 12px;
+  border:1px solid rgba(255,153,0,.42);
+  background:rgba(255,125,0,.055);
+  box-shadow:inset 0 0 12px rgba(255,125,0,.035);
+}
+.sales-floor-primary{
+  display:flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:7px 10px;
+}
+.sales-floor-label,
+.sales-floor-price{
+  color:#ff9d21;
+  font-size:1.08em;
+  line-height:1;
+  font-weight:800;
+  text-shadow:0 0 9px rgba(255,157,33,.28);
+  white-space:nowrap;
+}
+.sales-floor-label{
+  letter-spacing:.09em;
+}
+.sales-floor-trend{
+  display:inline;
+  flex:0 0 auto;
+  width:auto;
+  max-width:none;
+  margin:0;
+  padding:0;
+  border:0;
+  background:none;
+  box-shadow:none;
+  font-size:1em;
+  line-height:1;
+  letter-spacing:.035em;
+  white-space:nowrap;
+}
+.sales-floor-trend-row{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+  margin-top:8px;
+  min-width:0;
+  font-size:.82em;
+  line-height:1.2;
+}
+.sales-floor-trend-label{
+  flex:0 0 auto;
+  color:var(--cyan);
+  font-weight:700;
+  letter-spacing:.035em;
+  text-shadow:0 0 8px rgba(66,245,233,.18);
+  white-space:nowrap;
+}
+@media(max-width:560px){
+  .sales-floor-primary{gap:6px}
+  .sales-floor-label,
+  .sales-floor-price{font-size:.94em}
+  .sales-floor-trend-row{font-size:.78em}
+  .sales-floor-trend{font-size:1em}
+}
+
+/* 4-hour OpenSea floor-price trend */
+.floor-trend{
+  display:inline-flex;
+  align-items:center;
+  margin-top:7px;
+  padding:4px 7px;
+  border:1px solid rgba(255,255,255,.14);
+  font-size:.72em;
+  line-height:1.25;
+  letter-spacing:.035em;
+  white-space:normal;
+}
+.floor-trend-building,.floor-trend-unavailable,.floor-trend-flat{
+  color:var(--muted);
+  border-color:rgba(255,255,255,.14);
+}
+.floor-trend-up{
+  color:var(--green);
+  border-color:rgba(57,255,20,.35);
+}
+.floor-trend-down{
+  color:#ff6262;
+  border-color:rgba(255,98,98,.4);
+}
+.floor-trend-surge,.floor-trend-drop{
+  position:relative;
+  overflow:hidden;
+  font-weight:700;
+}
+.floor-trend-surge{
+  color:#fff39a;
+  border-color:#ffd84a;
+  box-shadow:0 0 10px rgba(255,216,74,.45),inset 0 0 8px rgba(57,255,20,.12);
+  animation:floorTrendPulse 1.55s ease-in-out infinite;
+}
+.floor-trend-drop{
+  color:#ffaaaa;
+  border-color:#ff4b4b;
+  box-shadow:0 0 10px rgba(255,75,75,.42),inset 0 0 8px rgba(255,75,75,.12);
+  animation:floorTrendPulse 1.55s ease-in-out infinite;
+}
+.floor-trend-surge::after,.floor-trend-drop::after{
+  content:"";
+  position:absolute;
+  inset:-2px auto -2px -45%;
+  width:28%;
+  transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);
+  animation:floorTrendSweep 2.4s linear infinite;
+}
+@keyframes floorTrendPulse{
+  0%,100%{opacity:1;transform:translateZ(0)}
+  50%{opacity:.72;filter:brightness(1.22)}
+}
+@keyframes floorTrendSweep{
+  from{left:-45%}
+  to{left:125%}
+}
+@media(prefers-reduced-motion:reduce){
+  .floor-trend-surge,.floor-trend-drop,.floor-trend-surge::after,.floor-trend-drop::after{
+    animation:none !important;
+  }
+}
+
+
+/* Canonical COMMUNITY TERMINAL header/footer — matched to Whale Activity Tracker */
+.community-header{text-align:center!important}
+.community-header>a{display:inline-block;line-height:0}
+.community-mascot{display:block;width:64px!important;height:64px!important;object-fit:cover;margin:0 auto 9px!important}
+.community-divider{width:100%;overflow:hidden;color:var(--orange)!important;opacity:.9;white-space:nowrap;line-height:1;letter-spacing:.02em;user-select:none}
+.community-title-row{display:flex;align-items:center;justify-content:center;gap:22px;margin:12px 0 7px!important;flex-wrap:wrap}
+.community-title-row h1{margin:0!important;color:var(--yellow)!important;font-size:clamp(1.05rem,2vw,1.42rem)!important;line-height:1.2;letter-spacing:.02em}
+.online-status{display:inline-flex;align-items:center;gap:6px;color:var(--green)!important;font-size:.82em;font-weight:700;white-space:nowrap}
+.community-subtitle{margin:0 0 11px!important;color:#fff!important;font-size:.88em!important}
+.module-title{margin:14px 0 12px!important;text-align:center!important;color:var(--yellow)!important;font-size:1.15rem!important;font-weight:600!important;letter-spacing:.5px!important}
+.footer-version,.terminal-footer .footer-version{color:var(--yellow)!important}
+@media(max-width:560px){.community-title-row{gap:7px;flex-direction:column;margin:10px 0 7px!important}.community-divider{font-size:.72em}.community-subtitle{line-height:1.5}}
+
+/* __CTB_PROJECT_NAME__ launch polish */
+.module-title{color:var(--green)!important;font-size:1.3rem!important;font-weight:700!important}.x-credit{color:var(--green);text-decoration:none}.x-credit:hover{text-decoration:underline;text-shadow:0 0 8px rgba(57,255,20,.35)}
+
+
+/* Launch UX: actual live values use the terminal green; pending/error states keep their existing colors. */
+.live-data-value{
+  color:var(--green) !important;
+}
+
+/* The bottom command prompt was intentionally removed: all terminal data/actions are exposed in the UI. */
+
+
+/* Compact 4h floor direction beside the primary LIVE floor price. */
+.market-floor-trend{
+  display:inline;
+  margin-left:.45em;
+  font-size:.84em;
+  font-weight:700;
+  white-space:nowrap;
+}
+.market-floor-trend.up{color:var(--green)}
+.market-floor-trend.down{color:#ff6262}
+.market-floor-trend.flat{color:var(--muted)}
+
+
+/* Prevent the post-mint panels from flashing fully expanded while the first
+   on-chain mint-state request is resolving. The compact loading summaries are
+   shown until JS confirms whether mint is complete. */
+body.postmint-resolving .collapsible-panel .collapsible-panel-body{
+  display:none !important;
+}
+
+body.postmint-resolving .collapsible-panel .collapsed-panel-summary{
+  display:block !important;
+}
+
+body.postmint-resolving .collapsible-panel .panel-toggle{
+  visibility:hidden;
+}
+
+.market-label-mobile{
+  display:none;
+}
+
+@media(max-width:560px){
+  .market-label-desktop{
+    display:none;
+  }
+
+  .market-label-mobile{
+    display:inline;
+  }
+}
+
+/* Final launch data-color rule: data values are terminal green in both pending and live states. */
+.market-value,
+.metric-value,
+.pending-data-value{
+  color:var(--green) !important;
+}
+
+/* Mint status remains a semantic status color rather than a numeric/data value. */
+.metric-value.status-waiting{
+  color:var(--orange) !important;
+}
+.metric-value.status-live{
+  color:var(--green) !important;
+}
+
+/* Decorative static binary background. Visual layer only; does not touch live-data logic. */
+.binary-background{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  background:#000;
+}
+
+/*
+  The binary texture spans the viewport behind the centered page.
+  The opaque terminal/page content naturally masks the center, so the
+  1s and 0s remain visible only in whatever empty side space exists.
+*/
+.binary-background__gutter{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:50%;
+  overflow:hidden;
+  background:#000;
+}
+
+.binary-background__gutter--left{left:0}
+.binary-background__gutter--right{right:0}
+
+.binary-background__pattern{
+  position:absolute;
+  inset:14px 0;
+  margin:0;
+  padding:0 12px;
+  overflow:hidden;
+  color:#00ff66;
+  opacity:.12;
+  font:500 clamp(8px,.72vw,11px)/1.55 "Courier New",Courier,monospace;
+  letter-spacing:.08em;
+  white-space:pre;
+  user-select:none;
+}
+
+.binary-background__gutter--left .binary-background__pattern{
+  text-align:left;
+}
+
+.binary-background__gutter--right .binary-background__pattern{
+  text-align:right;
+}
+
+/* Keep the actual application above the background without affecting modal positioning. */
+.nft-terminal-workspace{
+  position:relative;
+  z-index:1;
+}
+
+/* Modals must remain true viewport overlays. */
+.launch-modal{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:1000 !important;
+}
+
+/* Keep the binary texture quiet at tighter effective widths / higher zoom. */
+@media (max-width:1280px){
+  .binary-background__pattern{
+    opacity:.10;
+    font-size:8px;
+    letter-spacing:.04em;
+  }
+}
+
+@media (max-width:900px){
+  .binary-background__pattern{
+    opacity:.085;
+  }
+}
+
+@media (max-width:640px){
+  .binary-background__pattern{
+    opacity:.07;
+    padding-inline:6px;
+  }
+}
+
+
+/* NFT-only footer title polish */
+#terminal-footer .footer-version,
+.terminal-footer .footer-version{
+  color:var(--orange)!important;
+  font-size:.94em!important;
+  font-weight:700!important;
+  letter-spacing:.035em;
+  text-shadow:0 0 7px rgba(255,138,0,.18);
+}
+
+/* Compact on-chain wallet checker: stays inline on desktop, wraps cleanly on narrow screens. */
+.blockscout-wallet-check{
+  border-bottom:1px solid rgba(25,75,45,.7);
+  padding:8px 0 10px;
+}
+
+.blockscout-check-form{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  white-space:nowrap;
+}
+
+.blockscout-check-copy{
+  color:var(--cyan);
+  font-weight:700;
+  flex:0 0 auto;
+}
+
+.blockscout-wallet-input{
+  flex:1 1 430px;
+  min-width:220px;
+  max-width:560px;
+  height:32px;
+  border:1px solid var(--green);
+  background:#020806;
+  color:#fff;
+  padding:5px 9px;
+  outline:none;
+  box-shadow:0 0 0 1px rgba(0,255,65,.06) inset;
+}
+
+.blockscout-wallet-input::placeholder{
+  color:rgba(112,138,123,.92);
+}
+
+.blockscout-wallet-input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 9px rgba(0,255,65,.20);
+}
+
+.blockscout-check-button{
+  flex:0 0 auto;
+  height:32px;
+  border:1px solid var(--green);
+  background:rgba(0,255,65,.035);
+  color:#fff;
+  padding:4px 10px;
+  cursor:pointer;
+}
+
+.blockscout-check-button:hover,
+.blockscout-check-button:focus-visible,
+.blockscout-check-button:active{
+  background:rgba(0,255,65,.08);
+  color:var(--green);
+  box-shadow:0 0 8px rgba(0,255,65,.18);
+}
+
+.blockscout-check-status{
+  min-height:1.2em;
+  margin-top:4px;
+  padding-left:0;
+  color:var(--muted);
+  font-size:.82em;
+}
+
+.blockscout-check-status.is-error{
+  color:var(--red);
+}
+
+.blockscout-check-status.is-valid{
+  color:var(--green);
+}
+
+@media(max-width:820px){
+  .blockscout-check-form{
+    flex-wrap:wrap;
+    white-space:normal;
+  }
+  .blockscout-wallet-input{
+    flex:1 1 100%;
+    max-width:none;
+  }
+}
+
+.nft-sale-large-badge--double{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.nft-sale-double-star{
+  color:var(--cyan);
+  font-size:1.65em;
+  line-height:.8;
+  text-shadow:0 0 12px rgba(66,245,233,.85);
+  flex:0 0 auto;
+}
+
+
+/* FINAL close polish: OpenSea + Blockscout are one external-tools group. */
+.official-mint{
+  border-bottom:0 !important;
+  padding-bottom:8px;
+}
+
+/* Keep Blockscout label/copy/input/button vertically centered on one shared row. */
+.blockscout-check-form{
+  align-items:center !important;
+}
+.blockscout-check-form .official-mint-label,
+.blockscout-check-copy{
+  display:inline-flex;
+  align-items:center;
+  min-height:32px;
+}
+
+/* Give the clear "Top Sale 24h" label enough room on narrow screens. */
+@media(max-width:560px){
+  #terminal-live-panel .market-line{
+    grid-template-columns:14ch 12ch 1ch minmax(0,1fr) !important;
+    column-gap:3px !important;
+    font-size:.90em !important;
+  }
+}
+
+/* FINAL market-display polish: distinguish the current floor from the 4h direction signal. */
+.sales-floor-label,
+.sales-floor-price{
+  color:var(--cyan);
+  text-shadow:0 0 9px rgba(66,245,233,.24);
+}
+
+/* Keep the 4-hour direction on its own compact line so percentage width never competes with CURRENT FLOOR. */
+@media(max-width:560px){
+  .sales-floor-primary{
+    gap:4px;
+  }
+  .sales-floor-label{
+    letter-spacing:.045em;
+  }
+  .sales-floor-trend-row{
+    gap:5px;
+    flex-wrap:wrap;
+  }
+  .sales-floor-trend{
+    letter-spacing:.02em;
+  }
+}
+@media(max-width:380px){
+  .sales-floor-trend-row{
+    font-size:.75em;
+  }
+}
+
+/* FINAL first-paint/mobile viewport hardening.
+   Mirrors the tiny inline critical rules in index.html and terminal.html so
+   native and in-app browsers never derive a wider initial layout from long
+   terminal divider/content strings before the full stylesheet settles. */
+html,
+body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+.nft-terminal-workspace,
+#terminal-frame,
+.terminal,
+.terminal-area,
+.nft-sales-window{
+  min-width:0;
+  max-width:100%;
+}
+
+.community-divider{
+  max-width:100%;
+  overflow:hidden;
+}
+
+
+/* =========================================================
+   COLLECTION PULSE / SINCE LAST VISIT
+   Normal terminal module; intentionally not a shortcut or collapsible panel.
+   ========================================================= */
+.collection-pulse-panel{
+  margin-top:16px;
+}
+.collection-pulse-baseline{
+  border-top:1px solid rgba(255,138,0,.25);
+  padding:14px 0 2px;
+  color:#fff;
+  line-height:1.55;
+  white-space:nowrap;
+  font-size:clamp(.78rem,1.05vw,.94rem);
+}
+.collection-pulse-baseline .cyan{
+  color:var(--cyan);
+  font-weight:700;
+}
+.collection-pulse-metrics{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.collection-pulse-panel .metric-value{
+  overflow-wrap:anywhere;
+}
+.collection-pulse-panel .pulse-up{color:var(--green)}
+.collection-pulse-panel .pulse-down{color:var(--red)}
+.collection-pulse-panel .pulse-flat{color:var(--cyan)}
+.collection-pulse-panel .api-note{
+  margin-top:10px;
+  color:var(--muted);
+}
+@media(max-width:900px){
+  .collection-pulse-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .collection-pulse-metrics{grid-template-columns:1fr}
+  .collection-pulse-panel .dashboard-header{
+    align-items:flex-start;
+  }
+  .collection-pulse-baseline{
+    white-space:normal;
+    font-size:.88rem;
+  }
+}
+
+/* Mint completion is the terminal lifecycle state after the final mint phase. */
+.post-mint-complete-box .countdown-label,
+.post-mint-complete-box .countdown-value{
+  color:var(--green);
+}
+
+
+/* CTB Chapter 16 theme contract — generated NFT module outer frame stays bright green. */
+#terminal-frame.shell.terminal-frame{border:1px solid var(--green)!important}
+
+/* Chapter 16 / FINAL NFT base first-paint mobile viewport hardening. */
+html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.nft-terminal-workspace,#terminal-frame,.terminal,.terminal-area,.nft-sales-window{min-width:0;max-width:100%}
+.community-divider{width:100%;max-width:100%;overflow:hidden;white-space:nowrap}
+img,svg,canvas,video{max-width:100%}
+@media(max-width:1220px){.nft-terminal-workspace{grid-template-columns:1fr!important}}
+
+
+/* Chapter 17B acceptance fix — stable header logo slot for uploaded brand artwork.
+   A fixed display slot lets small-canvas transparent logos enlarge without distortion. */
+.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot{display:block!important;width:min(220px,58vw)!important;height:86px!important;max-width:100%!important;object-fit:contain!important;margin:0 auto 10px!important;background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;filter:none!important;animation:none!important;transform:none!important}
+@media(max-width:560px){.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot{width:min(190px,62vw)!important;height:72px!important}}
+
+
+/* Chapter 17 final polish: configured project links and graceful OpenSea fallback. */
+#terminal-live-panel .market-line{grid-template-columns:19ch 17ch 1ch minmax(0,1fr)!important}
+.project-launch-link a,.project-info-link-row a{color:var(--cyan,#6fd3ff)!important;text-decoration:none;overflow-wrap:anywhere}
+.project-launch-link a:hover,.project-info-link-row a:hover{text-decoration:underline}
+.project-launch-label{color:var(--cyan,#6fd3ff)}
+.opensea-action-status{margin-top:.7rem;color:var(--red,#ff3b30);font:inherit;line-height:1.45}
+@media(max-width:560px){#terminal-live-panel .market-line{grid-template-columns:18ch 10ch 1ch minmax(0,1fr)!important}}
+
+
+/* Chapter 17 DONE — clean black page background; decorative binary texture removed. */
+html,body{background:#000!important}
+.binary-background{display:none!important}
+
+
+/* Chapter 18 — NFT header logo parity with other module pages. */
+.community-header>a,
+.community-header>a:hover,
+.community-header>a:focus,
+.community-header>a:focus-visible{
+  display:inline-block!important;
+  line-height:0!important;
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  text-decoration:none!important;
+}
+.community-header .mascot,
+.community-header .community-mascot,
+.mascot.community-mascot,
+.community-header>a:hover .community-mascot,
+.community-header>a:focus-visible .community-mascot{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:min(240px,52vw)!important;
+  max-height:110px!important;
+  object-fit:contain!important;
+  margin:0 auto 10px!important;
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  animation:none!important;
+  transform:none!important;
+  mix-blend-mode:normal!important;
+}
+
+/* Chapter 18B — mobile-only compact copy for project/social links. */
+.link-copy-mobile{display:none}
+@media(max-width:560px){
+  .link-copy-desktop{display:none!important}
+  .link-copy-mobile{display:inline!important}
+}
+
+/* Chapter 19 final NFT header parity: keep the standard Community Terminal subtitle visible. */
+.community-subtitle{display:block!important}
+
+
+/* Chapter 20 — NFT QA carry-over, CTB palette preserved. */
+.log-copy-mobile{display:none}
+.mobile-launch-tag{display:none}
+@media(max-width:560px){
+  .log-copy-desktop{display:none!important}
+  .log-copy-mobile{display:inline!important;white-space:nowrap}
+  #boot .line{white-space:nowrap}
+  #terminal-live-panel .market-line{
+    grid-template-columns:11.5ch 12ch 1ch minmax(0,1fr)!important;
+    column-gap:.55ch!important;
+    align-items:baseline!important;
+    font-size:.80em!important;
+    white-space:nowrap!important;
+  }
+  #terminal-live-panel .market-tag,#terminal-live-panel .market-label,#terminal-live-panel .market-colon,#terminal-live-panel .market-value{min-width:0!important;white-space:nowrap!important}
+  #terminal-live-panel .market-tag,#terminal-live-panel .market-value{justify-self:start!important}
+  #terminal-live-panel .market-colon{text-align:center!important}
+}
+
+
+/* CTB Chapter 21A — NFT Terminal command interface. */
+.nft-command-separator{height:1px;margin:24px 0;background:var(--line)}
+.nft-quick-commands,.nft-command-terminal{margin-top:18px}
+.nft-command-section-label{margin:0 0 12px;color:var(--orange);font-size:1rem;letter-spacing:.04em}.nft-command-available-label{color:var(--green)}
+.nft-quick-command-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.nft-quick-command,.nft-command-name{font:inherit;cursor:pointer}
+.nft-quick-command{border:1px solid var(--cyan);background:transparent;color:var(--cyan);padding:9px 8px;font-weight:700}
+.nft-quick-command:hover,.nft-quick-command:focus-visible,.nft-quick-command.active{border-color:var(--green);color:var(--green);outline:none;background:#06150c}
+.nft-quick-command:disabled,.nft-command-name:disabled{opacity:.55;cursor:not-allowed}
+.nft-command-guide-list{margin-top:14px;display:grid;gap:0;border-top:1px solid rgba(57,255,20,.18)}
+.nft-command-guide-row{display:grid;grid-template-columns:minmax(170px,.45fr) 1fr;gap:14px;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(57,255,20,.12)}
+.nft-command-name{border:0;background:transparent;color:var(--cyan);padding:0;text-align:left;font-weight:700}
+.nft-command-name:hover,.nft-command-name:focus-visible{color:var(--green);outline:none;text-decoration:underline}
+.nft-command-guide-row>span{color:var(--muted)}
+.nft-command-input-hint{color:var(--orange);font-style:normal}
+.nft-command-terminal{border-top:1px solid var(--line);padding-top:16px}
+.nft-command-output{display:grid;gap:10px;margin-bottom:12px}
+.nft-command-block{border-left:2px solid var(--green);padding:10px 12px;background:rgba(3,16,11,.62)}
+.nft-command-title{color:var(--yellow);font-weight:700;margin-bottom:6px}
+.nft-command-kv{display:grid;grid-template-columns:minmax(160px,.48fr) 1fr;gap:12px;padding:2px 0}
+.nft-command-kv span:first-child{color:var(--muted)}
+.nft-command-error{color:var(--red)}
+.nft-command-muted{color:var(--muted)}
+.nft-command-wallet{color:var(--cyan);overflow-wrap:anywhere}
+.nft-command-prompt-row{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--green);padding:8px 0 5px}
+.nft-command-prompt-label{color:var(--green);white-space:nowrap}
+#nftCommandInput{min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--text);font:inherit;padding:0}
+.nft-command-back{border:0;background:transparent;color:var(--cyan);font:inherit;padding:0;cursor:pointer;text-align:left}
+.nft-command-back:hover,.nft-command-back:focus-visible{color:var(--green);outline:none;text-decoration:underline}
+@media(max-width:760px){.nft-quick-command-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.nft-quick-command-tabs .nft-quick-command:last-child{grid-column:1/-1}.nft-command-guide-row,.nft-command-kv{grid-template-columns:1fr;gap:3px}.nft-command-prompt-row{align-items:flex-start;flex-direction:column;gap:4px}#nftCommandInput{width:100%}}
+
+/* Chapter 21A accepted creator footer — Hoodrat signature */
+.builder-signature{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:nowrap;margin:0 auto;max-width:100%}
+.builder-signature-avatar{width:34px;height:34px;min-width:34px;border-radius:999px;object-fit:cover;object-position:center;border:0;box-shadow:none;background:transparent}
+.builder-signature-copy{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;text-align:center;line-height:1.1;font-size:1.08rem}
+.builder-signature-label{color:#c4ccd8;font-size:1em;font-weight:400;letter-spacing:.01em}
+.builder-signature-name{color:#ffffff;font-weight:800;font-size:1em;letter-spacing:.01em}
+.builder-signature-handle{white-space:nowrap;color:#c7ee07;font-size:1em;font-weight:400;letter-spacing:.01em}
+.builder-signature-disclaimer{margin-top:4px;color:#d8e0dc;line-height:1.4;font-size:.72rem}
+#terminal-footer .footer .builder-signature-handle{color:#c7ee07!important;text-decoration:none!important;border:0!important}
+#terminal-footer .footer .builder-signature-handle:hover{text-decoration:underline!important;text-shadow:none!important}
+@media(max-width:820px){.builder-signature-avatar{width:32px;height:32px;min-width:32px}.builder-signature-copy{font-size:1rem;gap:5px}.builder-signature-disclaimer{font-size:.7rem}}
+@media(max-width:520px){.builder-signature{gap:7px;flex-wrap:wrap}.builder-signature-avatar{width:30px;height:30px;min-width:30px}.builder-signature-copy{font-size:.95rem;gap:4px;line-height:1.08}.builder-signature-disclaimer{font-size:.68rem}}
+/* Chapter 21A fix batch — normalize NFT project logo to accepted project-wide size. */
+.community-header .mascot,
+.community-header .community-mascot,
+.mascot.community-mascot,
+.community-header>a:hover .community-mascot,
+.community-header>a:focus-visible .community-mascot{
+  display:block!important;width:min(142.5px,39vw)!important;height:54px!important;max-width:100%!important;max-height:none!important;object-fit:contain!important;margin:0 auto 10px!important;background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;filter:none!important;animation:none!important;transform:none!important;
+}
+@media(max-width:560px){.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot,.community-header>a:hover .community-mascot,.community-header>a:focus-visible .community-mascot{width:min(128px,43vw)!important;height:48px!important}}
+
+
+.nft-wallet-actions{display:inline-flex;gap:7px;margin-left:8px;vertical-align:middle}.nft-wallet-action{border:0;background:transparent;color:var(--cyan);font:inherit;padding:0;cursor:pointer;text-decoration:none}.nft-wallet-action:hover,.nft-wallet-action:focus-visible{color:var(--green);outline:none;text-decoration:underline}.nft-command-back-row{margin-top:9px}.nft-command-back{color:var(--cyan);font-weight:700}
+
+/* Chapter 21A canonical footer layout — screenshot structure, existing typography/palette preserved */
+#terminal-footer{border-top:2px solid #ff2d2d!important;margin-top:18px!important;padding-top:12px!important;text-align:center!important}
+#terminal-footer .ctb-footer-title{display:block;margin:0 0 2px;text-align:center}
+#terminal-footer .ctb-footer-version{display:block;margin:0 0 9px;text-align:center}
+#terminal-footer .ctb-footer-opensea{display:block;margin:0 0 10px;text-align:center}
+#terminal-footer .builder-signature{margin-top:0}
+#terminal-footer .builder-signature-disclaimer{margin-top:4px}
+
+/* Chapter 21 command feedback: echo clicked/typed commands immediately. */
+.nft-command-echo{margin:0 0 8px;padding:7px 9px;border-left:1px solid var(--green);background:rgba(0,24,14,.34)}
+.nft-command-echo-line{color:#d8e0dc;font-size:.82em}.nft-command-echo-line strong{color:var(--cyan);font-weight:700}.nft-command-echo-prompt{color:var(--green)}
+.nft-command-loading{margin-top:5px;color:var(--orange);font-size:.76em}
+
+/* Chapter 21 command cancellation */
+.nft-command-cancel{margin-left:8px;padding:2px 7px;border:1px solid var(--red);background:transparent;color:var(--red);font:inherit;font-size:.72em;cursor:pointer}
+.nft-command-cancel:hover,.nft-command-cancel:focus-visible{background:rgba(255,45,45,.08);outline:none}
+
+
+/* Chapter 21 Final Acceptance — mobile NFT commands follow Buy/Sell. */
+.nft-command-suite{min-width:0}
+@media(max-width:760px){
+  .nft-sales-window > .nft-command-suite{padding:0 14px 14px}
+  .nft-sales-window > .nft-command-suite .nft-command-separator:first-child{margin-top:4px}
+}
+
+
+/* Chapter 22 — CTB Additional Links */
+.additional-terminal-links{border-bottom:1px solid rgba(25,75,45,.7);padding:8px 0 10px}
+.additional-terminal-link{display:flex;align-items:baseline;gap:8px;min-width:0;font-weight:700}
+.additional-terminal-link+.additional-terminal-link{margin-top:7px}
+.additional-terminal-link-label{color:var(--green);flex:0 0 auto}
+.additional-terminal-link a{color:var(--cyan);text-decoration:none;overflow-wrap:anywhere}
+.additional-terminal-link a:hover{text-decoration:underline}
+.additional-terminal-link.is-highlighted .additional-terminal-link-label,.additional-terminal-link.is-highlighted a{color:#ff2020;text-shadow:0 0 9px rgba(255,32,32,.18)}
+.additional-terminal-link.is-highlighted a:hover{color:#ff4d4d}
+
+/* =========================================================
+   CPB NFT PORTAL — NEW UI PASS 1
+   Shared portal language + NFT-specific presentation only.
+   Functional IDs, routes and data hooks remain unchanged.
+   ========================================================= */
+:root{
+  --portal-lime:#eaff4f;--portal-yellow:#ffd84d;--portal-orange:#ff9b54;--portal-coral:#ff7188;
+  --portal-violet:#b48cff;--portal-aqua:#67e8f9;--portal-mint:#73f3bf;--portal-ink:#0a0d13;
+  --portal-panel:#121724;--portal-panel-2:#181e2e;--portal-border:rgba(255,255,255,.09);
+  --portal-copy:#f4f7fb;--portal-muted:#8f9aad;
+}
+html,body{background:#000!important;scroll-behavior:smooth}
+body{color:var(--portal-copy)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;font-size:15px!important;line-height:1.5!important}
+.shell,.launch-workspace{width:min(1080px,calc(100% - 28px))!important;margin:18px auto 26px!important}
+.terminal.portal-shell{min-height:0!important;padding:0!important;border:0!important;background:#000!important}
+
+/* Canonical shared header — identical contract to Landing/Whales/Intel/Pulse/Timeline. */
+.portal-hero{position:relative!important;padding:0!important;border:0!important;outline:0!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;overflow:visible!important}
+.portal-hero::before,.portal-hero::after{content:none!important;display:none!important}
+.portal-brand{display:grid!important;place-items:center!important;line-height:0!important;margin:0 auto 8px!important}
+.community-header{text-align:center!important}
+.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot,.community-header>a:hover .community-mascot,.community-header>a:focus-visible .community-mascot{display:block!important;width:min(154px,38vw)!important;height:66px!important;max-width:100%!important;max-height:none!important;object-fit:contain!important;object-position:center!important;margin:0 auto!important;background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;filter:none!important;animation:none!important;transform:none!important}
+.community-title-row{display:grid!important;grid-template-columns:1fr!important;justify-items:center!important;gap:5px!important;margin:0!important}
+.portal-heading-copy{display:grid!important;justify-items:center!important;gap:0!important;min-width:0!important}
+.community-title-row h1{margin:0!important;color:var(--portal-lime)!important;font-family:inherit!important;font-size:clamp(1.55rem,4vw,2.45rem)!important;font-weight:950!important;letter-spacing:-.035em!important;line-height:1.05!important;text-align:center!important}
+.community-subtitle{margin:6px 0 0!important;color:var(--portal-muted)!important;font-size:.84rem!important;line-height:1.5!important;text-align:center!important}
+.module-status-stack{display:grid!important;justify-items:center!important;gap:4px!important;margin-top:7px!important}
+.module-subtitle{color:var(--portal-orange)!important;font-size:clamp(.76rem,1.7vw,.96rem)!important;line-height:1.15!important;font-weight:900!important;letter-spacing:.055em!important;text-align:center!important;text-transform:none!important;text-shadow:0 0 14px rgba(255,138,0,.18)!important}
+.online-status{display:inline-flex!important;align-items:center!important;gap:7px!important;margin:0!important;padding:7px 10px!important;border:1px solid rgba(115,243,191,.25)!important;border-radius:999px!important;background:rgba(115,243,191,.07)!important;color:var(--portal-mint)!important;font-size:.69rem!important;font-weight:850!important;letter-spacing:.08em!important}
+.online-dot{font-size:.72em;animation:online-pulse 2.4s ease-in-out infinite}
+.community-divider,.module-title{display:none!important}
+.portal-header-energy{display:grid!important;gap:7px!important;width:100%!important;margin:10px auto 8px!important;padding:2px 0!important;overflow:hidden!important;border:0!important;box-shadow:none!important}
+.portal-header-energy .energy-line{position:relative!important;display:block!important;height:1px!important;border-radius:999px!important;overflow:visible!important;background:rgba(255,255,255,.06)!important}
+.portal-header-energy .energy-line:after{content:"";position:absolute;top:-1px;left:-24%;width:24%;height:3px;border-radius:999px;animation:cpb-energy-sweep 4.8s ease-in-out infinite}
+.portal-header-energy .energy-lime:after{background:linear-gradient(90deg,transparent,#ccff00,transparent);box-shadow:0 0 12px rgba(204,255,0,.48),0 0 28px rgba(204,255,0,.18)}
+.portal-header-energy .energy-violet:after{background:linear-gradient(90deg,transparent,#9d7cff,transparent);box-shadow:0 0 12px rgba(157,124,255,.42),0 0 26px rgba(157,124,255,.16);animation-delay:.7s}
+@keyframes cpb-energy-sweep{0%{left:-24%;opacity:0}12%{opacity:1}72%{opacity:1}100%{left:100%;opacity:0}}
+@keyframes online-pulse{0%,100%{opacity:.55}50%{opacity:1}}
+
+/* Shared modern card language. */
+.portal-panel,.mint-dashboard,.collection-market,.nft-whales-panel,.launch-panel,.nft-quick-commands,.nft-command-guide,.nft-command-terminal,.nft-sales-window,.blockscout-wallet-check,.official-mint,.tracking-note{
+  margin-top:10px!important;padding:16px!important;border:1px solid var(--portal-border)!important;border-radius:17px!important;background:linear-gradient(145deg,rgba(17,22,34,.98),rgba(10,13,20,.98))!important;box-shadow:0 12px 34px rgba(0,0,0,.15)!important;
+}
+.nft-market-panel{box-shadow:inset 3px 0 0 rgba(255,155,84,.72),0 12px 34px rgba(0,0,0,.15)!important}
+.nft-status-panel,.mint-dashboard{box-shadow:inset 3px 0 0 rgba(115,243,191,.62),0 12px 34px rgba(0,0,0,.15)!important}
+.nft-countdown-panel,.collection-market{box-shadow:inset 3px 0 0 rgba(180,140,255,.62),0 12px 34px rgba(0,0,0,.15)!important}
+.nft-whales-panel{box-shadow:inset 3px 0 0 rgba(103,232,249,.62),0 12px 34px rgba(0,0,0,.15)!important}
+.launch-panel,.nft-quick-commands,.nft-command-guide,.nft-command-terminal{box-shadow:inset 3px 0 0 rgba(255,216,77,.60),0 12px 34px rgba(0,0,0,.15)!important}
+
+/* NFT live market cards use the same responsive card grammar as Landing. */
+#terminal-live-panel .market-panel,.launch-live-panel .market-panel{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important;margin:0!important;padding:0!important;border:0!important}
+#terminal-live-panel .market-line,.launch-live-panel .market-line{display:grid!important;grid-template-columns:1fr auto!important;grid-template-areas:"label status" "value value"!important;column-gap:12px!important;row-gap:7px!important;min-height:86px!important;padding:14px 15px!important;border:1px solid rgba(255,255,255,.075)!important;border-radius:14px!important;background:rgba(7,10,17,.54)!important;line-height:1.3!important}
+#terminal-live-panel .market-label,.launch-live-panel .market-label{grid-area:label!important;color:var(--portal-muted)!important;font-size:.70rem!important;font-weight:750!important;letter-spacing:.05em!important;text-transform:uppercase!important}
+#terminal-live-panel .market-tag,.launch-live-panel .market-tag{grid-area:status!important;min-width:0!important;color:var(--portal-yellow)!important;font-size:.62rem!important;font-weight:850!important;text-align:right!important;white-space:nowrap!important}
+#terminal-live-panel .market-colon,.launch-live-panel .market-colon{display:none!important}
+#terminal-live-panel .market-value,#terminal-live-panel .market-line strong,.launch-live-panel .market-value,.launch-live-panel .market-line strong{grid-area:value!important;display:block!important;color:var(--portal-orange)!important;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;font-size:.92rem!important;font-weight:800!important;text-align:left!important;overflow-wrap:anywhere!important;white-space:normal!important}
+#terminal-live-panel .market-updated-line .market-value,#terminal-live-panel .market-updated-line strong{color:var(--portal-mint)!important}
+
+/* Countdown page. */
+.launch-status-area{display:grid!important;gap:8px!important}.launch-links-line{padding:8px 10px!important;border:1px solid rgba(255,255,255,.055)!important;border-radius:10px!important;background:#080b12!important;color:#aeb8ca!important}.launch-boot{margin:0!important;padding:0!important;border:0!important;display:grid!important;gap:7px!important}.launch-boot .line{padding:8px 10px!important;border:1px solid rgba(255,255,255,.055)!important;border-radius:10px!important;background:#080b12!important;color:#aeb8ca!important}.countdown-box{border:0!important;background:transparent!important;padding:8px 4px 4px!important}.countdown-label{color:var(--portal-violet)!important;font-size:.70rem!important;letter-spacing:.12em!important}.countdown-value{color:var(--portal-lime)!important;font-size:clamp(2.2rem,7vw,4.8rem)!important;font-weight:950!important;letter-spacing:.045em!important;text-shadow:0 0 22px rgba(234,255,79,.18)!important}.countdown-prompt{color:var(--portal-muted)!important}.phase-detail-label{color:var(--portal-aqua)!important}.phase-detail-value{color:#fff!important}.terminal-action{border:1px solid rgba(103,232,249,.34)!important;border-radius:10px!important;background:rgba(103,232,249,.06)!important;color:var(--portal-aqua)!important;padding:9px 13px!important;font-weight:850!important}.terminal-action:hover,.terminal-action:focus-visible{background:rgba(103,232,249,.12)!important;color:#fff!important;outline:none!important}
+.launch-modal{backdrop-filter:blur(10px)!important}.launch-modal-card{border:1px solid var(--portal-border)!important;border-radius:20px!important;background:linear-gradient(145deg,#151b2a,#0b0f18)!important;box-shadow:0 28px 90px rgba(0,0,0,.55)!important}.launch-modal-card h2{color:var(--portal-lime)!important}
+
+/* Collection portal panels and title/accent ownership. */
+.nft-portal-application{display:block!important}.official-mint,.blockscout-wallet-check,.tracking-note{margin-bottom:0!important}
+.dashboard-header h3,.launch-panel h3,.nft-command-section-label{font-family:inherit!important;font-weight:900!important}.mint-dashboard .dashboard-header h3{color:var(--portal-mint)!important}.collection-market .dashboard-header h3{color:var(--portal-violet)!important}.nft-whales-panel .dashboard-header h3,.nft-whales-panel h4{color:var(--portal-aqua)!important}.launch-panel h3,.nft-command-section-label{color:var(--portal-yellow)!important}
+.metrics{gap:9px!important}.metric{border:1px solid rgba(255,255,255,.07)!important;border-radius:13px!important;background:rgba(7,10,17,.52)!important;padding:13px!important}.metric-label{color:var(--portal-muted)!important;font-size:.69rem!important;font-weight:750!important;text-transform:uppercase!important;letter-spacing:.04em!important}.metric-value{color:#fff!important;font-size:1.02rem!important}.progress-track,.distribution-track{border:0!important;border-radius:999px!important;background:rgba(255,255,255,.07)!important;overflow:hidden!important}.progress-fill{background:linear-gradient(90deg,var(--portal-lime),var(--portal-mint))!important;border-radius:999px!important}.panel-toggle,.blockscout-check-button,.wallet-lookup button{border:1px solid rgba(103,232,249,.30)!important;border-radius:9px!important;background:rgba(103,232,249,.06)!important;color:var(--portal-aqua)!important}.blockscout-wallet-input,.wallet-lookup input,#nftCommandInput{border:1px solid rgba(255,255,255,.10)!important;border-radius:9px!important;background:#080b12!important;color:#fff!important;padding:9px 10px!important}.whale-table-wrap{border:1px solid rgba(255,255,255,.06)!important;border-radius:12px!important;overflow:auto!important}.whale-table th{color:var(--portal-muted)!important}.whale-table td{border-color:rgba(255,255,255,.055)!important}.nft-command-guide-list{border-top-color:rgba(255,255,255,.07)!important}.nft-command-guide-row{border-bottom-color:rgba(255,255,255,.055)!important}.nft-quick-command{border:1px solid rgba(103,232,249,.28)!important;border-radius:9px!important;background:rgba(103,232,249,.05)!important;color:var(--portal-aqua)!important}.nft-command-block{border-left:3px solid var(--portal-yellow)!important;border-radius:10px!important;background:#080b12!important}.nft-command-title{color:var(--portal-yellow)!important}
+
+/* Shared compact footer host is injected by CPB generator; hide legacy source footer cleanly until then. */
+#terminal-footer{margin-top:12px!important;padding:0!important;border:0!important;background:transparent!important}
+
+.back-to-top{position:fixed;right:24px;bottom:24px;z-index:40;display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;border-radius:50%;background:#ccff00;color:#0b0d08;font-size:1.35rem;font-weight:950;line-height:1;box-shadow:0 10px 28px rgba(204,255,0,.18),0 6px 18px rgba(0,0,0,.28);opacity:0;pointer-events:none;transform:translateY(10px) scale(.92);transition:opacity .2s ease,transform .2s ease,box-shadow .2s ease}.back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}.back-to-top:hover,.back-to-top:focus-visible{transform:translateY(-2px) scale(1.04);box-shadow:0 0 0 5px rgba(204,255,0,.10),0 12px 32px rgba(204,255,0,.24),0 7px 20px rgba(0,0,0,.28);outline:none}
+
+@media(max-width:820px){.shell,.launch-workspace{width:min(100% - 12px,1080px)!important;margin:6px auto 16px!important}.portal-panel,.mint-dashboard,.collection-market,.nft-whales-panel,.launch-panel,.nft-quick-commands,.nft-command-guide,.nft-command-terminal,.nft-sales-window,.blockscout-wallet-check,.official-mint,.tracking-note{padding:14px!important;border-radius:15px!important}.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot{width:min(138px,48vw)!important;height:60px!important}.community-title-row h1{font-size:clamp(1.18rem,7vw,1.75rem)!important}.module-subtitle{font-size:.72rem!important}.back-to-top{right:14px;bottom:14px;width:44px;height:44px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){#terminal-live-panel .market-panel,.launch-live-panel .market-panel{grid-template-columns:1fr!important}.metrics{grid-template-columns:1fr!important}.whale-grid{grid-template-columns:1fr!important}.nft-quick-command-tabs{grid-template-columns:1fr 1fr!important}.launch-actions{flex-direction:column!important}.terminal-action{width:100%!important;text-align:center!important}.countdown-value{font-size:2.55rem!important}.community-subtitle{font-size:.76rem!important}.portal-header-energy{margin-top:8px!important}}
+@media(prefers-reduced-motion:reduce){.portal-header-energy .energy-line:after{animation:none!important;left:38%!important;opacity:.7!important}.back-to-top{transition:none!important}}
+/* NFT Pass 1 final frame/sidebar normalization. */
+#terminal-frame.shell.terminal-frame{border:0!important;background:#000!important;box-shadow:none!important}
+.nft-sales-window{border:1px solid var(--portal-border)!important;border-radius:17px!important;background:linear-gradient(145deg,rgba(17,22,34,.98),rgba(10,13,20,.98))!important;box-shadow:inset 3px 0 0 rgba(255,113,136,.62),0 12px 34px rgba(0,0,0,.18)!important;overflow:hidden!important}
+.nft-sales-window::before{padding:11px 14px!important;border-bottom:1px solid rgba(255,255,255,.07)!important;color:var(--portal-coral)!important;font-family:inherit!important;font-size:.70rem!important;font-weight:900!important;letter-spacing:.10em!important;text-align:left!important}
+.nft-sales-window .nft-sales-panel{padding:14px!important}.nft-sales-window .dashboard-header h3{color:var(--portal-coral)!important}
+
+
+/* ================================================================
+   CPB NFT PORTAL — NEW UI PASS 2
+   Accepted portal language + collection-specific layout refinements.
+   ================================================================ */
+/* Canonical header lock: only module subtitle varies. */
+.community-title-row h1{color:var(--portal-yellow)!important}
+.module-subtitle{color:var(--portal-orange)!important}
+
+/* Collection access + wallet are product UI, not terminal logs. */
+.official-mint,.blockscout-wallet-check{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;padding:15px 16px!important}
+.official-mint-label{color:var(--portal-aqua)!important;font-size:.74rem!important;font-weight:900!important;letter-spacing:.06em!important;text-transform:uppercase!important;white-space:nowrap!important}
+.official-mint a{justify-self:end!important;color:#fff!important;font-weight:800!important;text-decoration:none!important}
+.official-mint a:hover,.official-mint a:focus-visible{color:var(--portal-aqua)!important}
+.blockscout-check-form{display:grid!important;grid-template-columns:auto minmax(180px,1fr) auto!important;align-items:center!important;gap:10px!important;width:100%!important}
+.blockscout-check-copy{color:var(--portal-muted)!important;font-size:.78rem!important}
+.blockscout-check-button{padding:10px 14px!important;font-weight:900!important}
+#boot[hidden]{display:none!important}
+.additional-terminal-links{display:none!important}
+
+/* One cohesive Tools card, matching the accepted Whales/Intel pattern. */
+.nft-command-suite{display:grid!important;gap:12px!important;margin-top:12px!important}
+.nft-tools-card{padding:16px!important;border:1px solid var(--portal-border)!important;border-radius:17px!important;background:linear-gradient(145deg,rgba(17,22,34,.98),rgba(10,13,20,.98))!important;box-shadow:inset 3px 0 0 rgba(255,216,77,.64),0 12px 34px rgba(0,0,0,.16)!important}
+.nft-tools-section{display:grid!important;gap:10px!important}
+.nft-tools-guide{margin-top:15px!important;padding-top:15px!important;border-top:1px solid rgba(255,255,255,.075)!important;box-shadow:inset 3px 0 0 rgba(180,140,255,.62)!important;padding-left:14px!important}
+.nft-command-section-label{margin:0!important;padding:0!important;border:0!important;color:var(--portal-yellow)!important;font-size:.86rem!important;font-weight:950!important;letter-spacing:.045em!important;text-transform:none!important}
+.nft-command-available-label{color:var(--portal-violet)!important}
+.nft-command-guide-list{margin:0!important;padding:0!important;border-top:0!important}
+.nft-command-guide-row{padding:9px 2px!important}
+.nft-command-name{color:var(--portal-aqua)!important}
+.nft-command-separator{display:none!important}
+
+/* Market Update is a substantial full-height companion panel. */
+.nft-terminal-workspace{width:min(1580px,calc(100% - 24px))!important;grid-template-columns:minmax(0,1100px) minmax(390px,460px)!important;align-items:stretch!important}
+.nft-sales-window{position:sticky!important;top:12px!important;min-height:calc(100vh - 24px)!important;display:flex!important;flex-direction:column!important}
+.nft-sales-window::before{font-size:.92rem!important;padding:14px 16px!important;letter-spacing:.11em!important}
+.nft-sales-window .nft-sales-panel{display:flex!important;flex:1!important;min-height:0!important;flex-direction:column!important;padding:16px!important}
+.nft-sales-window .dashboard-header h3{font-size:1.08rem!important}
+.nft-sales-window .nft-sales-list{flex:1!important;min-height:420px!important;max-height:calc(100vh - 260px)!important;overflow:auto!important}
+.nft-sale{padding:13px!important;margin-bottom:10px!important;border-radius:12px!important}
+.nft-full-footer{grid-column:1 / -1!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important}
+.nft-full-footer .footer{width:100%!important;max-width:none!important}
+
+/* Countdown lifecycle state colors are explicit and stable. */
+.post-mint-complete-box .countdown-label,.post-mint-complete-box .countdown-value{color:var(--green)!important}
+.post-mint-live-box:not(.post-mint-complete-box) .countdown-label,.post-mint-live-box:not(.post-mint-complete-box) .countdown-value{color:var(--portal-orange)!important}
+.countdown-phase-info{margin:7px 0 3px!important;color:#fff!important;font-size:.78rem!important;font-weight:750!important;line-height:1.45!important;letter-spacing:.015em!important}
+
+@media(max-width:1220px){
+  .nft-terminal-workspace{width:min(1100px,calc(100% - 24px))!important;grid-template-columns:1fr!important}
+  .nft-sales-window{position:static!important;min-height:100vh!important}
+  .nft-sales-window .nft-sales-list{max-height:70vh!important;min-height:420px!important}
+  .nft-full-footer{grid-column:1!important}
+}
+@media(max-width:700px){
+  .official-mint{grid-template-columns:1fr!important;gap:7px!important}.official-mint a{justify-self:start!important}
+  .blockscout-wallet-check{display:block!important}.blockscout-check-form{grid-template-columns:1fr!important;gap:8px!important}.blockscout-check-button{width:100%!important}
+  .nft-tools-card{padding:14px!important}.nft-tools-guide{padding-left:11px!important}
+  .nft-sales-window{min-height:100svh!important}.nft-sales-window .nft-sales-list{min-height:55svh!important;max-height:72svh!important}
+  .countdown-phase-info{font-size:.72rem!important}
+}
+
+/* Countdown access area uses product cards instead of terminal/status logs. */
+.nft-access-panel{padding:14px!important}.launch-access-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.launch-access-item{display:grid!important;gap:5px!important;min-height:72px!important;padding:13px 14px!important;border:1px solid rgba(103,232,249,.18)!important;border-radius:13px!important;background:rgba(7,10,17,.52)!important;color:#fff!important;text-decoration:none!important}.launch-access-item:hover,.launch-access-item:focus-visible{border-color:rgba(103,232,249,.5)!important;background:rgba(103,232,249,.08)!important;outline:none!important}.launch-access-kicker{color:var(--portal-aqua)!important;font-size:.68rem!important;font-weight:900!important;letter-spacing:.08em!important;text-transform:uppercase!important}.launch-access-item strong{font-size:.82rem!important;line-height:1.35!important}.pre-mint-state-text{margin:2px 0 6px!important;color:#fff!important;font-size:clamp(1rem,2.4vw,1.25rem)!important;font-weight:850!important;letter-spacing:.01em!important}.multi-pre-mint-state{text-align:left!important;margin-bottom:12px!important}
+@media(max-width:600px){.launch-access-grid{grid-template-columns:1fr!important}.pre-mint-state-text{font-size:.92rem!important}}
+
+
+/* ================================================================
+   CPB NFT PORTAL — FINAL ACCEPTANCE REFINEMENTS
+   Canonical header, compact lifecycle hero, wallet alignment, and
+   full-height Market Update companion layout.
+   ================================================================ */
+/* Header is locked to the exact accepted Landing/Whales contract. */
+.community-title-row h1{color:var(--portal-lime,#ccff00)!important}
+.module-subtitle{color:var(--portal-orange,#ff8a00)!important}
+
+/* MINT COMPLETE remains prominent without overpowering the page. */
+.post-mint-complete-box{padding:14px 14px 12px!important}
+.post-mint-complete-box .countdown-label{font-size:.62rem!important;margin:0 0 3px!important}
+.post-mint-complete-box .countdown-value{font-size:clamp(1.9rem,5vw,3.35rem)!important;line-height:1!important;margin:5px 0 7px!important;letter-spacing:.035em!important}
+.post-mint-complete-box .countdown-phase-info{margin:5px 0 2px!important;font-size:.72rem!important}
+.post-mint-complete-box .countdown-prompt{font-size:.77rem!important;line-height:1.35!important}
+
+/* Desktop wallet check is one aligned row: label, copy, input, action. */
+.blockscout-wallet-check{display:block!important}
+.blockscout-check-form{display:grid!important;grid-template-columns:auto auto minmax(240px,1fr) auto!important;align-items:center!important;gap:10px!important;width:100%!important}
+.blockscout-check-status:empty{display:none!important}
+
+/* Market Update stretches with the complete left-side portal content. */
+.nft-terminal-workspace{align-items:stretch!important}
+.nft-sales-window{position:relative!important;top:auto!important;height:100%!important;min-height:calc(100vh - 24px)!important;align-self:stretch!important}
+.nft-sales-window .nft-sales-panel{height:100%!important}
+.nft-sales-window .nft-sales-list{flex:1 1 auto!important;min-height:calc(100vh - 300px)!important;max-height:none!important;overflow:auto!important}
+
+/* Modern informational copy: no terminal-style bracket prefix. */
+.tracking-note.mint-complete-note .green{display:none!important}
+.tracking-note.mint-complete-note{color:var(--portal-muted)!important}
+
+@media(max-width:1220px){
+  .nft-sales-window{height:auto!important;min-height:100vh!important}
+  .nft-sales-window .nft-sales-list{min-height:55vh!important;max-height:72vh!important}
+}
+@media(max-width:700px){
+  .blockscout-check-form{grid-template-columns:1fr!important}
+  .blockscout-check-button{width:100%!important}
+  .post-mint-complete-box{padding:12px 10px 10px!important}
+  .post-mint-complete-box .countdown-value{font-size:clamp(1.7rem,10vw,2.55rem)!important}
+}
+
+
+/* ================================================================
+   CPB NFT PORTAL — PASS 3B ACCEPTANCE LOCK
+   Prevent stale-asset/layout regressions observed during live testing.
+   ================================================================ */
+.community-title-row h1{color:var(--portal-lime,#ccff00)!important}
+.module-subtitle{color:var(--portal-orange,#ff8a00)!important}
+.nft-terminal-workspace{align-items:stretch!important;grid-auto-rows:auto!important}
+.nft-sales-window{position:relative!important;top:auto!important;height:auto!important;min-height:100vh!important;align-self:stretch!important;display:flex!important;flex-direction:column!important}
+.nft-sales-window .nft-sales-panel{height:100%!important;min-height:0!important;display:flex!important;flex:1 1 auto!important;flex-direction:column!important}
+.nft-sales-window .nft-sales-list{flex:1 1 0!important;min-height:0!important;max-height:none!important;overflow:auto!important}
+.nft-full-footer{grid-column:1/-1!important;width:100%!important}
+.tracking-note.mint-complete-note{color:var(--portal-muted)!important}
+.tracking-note.mint-complete-note .green{display:none!important}
+@media(max-width:1220px){.nft-sales-window{height:auto!important;min-height:100vh!important}.nft-sales-window .nft-sales-list{flex:none!important;min-height:55vh!important;max-height:72vh!important}.nft-full-footer{grid-column:1!important}}
+
+
+/* CPB NFT Pass 3C — final header + market-update acceptance lock */
+.community-title-row h1{
+  color:#ccff00!important;
+}
+.nft-sales-window::before{
+  content:var(--nft-terminal-label, "NFT MARKET UPDATE")!important;
+  display:block!important;
+  text-align:center!important;
+}
+
+
+/* CPB NFT FINAL mobile order lock: content -> NFT Market Update -> footer. */
+@media(max-width:1220px){
+  .nft-terminal-workspace{display:grid!important;grid-template-columns:1fr!important;grid-auto-flow:row!important}
+  .nft-terminal-workspace > #terminal-frame{grid-column:1!important;grid-row:1!important}
+  .nft-terminal-workspace > .nft-sales-window{grid-column:1!important;grid-row:2!important;min-height:0!important}
+  .nft-terminal-workspace > .nft-full-footer{grid-column:1!important;grid-row:3!important;margin-top:0!important}
+}

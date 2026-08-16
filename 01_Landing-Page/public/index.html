@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style id="ctb-style-guard">html{background:#000}html:not(.ctb-styles-ready) body{visibility:hidden}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta id="themeColor" name="theme-color" content="#000000">
+  <meta id="pageDescription" name="description" content="Community Portal">
+  <title>Community Portal</title>
+  <link rel="stylesheet" href="/style.css?v=chapter22c-pass1230">
+  <script>
+(()=>{
+  const root=document.documentElement;
+  const links=[...document.querySelectorAll('link[rel="stylesheet"]')];
+  if(!links.length){ root.classList.add("ctb-styles-ready"); return; }
+  let remaining=links.length;
+  let revealed=false;
+  const settle=()=>{
+    remaining-=1;
+    if(remaining<=0 && !revealed){
+      revealed=true;
+      root.classList.add("ctb-styles-ready");
+    }
+  };
+  for(const link of links){
+    if(link.sheet){ settle(); continue; }
+    link.addEventListener("load",settle,{once:true});
+    link.addEventListener("error",settle,{once:true});
+  }
+  setTimeout(()=>{
+    if(!revealed){ revealed=true; root.classList.add("ctb-styles-ready"); }
+  },8000);
+})();
+</script>
+</head>
+<body>
+  <main id="terminal-frame" class="shell terminal-frame">
+    <section id="terminalShell" class="terminal portal-shell" aria-label="Community Portal">
+      <div id="terminal-header" class="terminal-area terminal-header portal-hero">
+        <header class="header community-header">
+          <a id="homeLink" class="portal-brand" href="/" title="Return to Community Portal">
+            <img id="mascot" class="mascot community-mascot" src="" alt="Project mascot">
+          </a>
+          <div class="community-title-row">
+            <div class="portal-heading-copy">
+              <h1 id="terminalTitle">COMMUNITY PORTAL</h1>
+              <p id="terminalSubtitle" class="community-subtitle">Independent Community Tools</p>
+            </div>
+            <span class="online-status"><span class="online-dot" aria-hidden="true">●</span> ONLINE</span>
+          </div>
+        </header>
+      </div>
+
+      <div class="portal-header-energy" aria-hidden="true">
+        <span class="energy-line energy-lime"></span>
+        <span class="energy-line energy-violet"></span>
+      </div>
+
+      <div id="terminal-live-panel" class="terminal-area terminal-live-panel portal-panel portal-market-panel">
+        <div class="portal-section-heading">
+          <div>
+            <span class="portal-section-kicker">LIVE MARKET DATA</span>
+            <h2>Market Snapshot</h2>
+          </div>
+          <span class="portal-status-chip">AUTO REFRESH</span>
+        </div>
+        <section id="marketPanel" class="market-panel" aria-label="Live market data">
+          <div class="market-line market-price-line"><span id="marketPriceStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Price</span><span class="market-colon" aria-hidden="true">:</span><span class="market-price-wrap"><strong id="marketPrice" class="market-value">—</strong><span id="marketPriceChange" class="market-price-change" aria-label="24 hour price change">24H PRICE CHANGE&nbsp; —</span></span></div>
+          <div class="market-line"><span id="marketCapStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Market Cap</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketCap" class="market-value">—</strong></div>
+          <div class="market-line"><span id="marketHoldersStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Holders</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketHolders" class="market-value">—</strong></div>
+          <div class="market-line"><span id="marketVolumeStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">24h Volume</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketVolume" class="market-value">—</strong></div>
+          <div class="market-line market-updated-line"><span id="marketUpdatedStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Updated</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketUpdated" class="market-value">—</strong></div>
+          <div class="market-line contract-address-line"><span class="market-tag contract-tag">[ CA ]</span><span class="market-label">Contract</span><span class="market-colon" aria-hidden="true">:</span><span class="contract-value-wrap"><code class="market-value contract-value" data-token-contract>—</code><button class="copy-contract" type="button" data-copy-token-contract aria-label="Copy token contract address" title="Copy token contract address">COPY</button></span></div>
+        </section>
+      </div>
+
+      <div id="terminal-application" class="terminal-area terminal-application portal-workspace">
+        <div id="terminal-output-area" class="application-area terminal-output-area portal-panel portal-system-panel">
+          <div class="portal-section-heading compact">
+            <div>
+              <span class="portal-section-kicker">PORTAL STATUS</span>
+            </div>
+            <span class="portal-status-chip portal-status-ready">READY</span>
+          </div>
+          <div id="boot" class="boot" aria-live="polite"></div>
+          <div id="output" class="output" aria-live="polite"></div>
+        </div>
+
+        <div id="terminal-modules" class="application-area terminal-modules portal-modules-grid">
+          <section class="terminal-explanations portal-panel" aria-labelledby="availableTerminalsTitle">
+            <div class="portal-section-heading compact">
+              <div>
+                <span class="portal-section-kicker">AVAILABLE MODULES</span>
+                <h2 id="availableTerminalsTitle">Your Portal Tools</h2>
+              </div>
+            </div>
+            <div id="modulesList" class="module-explanation-list" aria-label="Available terminal explanations"></div>
+          </section>
+        </div>
+      </div>
+
+      <div id="terminal-footer" class="terminal-area terminal-footer">
+        <footer id="footerCopy" class="footer"></footer>
+      </div>
+    </section>
+  </main>
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="/script.js?v=chapter22c-pass1230"></script>
+</body>
+</html>

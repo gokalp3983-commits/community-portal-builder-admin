@@ -1,0 +1,24 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const root = path.join(__dirname, "..");
+const html = fs.readFileSync(path.join(root, "01_Landing-Page/public/index.html"), "utf8");
+const css = fs.readFileSync(path.join(root, "01_Landing-Page/public/style.css"), "utf8");
+const script = fs.readFileSync(path.join(root, "01_Landing-Page/public/script.js"), "utf8");
+const must = (condition, message) => { if (!condition) throw new Error(message); };
+
+must(html.includes("portal-hero"), "Landing page should use CPB-era portal hero.");
+must(html.includes("portal-market-panel"), "Landing page should use modern market panel wrapper.");
+must(html.includes("portal-system-panel"), "Landing page should use modern system panel wrapper.");
+must(html.includes("portal-modules-grid"), "Landing page should use modern module grid.");
+must(html.includes('id="marketPrice"'), "Market price binding must be preserved.");
+must(html.includes('id="quickAccessTabs"'), "Quick Access binding must be preserved.");
+must(html.includes('id="modulesList"'), "Module explanation binding must be preserved.");
+must(html.includes("data-token-contract"), "Token contract binding must be preserved.");
+must(css.includes("CHAPTER 22C — CPB-ERA LANDING PAGE MODERNIZATION"), "Modern landing style layer missing.");
+must(css.includes("--portal-lime:#eaff4f"), "CPB lime token missing.");
+must(css.includes("--portal-violet:#b48cff"), "CPB violet token missing.");
+must(css.includes("@media(max-width:600px)"), "Mobile modernization rules missing.");
+must(script.includes("renderModules()"), "Landing module runtime should remain intact.");
+must(script.includes("refreshMarketWidget()"), "Landing live-market runtime should remain intact.");
+console.log("Chapter 22C landing modernization regression: PASS");

@@ -1,0 +1,2194 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Share+Tech+Mono&display=swap");
+
+:root{
+  --bg:#020806;
+  --panel:#03100b;
+  --panel-2:#04140d;
+  --green:#39ff14;
+  --orange:#ff6a00;
+  --cyan:#65dfff;
+  --text:#e8fff0;
+  --muted:#789184;
+  --field-label:#8fbda0;
+  --placeholder:#42584b;
+  --line:#194b2d;
+  --line-bright:#28633e;
+  --danger:#ff5a67;
+  font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  color:var(--text);
+  background:var(--bg)
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg);overflow-x:hidden}
+body{position:relative;min-height:100vh;margin:0;background:#000;font-size:15px;line-height:1.48}
+body::before{content:none}
+body::after{content:none}
+button,input,textarea{font:inherit}
+.shell{position:relative;z-index:1;width:min(1240px,calc(100% - 24px));margin:12px auto 28px}
+.terminal-window{border:1px solid var(--line);background:#000;box-shadow:0 0 55px rgba(57,255,20,.05),0 24px 80px rgba(0,0,0,.55)}
+.window-bar{min-height:38px;display:grid;grid-template-columns:170px 1fr 170px;align-items:center;padding:0 12px;border-bottom:1px solid var(--line);background:#04110b;color:var(--muted);font-size:.72rem;letter-spacing:.04em}
+.window-dots{display:flex;gap:7px}.window-dots span{width:9px;height:9px;border:1px solid var(--line-bright);border-radius:50%}.window-dots span:first-child{border-color:var(--danger)}.window-dots span:nth-child(2){border-color:var(--orange)}.window-dots span:last-child{border-color:var(--green)}
+.window-title{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.window-state{text-align:right;color:var(--green)}
+.hero{position:relative;padding:22px 28px 18px;border-bottom:1px solid var(--line);overflow:hidden}
+.hero::after{content:none}
+.hero-kicker{color:var(--muted);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem}.prompt-mark{color:var(--green)}
+h1{position:relative;z-index:1;margin:6px auto 1px;color:var(--orange);font-family:"Share Tech Mono","IBM Plex Mono","Lucida Console","Courier New",monospace;font-size:clamp(1.35rem,2.45vw,2.15rem);font-weight:400;line-height:1;letter-spacing:.075em;text-align:center;text-shadow:0 0 20px rgba(255,106,0,.14)}
+.tagline{margin:6px 0 0;color:#fff;font-family:"IBM Plex Mono",ui-monospace,monospace;letter-spacing:.18em;font-size:clamp(.68rem,1.25vw,.82rem);text-align:center}.tagline span{color:var(--green)}
+.boot-log{position:relative;z-index:1;margin-top:10px;padding-top:8px;border-top:1px solid rgba(25,75,45,.72);color:var(--muted);font-size:.7rem;line-height:1.52}.ok{color:var(--green)}.wait{color:var(--orange)}
+#builder{padding:0 24px 24px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+.form-stack{min-width:0}.panel{margin-top:18px;padding:19px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(3,16,11,.96),rgba(2,8,6,.96));box-shadow:inset 0 1px rgba(255,255,255,.015)}
+.section-heading{display:grid;grid-template-columns:38px auto 1fr;gap:10px;align-items:center;margin-bottom:17px;padding-bottom:11px;border-bottom:1px solid rgba(25,75,45,.72)}
+.section-heading>span,.section-heading h2{color:var(--green);font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:1.08rem;font-weight:800;letter-spacing:.07em;line-height:1}.section-heading h2{margin:0}.section-heading small{justify-self:end;color:var(--muted);font-size:.64rem;letter-spacing:.07em}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.span-2{grid-column:span 2}.wide{margin-top:13px}
+label{display:grid;gap:7px;min-width:0;color:var(--field-label);font-size:.76rem;letter-spacing:.025em}label>span:first-child{display:flex;align-items:center;gap:6px}label>span:first-child::before{content:">";color:var(--green)}
+input,textarea{width:100%;border:1px solid var(--line-bright);outline:none;background:#020806;color:var(--text);padding:11px 12px;border-radius:0;caret-color:var(--green);transition:border-color .15s,box-shadow .15s}
+select{border:1px solid var(--line-bright);outline:none;background:#020806;color:var(--text);border-radius:0;font:inherit}select option{background:#020806;color:#f4fff7}
+input::placeholder,textarea::placeholder{color:var(--placeholder);opacity:1}input:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 1px rgba(57,255,20,.08),0 0 16px rgba(57,255,20,.06)}
+input:invalid:not(:placeholder-shown){border-color:var(--danger)}textarea{min-height:78px;resize:vertical}
+.color-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.color-field{display:grid;grid-template-columns:48px 1fr;border:1px solid var(--line-bright);background:#020806}.color-field input{height:44px;padding:4px;border:0;border-right:1px solid var(--line-bright);cursor:pointer}.color-field code{display:grid;place-items:center;color:var(--cyan);font-size:.73rem}
+.upload{margin-top:14px;padding:14px;border:1px dashed var(--line-bright);background:#020806}
+.upload-label{display:block;margin-bottom:8px}
+.upload-native{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.upload-control{display:flex;align-items:center;gap:12px;min-height:36px;padding:8px 10px;border:1px solid var(--line);background:#010503;cursor:pointer;transition:border-color .15s ease,box-shadow .15s ease}
+.upload-control:hover,.upload-control:focus-within{border-color:var(--green);box-shadow:0 0 12px rgba(57,255,20,.12)}
+.upload-control strong{color:var(--green);font-size:.72rem;letter-spacing:.08em;white-space:nowrap}
+.upload-control span{color:#8aa394;font-size:.72rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload em{display:block;margin-top:7px;color:#4f6b59;font-size:.67rem;font-style:normal}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.checks label{display:flex;align-items:flex-start;gap:10px;padding:13px;border:1px solid var(--line);background:#020806;cursor:pointer}.checks label:hover{border-color:var(--line-bright)}.checks input{appearance:none;width:17px;height:17px;flex:0 0 17px;margin:1px 0 0;padding:0;border:1px solid var(--line-bright);display:grid;place-items:center}.checks input:checked{border-color:var(--green);background:rgba(57,255,20,.08)}.checks input:checked::after{content:"✓";color:var(--green);font-weight:700;line-height:1}.checks span{display:grid;gap:3px}.checks strong{color:var(--cyan);font-size:.75rem}.checks small{color:var(--muted);font-size:.65rem;line-height:1.35}
+.console-panel{position:sticky;top:12px;margin-top:18px;border:1px solid var(--line);background:#010503;min-height:410px;box-shadow:0 0 30px rgba(57,255,20,.04)}
+.console-heading{font-family:"IBM Plex Mono",ui-monospace,monospace;display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line);background:#04110b;color:var(--orange);font-size:.94rem;font-weight:900;letter-spacing:.08em}.console-heading>span{font-weight:900}.console-heading em{color:var(--muted);font-style:normal;font-size:.68rem;font-weight:700}.console-heading b{color:var(--orange);font-size:.72rem;font-weight:800}.console-heading b.ready{color:var(--green)}
+#preview{min-height:325px;margin:0;padding:16px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted);font:inherit;font-size:.74rem;line-height:1.72}
+.console-status-line{display:flex;gap:8px;align-items:flex-start;padding:12px;border-top:1px solid var(--line);color:var(--green);font-size:.72rem;line-height:1.45}.console-status-line>span{flex:0 0 auto;white-space:nowrap}.console-status-line small{min-width:0;color:var(--muted);font-size:.68rem;line-height:1.45}
+.action-bar{display:grid;grid-template-columns:1fr minmax(300px,420px);align-items:center;gap:16px;margin-top:18px;padding:15px;border:1px solid var(--line);background:#03100b}.action-copy{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.73rem}.action-copy p{margin:0}.action-copy code{color:var(--cyan)}
+button{border:1px solid var(--green);background:var(--green);color:#020806;padding:15px 18px;font-weight:800;letter-spacing:.06em;cursor:pointer;box-shadow:0 0 22px rgba(57,255,20,.12);transition:transform .12s,box-shadow .12s,opacity .12s}button:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(57,255,20,.22)}button:active{transform:translateY(0)}button:disabled{opacity:.42;cursor:not-allowed;transform:none}button span{margin-right:8px}
+#status{min-height:1.5em;margin:12px 2px 0;color:var(--orange);font-size:.78rem}
+footer{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 4px 0;color:#52675a;text-align:center;font-size:.64rem;letter-spacing:.05em}
+footer a{color:var(--green);text-decoration:none;border-bottom:1px dotted rgba(57,255,20,.35)}
+footer a:hover{color:#b5ff9f;border-bottom-color:rgba(181,255,159,.6)}
+
+/* Chapter 14C final text hierarchy: section/status neon, field labels medium green, real values white, hints/placeholders dim. */
+input:not([type="checkbox"]):not([type="color"]),textarea,select{color:#f4fff7}
+input:not([type="checkbox"]):not([type="color"])::placeholder,textarea::placeholder{color:var(--placeholder);opacity:1}
+.field-help,.connected-note,.section-heading small,.checks small{color:var(--muted)}
+
+.auto-save-toast{position:fixed;right:22px;bottom:22px;z-index:60;max-width:min(430px,calc(100vw - 44px));padding:12px 14px;border:1px solid var(--green);background:rgba(2,8,6,.98);color:#f4fff7;box-shadow:0 0 28px rgba(57,255,20,.18);font-size:.75rem;line-height:1.45;letter-spacing:.025em;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .16s ease,transform .16s ease}
+.auto-save-toast.show{opacity:1;transform:translateY(0)}
+.auto-save-toast strong{color:var(--green)}
+@media(max-width:700px){.auto-save-toast{right:12px;bottom:12px;max-width:calc(100vw - 24px)}}
+
+@media(max-width:980px){.workspace{grid-template-columns:1fr}.console-panel{position:static;min-height:0}#preview{min-height:230px}.window-bar{grid-template-columns:100px 1fr 100px}.window-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media(max-width:680px){body{font-size:14px}.shell{width:min(100% - 8px,1240px);margin:4px auto 16px}.window-bar{grid-template-columns:60px 1fr}.window-state{display:none}.hero{padding:12px 15px 11px}.hero::after{display:none}#builder{padding:0 10px 12px}.panel{padding:14px}.grid,.checks,.color-grid{grid-template-columns:1fr}.span-2{grid-column:auto}.section-heading{grid-template-columns:32px 1fr}.section-heading small{display:none}.action-bar{grid-template-columns:1fr}.action-copy{align-items:flex-start}.window-title{text-align:right}.tagline{letter-spacing:.09em}}
+
+
+.action-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}.preview-button{background:#04110b;color:var(--green);box-shadow:none}.preview-button:hover{background:#07180f;box-shadow:0 0 22px rgba(57,255,20,.12)}
+@media(max-width:760px){.action-buttons{grid-template-columns:1fr}}
+
+/* Compact final actions: prominent without overpowering the builder. */
+.action-buttons{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:9px;
+}
+.action-buttons button{
+  width:auto;
+  min-width:190px;
+  padding:10px 13px;
+  font-size:.70rem;
+  line-height:1.15;
+  letter-spacing:.055em;
+  box-shadow:0 0 14px rgba(57,255,20,.10);
+}
+.action-buttons button span{margin-right:6px}
+@media(max-width:760px){
+  .action-buttons{display:grid;grid-template-columns:1fr 1fr}
+  .action-buttons button{min-width:0;width:100%}
+}
+@media(max-width:520px){.action-buttons{grid-template-columns:1fr}}
+
+
+/* Bright white builder identity treatment */
+.window-title{
+  color:#ffffff;
+  font-weight:700;
+  text-shadow:0 0 6px rgba(255,255,255,.55),0 0 14px rgba(255,255,255,.18);
+}
+footer,footer span{
+  color:#ffffff;
+  font-weight:600;
+  text-shadow:0 0 6px rgba(255,255,255,.45),0 0 12px rgba(255,255,255,.14);
+}
+footer a{
+  color:#ffffff;
+  font-weight:800;
+  border-bottom-color:rgba(255,255,255,.65);
+  text-shadow:0 0 7px rgba(255,255,255,.58),0 0 14px rgba(57,255,20,.12);
+}
+footer a:hover{
+  color:#ffffff;
+  border-bottom-color:#ffffff;
+  text-shadow:0 0 9px rgba(255,255,255,.8),0 0 16px rgba(57,255,20,.18);
+}
+
+
+/* Two-line builder signature */
+.builder-footer{
+  display:grid;
+  justify-items:center;
+  gap:4px;
+  padding:16px 4px 2px;
+  color:#fff;
+  text-align:center;
+}
+.builder-footer .footer-title{
+  color:#fff;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-shadow:0 0 7px rgba(255,255,255,.62),0 0 16px rgba(255,255,255,.16);
+}
+.builder-footer .footer-version{
+  color:#7f9286;
+  font-size:.60rem;
+  font-weight:600;
+  letter-spacing:.08em;
+  margin-top:-1px;
+  margin-bottom:2px;
+}
+.builder-footer .footer-credit{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  color:#fff;
+  font-size:.70rem;
+  font-weight:600;
+  letter-spacing:.035em;
+  text-shadow:0 0 6px rgba(255,255,255,.46);
+}
+.builder-footer .footer-dot{color:#fff;font-weight:800}
+.builder-footer a{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#6FD3FF;
+  text-decoration:none;
+  border-bottom:1px dotted rgba(111,211,255,.55);
+}
+.builder-footer .x-logo{
+  width:12px;
+  height:12px;
+  fill:currentColor;
+  filter:drop-shadow(0 0 4px rgba(111,211,255,.55));
+}
+.builder-footer a:hover{
+  color:#9DE3FF;
+  border-bottom-color:#9DE3FF;
+  text-shadow:0 0 9px rgba(111,211,255,.85);
+}
+
+
+/* Chapter 8: local project workspace */
+.project-toolbar{display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:14px;align-items:center;margin:18px 24px 0;padding:12px 14px;border:1px solid var(--line);background:#020806;box-shadow:inset 0 1px rgba(255,255,255,.015)}
+.project-current{display:flex;align-items:center;gap:11px;min-width:0}.workspace-label{color:var(--muted);font-size:.66rem;letter-spacing:.08em}.project-current strong{color:#fff;font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.project-current b{padding:3px 7px;border:1px solid var(--orange);color:var(--orange);font-size:.61rem;letter-spacing:.08em}.project-current b.ready{border-color:var(--green);color:var(--green)}
+.project-controls{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}.project-controls select{min-width:180px;height:31px;border:1px solid var(--line-bright);background:#010503;color:var(--text);padding:0 8px;font:inherit;font-size:.66rem;outline:none}.project-controls select:focus{border-color:var(--green)}.project-controls button{min-width:0;padding:8px 9px;background:#04110b;color:var(--green);font-size:.62rem;line-height:1;box-shadow:none}.project-controls button:hover{background:#07180f;box-shadow:0 0 14px rgba(57,255,20,.10)}.project-controls .danger-button{border-color:var(--danger);color:var(--danger)}
+
+/* Chapter 14C final text hierarchy: section/status neon, field labels medium green, real values white, hints/placeholders dim. */
+input:not([type="checkbox"]):not([type="color"]),textarea,select{color:#f4fff7}
+input:not([type="checkbox"]):not([type="color"])::placeholder,textarea::placeholder{color:var(--placeholder);opacity:1}
+.field-help,.connected-note,.section-heading small,.checks small{color:var(--muted)}
+
+.auto-save-toast{position:fixed;right:22px;bottom:22px;z-index:60;max-width:min(430px,calc(100vw - 44px));padding:12px 14px;border:1px solid var(--green);background:rgba(2,8,6,.98);color:#f4fff7;box-shadow:0 0 28px rgba(57,255,20,.18);font-size:.75rem;line-height:1.45;letter-spacing:.025em;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .16s ease,transform .16s ease}
+.auto-save-toast.show{opacity:1;transform:translateY(0)}
+.auto-save-toast strong{color:var(--green)}
+@media(max-width:700px){.auto-save-toast{right:12px;bottom:12px;max-width:calc(100vw - 24px)}}
+
+@media(max-width:980px){.project-toolbar{grid-template-columns:1fr}.project-controls{justify-content:flex-start}}
+@media(max-width:680px){.project-toolbar{margin:12px 10px 0;padding:10px}.project-current{flex-wrap:wrap}.project-controls{display:grid;grid-template-columns:repeat(3,1fr);width:100%}.project-controls select{grid-column:1/-1;width:100%}.project-controls button{width:100%}}
+
+/* Chapter 11.2: EVM contract guidance and inline validation */
+.evm-badge{display:inline-block;margin-left:.45rem;padding:.08rem .35rem;border:1px solid var(--green);color:var(--green);font-size:.62rem;letter-spacing:.08em;vertical-align:1px}
+.field-help{display:block;margin-top:.38rem;color:#789184;font-size:.68rem;line-height:1.45}
+.contract-check{display:block;margin-top:.45rem;padding:.55rem .65rem;border:1px solid rgba(57,255,20,.22);background:rgba(0,0,0,.28);color:#789184;font-size:.72rem;line-height:1.45;white-space:normal}
+.contract-check.pass{color:var(--green);border-color:rgba(57,255,20,.55)}
+.contract-check.warn{color:var(--yellow);border-color:rgba(255,106,0,.55)}
+.contract-check.fail{color:#ff5a67;border-color:rgba(255,90,103,.6)}
+
+
+/* Chapter 12: deployment assistant and release provenance */
+.build-complete{width:min(760px,calc(100% - 24px));padding:0;border:1px solid var(--green);background:#020806;color:var(--text);box-shadow:0 0 80px rgba(57,255,20,.18)}
+.build-complete::backdrop{background:rgba(0,0,0,.82);backdrop-filter:blur(3px)}
+.build-modal{padding:0}.build-modal-head{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px solid var(--line);background:#04110b;color:var(--green);font-weight:800;letter-spacing:.09em}.build-modal-head button{padding:2px 9px;border-color:var(--danger);background:transparent;color:var(--danger);box-shadow:none;font-size:1.2rem}
+.build-summary{padding:18px;border-bottom:1px solid var(--line)}.build-summary strong{display:block;color:var(--orange);font-size:1.18rem;letter-spacing:.08em}.build-summary p{margin:6px 0;color:var(--muted)}.built-modules{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.built-modules span{padding:4px 7px;border:1px solid var(--line-bright);color:var(--cyan);font-size:.68rem}
+.deployment-readiness{padding:14px 18px;color:var(--green);font-size:.74rem;line-height:1.7;border-bottom:1px solid var(--line)}
+.build-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 18px}.build-actions button{padding:11px;background:#04110b;color:var(--green);font-size:.7rem;box-shadow:none}.build-actions button:hover{background:#07180f}
+#deployment-command-preview{margin:0 18px 14px;padding:12px;min-height:92px;border:1px solid var(--line);background:#010503;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:.7rem;line-height:1.55}.build-note{margin:0;padding:0 18px 18px;color:var(--muted);font-size:.66rem}
+@media(max-width:620px){.build-actions{grid-template-columns:1fr}}
+
+
+/* Chapter 13A: deployment dashboard and guided public acceptance */
+.deployment-dashboard{margin:14px 24px 0;border:1px solid var(--line);background:#020806;padding:14px}.deployment-dashboard-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.deployment-dashboard-head>div{display:flex;align-items:center;gap:10px}.deployment-dashboard-head span{color:var(--orange);font-size:.64rem;letter-spacing:.1em}.deployment-dashboard-head strong{color:#fff;font-size:.8rem;letter-spacing:.08em}.deployment-dashboard-head b{padding:4px 8px;border:1px solid var(--orange);color:var(--orange);font-size:.62rem;letter-spacing:.08em}.deployment-dashboard-head b.live{border-color:var(--green);color:var(--green)}.deployment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.deployment-grid label span{display:block;color:var(--field-label);font-size:.66rem;margin-bottom:5px}.deployment-grid input{width:100%;border:1px solid var(--line-bright);background:#010503;color:var(--text);padding:9px;font:inherit;font-size:.7rem}.deployment-dashboard-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.deployment-dashboard-actions button{min-width:0;padding:9px 11px;background:#04110b;color:var(--green);font-size:.62rem;box-shadow:none}.deployment-dashboard-actions button:hover{background:#07180f}.deployment-dashboard-actions button:disabled{opacity:.45}.deployment-result,#deployment-result{margin:11px 0 0;min-height:62px;padding:10px;border:1px solid var(--line);background:#010503;color:var(--muted);white-space:pre-wrap;font:inherit;font-size:.68rem;line-height:1.55}.deployment-result.pass,#deployment-result.pass{color:var(--green);border-color:rgba(57,255,20,.5)}.deployment-result.fail,#deployment-result.fail{color:#ff5a67;border-color:rgba(255,90,103,.55)}
+@media(max-width:760px){.deployment-dashboard,.connected-dashboard{margin:12px 10px 0}.deployment-grid{grid-template-columns:1fr}.deployment-dashboard-head{align-items:flex-start}.deployment-dashboard-head>div{display:grid;gap:4px}}
+
+/* Chapter 13B connected deployment prototype */
+.connected-dashboard{margin:14px 24px 0;border:1px solid color-mix(in srgb,var(--accent,#ff6a00) 62%,transparent);background:rgba(0,0,0,.25);padding:14px}.connected-note{margin:8px 0 14px;color:var(--muted,#708a7b);font-size:12px}.connected-options{display:flex;gap:20px;flex-wrap:wrap;margin:10px 0}.connected-options label{display:flex;align-items:center;gap:8px;color:var(--green,#39ff14);font-size:12px}.connected-options input{accent-color:var(--green,#39ff14)}#integration-state.live{color:var(--green,#39ff14);border-color:var(--green,#39ff14)}#connected-result{min-height:92px}
+
+
+/* Chapter 14A: secure release readiness */
+.release-control{margin:14px 24px 0;border:1px solid var(--line-bright);background:rgba(0,0,0,.28);padding:14px}.release-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 14px;margin:10px 0 2px}.release-checks>div{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 9px;border:1px solid var(--line);background:#010503;font-size:.68rem}.release-checks span{color:var(--muted)}.release-checks b{color:var(--orange);font-size:.64rem;letter-spacing:.08em}.release-checks b.pass{color:var(--green)}.release-checks b.fail{color:#ff5a67}#release-state.live{color:var(--green);border-color:var(--green)}#release-state.locked{color:var(--orange);border-color:var(--orange)}#release-result{min-height:72px}@media(max-width:760px){.release-control{margin:12px 10px 0}.release-checks{grid-template-columns:1fr}}
+
+/* Chapter 14B — protected release authorization */
+.release-confirmation{margin:10px 0;border:1px solid var(--accent,#ff6a00);padding:10px;display:grid;gap:8px}
+.release-confirmation[hidden]{display:none}
+.release-confirmation label{display:grid;gap:5px}
+.release-confirmation code{display:block;color:var(--accent,#ff6a00);font-weight:700;word-break:break-all}
+.release-confirmation small{color:#7f9387;line-height:1.45}
+.connected-private-option>span:last-child{display:flex;gap:8px;align-items:center;color:#b8d4c2}
+
+/* Chapter 14B finalization — confirmation feedback */
+.release-alert{position:fixed;right:18px;bottom:18px;z-index:1000;max-width:min(440px,calc(100vw - 36px));padding:12px 14px;border:1px solid var(--accent,#ff6a00);background:#07100c;color:#dce8df;box-shadow:0 8px 28px rgba(0,0,0,.45);font-weight:700}
+.release-alert[hidden]{display:none}
+.release-alert.fail{border-color:#ff4d4d;color:#ff9b9b}
+.release-alert.pass{border-color:#39ff14;color:#8cff78}
+#prepare-release:disabled,#connected-deploy:disabled{cursor:not-allowed}
+
+.confirmation-instruction{margin:0 0 8px;color:var(--green);font-size:.76rem;font-weight:800}.confirmation-instruction code{color:var(--orange);font-size:.9rem;font-weight:900}.release-confirmation label{display:grid;gap:6px}
+
+.confirmation-instruction code{display:inline;word-break:break-word}
+
+
+/* Chapter 14C accepted cleanup: consistent real-value contrast, connected controls, release progress and semantic console output. */
+.connected-dashboard input:not([type="checkbox"]),
+.connected-dashboard select,
+.deployment-dashboard input{
+  color:#f4fff7;
+  -webkit-text-fill-color:#f4fff7;
+  opacity:1;
+}
+.connected-dashboard input:not([type="checkbox"]):disabled,
+.connected-dashboard input:not([type="checkbox"])[readonly],
+.deployment-dashboard input:disabled,
+.deployment-dashboard input[readonly]{
+  color:#f4fff7;
+  -webkit-text-fill-color:#f4fff7;
+  background:#020806;
+  opacity:1;
+}
+.connected-dashboard select{width:100%;border:1px solid var(--line-bright);outline:none;background:#020806;color:#f4fff7;padding:9px 10px;border-radius:0}
+.connected-dashboard select:disabled{
+  color:#b8c9be;
+  -webkit-text-fill-color:#b8c9be;
+  background:#07100b;
+  border-color:#244936;
+  opacity:1;
+  cursor:not-allowed;
+}
+.connected-private-option{align-content:start}
+.connected-private-option>span:last-child{display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;width:max-content;max-width:100%;color:var(--field-label);white-space:nowrap}
+.connected-private-option input[type="checkbox"]{appearance:none;width:16px;height:16px;flex:0 0 16px;margin:0;padding:0;border:1px solid var(--line-bright);background:#020806;display:grid;place-items:center;cursor:pointer}
+.connected-private-option input[type="checkbox"]:checked{border-color:var(--green);background:rgba(57,255,20,.08)}
+.connected-private-option input[type="checkbox"]:checked::after{content:"✓";color:var(--green);font-weight:800;line-height:1}
+#connected-result.release-progress{color:#dfffe8;border-color:rgba(57,255,20,.34)}
+.release-line{display:block;min-height:1.45em}
+.release-line.release-start{color:var(--green);font-weight:800;margin-bottom:.3em}
+.release-key{color:var(--green);font-weight:700}
+.release-value{color:#f4fff7}
+.release-value.action,.release-value.commit,.release-value.status-pending{color:var(--orange);font-weight:700}
+.release-value.url{color:var(--cyan)}
+.release-value.status-success{color:var(--green);font-weight:800}
+.release-value.status-fail{color:var(--danger);font-weight:800}
+.deployment-toast{position:fixed;right:22px;bottom:22px;z-index:70;display:grid;gap:5px;max-width:min(480px,calc(100vw - 44px));padding:13px 15px;border:1px solid var(--orange);background:rgba(2,8,6,.985);color:#f4fff7;box-shadow:0 0 32px rgba(255,106,0,.16);font-size:.74rem;line-height:1.45;letter-spacing:.02em}
+.deployment-toast[hidden]{display:none}
+.deployment-toast strong{color:var(--orange);font-size:.72rem;letter-spacing:.07em}
+.deployment-toast.success{border-color:var(--green);box-shadow:0 0 32px rgba(57,255,20,.16)}
+.deployment-toast.success strong{color:var(--green)}
+.deployment-toast.fail{border-color:var(--danger);box-shadow:0 0 32px rgba(255,90,103,.16)}
+.deployment-toast.fail strong{color:var(--danger)}
+@media(max-width:700px){.deployment-toast{right:12px;bottom:12px;max-width:calc(100vw - 24px)}}
+
+
+/* Chapter 14 closure — deployment completion requires explicit acknowledgement. */
+.deployment-success-dialog{width:min(640px,calc(100% - 28px));padding:0;border:1px solid var(--green);background:#020806;color:#f4fff7;box-shadow:0 0 70px rgba(57,255,20,.2)}
+.deployment-success-dialog::backdrop{background:rgba(0,0,0,.84);backdrop-filter:blur(3px)}
+.deployment-success-panel{display:grid}
+.deployment-success-panel header{display:grid;gap:5px;padding:15px 17px;border-bottom:1px solid var(--line);background:#04110b}
+.deployment-success-panel header span{color:var(--green);font-size:.66rem;font-weight:800;letter-spacing:.1em}
+.deployment-success-panel header strong{color:#f4fff7;font-size:1rem;letter-spacing:.05em}
+.deployment-success-body{display:grid;gap:9px;padding:18px 17px}
+.deployment-success-body p{margin:0;color:#d7e7dc;line-height:1.55}
+.deployment-success-body label{margin-top:4px;color:var(--field-label);font-size:.68rem}
+.deployment-success-body a{padding:10px;border:1px solid var(--line-bright);background:#010503;color:var(--cyan);overflow-wrap:anywhere;text-decoration:none}
+.deployment-success-body a:hover{text-decoration:underline}
+.deployment-success-note{color:var(--muted)!important;font-size:.7rem}
+.deployment-success-actions{display:flex;justify-content:flex-end;gap:8px;padding:13px 17px;border-top:1px solid var(--line)}
+.deployment-success-actions button{min-width:132px;background:#04110b;color:var(--green);box-shadow:none}
+.deployment-success-actions button:first-child{border-color:var(--green);background:rgba(57,255,20,.08)}
+.deployment-success-actions button:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:560px){.deployment-success-actions{display:grid;grid-template-columns:1fr}.deployment-success-actions button{width:100%}}
+
+
+/* Chapter 15A — NFT mint schedule safety */
+.nft-mint-schedule{border:1px solid var(--line-bright);background:rgba(0,0,0,.2);padding:11px}.nft-mint-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:9px}.nft-mint-heading>span{color:var(--field-label);font-size:.68rem}.nft-mint-heading small{color:var(--muted);font-size:.64rem}.nft-mint-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(180px,1.4fr) auto;gap:8px;align-items:end}.nft-mint-grid label{min-width:0}.nft-mint-grid input{width:100%}.timezone-button{min-height:38px;padding:8px 10px;background:#04110b;color:var(--cyan);border-color:var(--cyan);box-shadow:none;font-size:.62rem;white-space:nowrap}.timezone-button:hover{background:#07180f}.nft-mint-schedule .contract-check{margin-bottom:0}.nft-mint-confirm{width:min(680px,calc(100% - 24px));padding:0;border:1px solid var(--orange);background:#020806;color:var(--text);box-shadow:0 0 80px rgba(255,106,0,.18)}.nft-mint-confirm::backdrop{background:rgba(0,0,0,.86);backdrop-filter:blur(3px)}.nft-mint-confirm-panel{padding:0}.nft-mint-confirm-head{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px solid var(--orange);background:#0a0803;color:var(--orange);font-weight:800;letter-spacing:.09em}.nft-mint-confirm-head button{padding:2px 9px;border-color:var(--danger);background:transparent;color:var(--danger);box-shadow:none;font-size:1.2rem}.nft-mint-confirm-body{padding:18px}.nft-mint-confirm-body>strong{display:block;color:#fff;font-size:1rem;letter-spacing:.08em}.nft-mint-confirm-body>p{color:var(--muted);font-size:.72rem;line-height:1.55}.nft-time-review{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 12px;margin:15px 0;padding:12px;border:1px solid var(--line-bright);background:#010503;font-size:.72rem}.nft-time-review span{color:var(--muted)}.nft-time-review b{color:var(--cyan);overflow-wrap:anywhere}.nft-time-review b.pass{color:var(--green)}.nft-time-review b.warn{color:var(--orange)}.nft-time-review b.fail{color:var(--danger)}.nft-mint-confirm-note{margin-bottom:0}.nft-mint-confirm-actions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;border-top:1px solid var(--line)}.nft-mint-confirm-actions button{padding:10px 12px;background:#04110b;box-shadow:none}.nft-mint-confirm-actions #nft-mint-edit{color:var(--cyan);border-color:var(--cyan)}.nft-mint-confirm-actions #nft-mint-proceed{color:var(--green);border-color:var(--green)}
+@media(max-width:780px){.nft-mint-grid{grid-template-columns:1fr 1fr}.nft-timezone-field{grid-column:1/-1}.timezone-button{grid-column:1/-1}.nft-mint-heading{display:grid;gap:4px}.nft-time-review{grid-template-columns:1fr}.nft-mint-confirm-actions{display:grid;grid-template-columns:1fr}}
+
+/* Chapter 16 — dual NFT mint structure editor */
+.nft-mint-mode-row{display:grid;grid-template-columns:minmax(220px,360px);gap:8px;margin-bottom:10px}.nft-mint-mode-row select{width:100%}.nft-phase-help{margin:2px 0 9px;color:var(--muted);font-size:.66rem;line-height:1.5}.nft-phase-list{display:grid;gap:10px}.nft-phase-card{border:1px solid var(--line-bright);background:#010503;padding:10px;min-width:0}.nft-phase-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.nft-phase-card-head strong{color:var(--orange);font-size:.7rem;letter-spacing:.08em}.nft-phase-remove{padding:5px 8px;border-color:var(--danger);color:var(--danger);background:transparent;box-shadow:none;font-size:.6rem}.nft-phase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nft-phase-grid .phase-wide{grid-column:1/-1}.nft-phase-grid .phase-timezone{grid-column:1/-1}.phase-add-button{margin-top:9px;padding:8px 10px;background:#04110b;color:var(--cyan);border-color:var(--cyan);box-shadow:none;font-size:.62rem}.phase-add-button:disabled{opacity:.45;cursor:not-allowed}.nft-phase-card input{width:100%;min-width:0}.nft-phase-card input[type="date"],.nft-phase-card input[type="time"]{max-width:100%}
+@media(max-width:780px){.nft-mint-mode-row{grid-template-columns:1fr}.nft-phase-grid{grid-template-columns:1fr}.nft-phase-grid .phase-wide,.nft-phase-grid .phase-timezone{grid-column:auto}}
+
+/* Chapter 16 NFT acceptance: readable native select options and uploaded-brand preview. */
+#nft-mint-mode{width:100%;min-height:40px;padding:9px 34px 9px 11px;border:1px solid var(--line-bright);background:#020806;color:#f4fff7;-webkit-text-fill-color:#f4fff7;color-scheme:dark;cursor:pointer}#nft-mint-mode:hover,#nft-mint-mode:focus{border-color:var(--green);box-shadow:0 0 0 1px rgba(57,255,20,.08),0 0 16px rgba(57,255,20,.06)}#nft-mint-mode:invalid{color:var(--placeholder)!important;-webkit-text-fill-color:var(--placeholder)!important}#nft-mint-mode option{background:#020806!important;color:#f4fff7!important;-webkit-text-fill-color:#f4fff7!important}#nft-mint-mode option[value=""]{color:#789083!important}
+.builder-brand-preview{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 12px;border-bottom:1px solid var(--line);background:#010503}
+.builder-brand-preview[hidden]{display:none}
+.builder-brand-preview span{color:var(--orange);font-size:.64rem;letter-spacing:.09em}
+.builder-brand-preview img{display:block;width:auto;height:auto;max-width:96px;max-height:72px;object-fit:contain;background:transparent;border:0;box-shadow:none;filter:none}
+
+
+/* Chapter 17 — User-Friendly Simplification foundation. */
+.builder-mode-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:14px 24px 0;padding:12px 14px;border:1px solid var(--line);background:#020806}
+.builder-mode-copy{display:grid;grid-template-columns:auto auto;column-gap:10px;row-gap:3px;align-items:center}.builder-mode-copy>span{color:var(--orange);font-size:.62rem;letter-spacing:.1em}.builder-mode-copy>strong{color:#fff;font-size:.75rem;letter-spacing:.08em}.builder-mode-copy>small{grid-column:1/-1;color:var(--muted);font-size:.66rem;line-height:1.45}
+.builder-mode-switch{display:grid;grid-template-columns:1fr 1fr;min-width:246px}.builder-mode-switch button{min-width:0;padding:9px 12px;border:1px solid var(--line-bright);background:#010503;color:var(--muted);box-shadow:none;font-size:.62rem}.builder-mode-switch button+button{border-left:0}.builder-mode-switch button.active{color:var(--green);border-color:var(--green);background:#04110b}.builder-mode-switch button+button.active{border-left:1px solid var(--green)}
+body.guided-mode .advanced-only,body.guided-mode .advanced-field,body.guided-mode [data-advanced-control]{display:none!important}
+.nft-config[hidden]{display:none!important}
+.guided-helper{margin:0 0 12px;padding:9px 11px;border-left:2px solid var(--green);background:rgba(57,255,20,.035);color:var(--muted);font-size:.68rem;line-height:1.5}.guided-helper strong{color:#fff}
+@media(max-width:760px){.builder-mode-bar{margin:12px 10px 0;align-items:stretch;flex-direction:column}.builder-mode-switch{min-width:0;width:100%}}
+
+
+/* Chapter 17B — Guided Workflow Simplification & Readability preview. */
+.guided-overview{display:none}
+.guided-step-note,.guided-color-toggle{display:none}
+body.guided-mode .guided-overview{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:12px 24px 2px}
+body.guided-mode .guided-overview a{display:flex;align-items:center;gap:9px;min-width:0;padding:10px 11px;border:1px solid var(--line);background:#020806;color:#f4fff7;text-decoration:none}
+body.guided-mode .guided-overview a:hover{border-color:var(--green);background:#04110b}
+body.guided-mode .guided-overview b{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border:1px solid var(--green);color:var(--green);font-size:.72rem}
+body.guided-mode .guided-overview span{display:grid;gap:2px;min-width:0;color:#f4fff7;font-size:.70rem;font-weight:800;letter-spacing:.045em}
+body.guided-mode .guided-overview small{color:#91aa9b;font-size:.62rem;font-weight:400;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.guided-mode .workspace{grid-template-columns:minmax(0,1fr)}
+body.guided-mode .console-panel{display:none}
+body.guided-mode .form-stack{max-width:920px;width:100%;margin:0 auto}
+body.guided-mode .panel{padding:19px 18px;margin-bottom:13px;scroll-margin-top:16px}
+body.guided-mode .guided-step-note{display:block;margin:7px 0 15px;color:#9bb3a4;font-size:.79rem;line-height:1.55}
+body.guided-mode label{font-size:.82rem;gap:8px}
+body.guided-mode .field-help,body.guided-mode .checks small,body.guided-mode .nft-phase-help,body.guided-mode .nft-mint-heading small{color:#91aa9b;font-size:.74rem;line-height:1.5}
+body.guided-mode .section-heading small{color:#91aa9b;font-size:.70rem}
+body.guided-mode .contract-check{font-size:.76rem}
+body.guided-mode .checks strong{font-size:.80rem}
+body.guided-mode .checks label{padding:14px}
+body.guided-mode .action-copy{font-size:.78rem;color:#9bb3a4}
+body.guided-mode .guided-color-toggle{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;padding:8px 10px;border:1px solid var(--cyan);background:#020806;color:var(--cyan);box-shadow:none;font-size:.65rem}
+body.guided-mode .guided-color-toggle span{font-size:.9rem;line-height:1}
+body.guided-mode .color-grid:not(.guided-expanded){display:none}
+body.guided-mode .project-toolbar{grid-template-columns:minmax(220px,1fr) auto}
+body.guided-mode .project-controls select{min-width:210px}
+body.guided-mode .builder-mode-bar{padding:11px 14px}
+body.guided-mode .builder-mode-copy>small{font-size:.72rem;color:#91aa9b}
+body.guided-mode .action-bar{max-width:920px;margin-left:auto;margin-right:auto}
+body.guided-mode #download-again{display:none!important}
+
+/* Chapter 17A Hotfix 2 — relationship errors must stay visibly red even while focused. */
+.nft-phase-card input.phase-invalid,
+.nft-phase-card input.phase-invalid:focus{border-color:var(--danger)!important;box-shadow:0 0 0 1px rgba(255,90,103,.18),0 0 14px rgba(255,90,103,.10)!important;outline:none!important}
+.nft-phase-card.phase-invalid{border-color:rgba(255,90,103,.55)}
+
+@media(max-width:900px){body.guided-mode .guided-overview{grid-template-columns:repeat(2,minmax(0,1fr))}body.guided-mode .guided-overview a:last-child{grid-column:1/-1}}
+@media(max-width:680px){body.guided-mode .guided-overview{margin:10px 10px 0;grid-template-columns:1fr}body.guided-mode .guided-overview a:last-child{grid-column:auto}body.guided-mode .project-toolbar{grid-template-columns:1fr}body.guided-mode .guided-step-note{font-size:.76rem}}
+
+
+/* Chapter 17 DONE — final public-facing CTB chrome/background/footer polish. */
+html,body{background:#000!important}
+body::before,body::after,.hero::after{content:none!important;display:none!important}
+.terminal-window{background:#000!important}
+.hero{padding:22px 28px 18px!important}
+.builder-footer,.builder-footer .footer-title,.builder-footer .footer-version,.builder-footer .footer-credit,.builder-footer .footer-dot{color:#6FD3FF!important}
+.builder-footer .footer-title,.builder-footer .footer-version,.builder-footer .footer-credit{font-size:.72rem!important;font-weight:700!important;letter-spacing:.08em!important;line-height:1.45!important}
+.builder-footer .footer-version{margin:0!important}
+.builder-footer a{color:#6FD3FF!important;border-bottom-color:rgba(111,211,255,.55)!important}
+.builder-footer a span{color:#fff!important;text-shadow:0 0 6px rgba(255,255,255,.5)!important}
+.builder-footer .x-logo{color:#6FD3FF!important;fill:currentColor!important}
+
+/* Chapter 19 acceptance UX — explicit NFT confirmation + final-product terminal link. */
+.nft-mint-explicit-confirm{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:10px;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+#confirm-nft-mint-details{background:#04110b;color:var(--green);border-color:var(--green);box-shadow:none;white-space:nowrap}
+#nft-mint-confirmed-state{margin:0}
+.terminal-ready-link{margin:18px;padding:14px;border:1px solid var(--green);background:#010503;display:grid;gap:8px}
+.terminal-ready-link span{color:var(--orange);font-size:.68rem;letter-spacing:.1em;font-weight:800}
+.terminal-ready-link a{color:var(--cyan);text-decoration:none;overflow-wrap:anywhere;font-size:.86rem}
+.terminal-ready-link a:hover{text-decoration:underline}
+.final-product-actions{grid-template-columns:repeat(3,minmax(0,1fr))}
+.final-product-actions #open-built-terminal{color:var(--green);border-color:var(--green)}
+.final-product-actions #copy-built-terminal-link{color:var(--cyan);border-color:var(--cyan)}
+@media(max-width:780px){.nft-mint-explicit-confirm{grid-template-columns:1fr}.nft-mint-explicit-confirm button{width:100%}.final-product-actions{grid-template-columns:1fr}}
+
+/* Chapter 19 final acceptance polish — warning actions and safe NFT disable flow. */
+#nft-past-warning .nft-mint-confirm-actions,#nft-disable-warning .nft-mint-confirm-actions{gap:10px;padding:12px 18px 14px}
+#nft-past-warning-edit,#nft-disable-keep{color:var(--green)!important;border-color:var(--green)!important;background:#04110b!important}
+#nft-past-warning-keep,#nft-disable-confirm{color:var(--orange)!important;border-color:var(--orange)!important;background:#0a0803!important}
+#nft-past-warning .nft-mint-confirm-body{padding-bottom:12px}
+#nft-past-warning .nft-time-review{margin-bottom:4px}
+@media(max-width:620px){#nft-past-warning .nft-mint-confirm-actions,#nft-disable-warning .nft-mint-confirm-actions{flex-direction:column}#nft-past-warning .nft-mint-confirm-actions button,#nft-disable-warning .nft-mint-confirm-actions button{width:100%}}
+
+/* Chapter 19 final acceptance inline validation/polish */
+.inline-warning{margin:8px 0 0;max-width:100%;color:var(--danger);font-size:.68rem;line-height:1.45;overflow-wrap:anywhere}.field-error{display:block;margin-top:5px;color:var(--danger);font-size:.68rem;line-height:1.4}.field-invalid{border-color:var(--danger)!important;box-shadow:0 0 0 1px rgba(255,90,103,.18)!important}.upload{min-width:0}.upload .inline-warning[hidden]{display:none!important}@media(max-width:780px){.inline-warning,.field-error{font-size:.7rem}}
+.field-error[hidden]{display:none!important}
+
+/* Chapter 20B — integrated post-build deployment */
+.quick-deploy-state{margin:14px 0 0;padding:10px 12px;border:1px solid rgba(57,255,20,.35);background:rgba(57,255,20,.035);color:var(--green);font-size:.82rem;line-height:1.5}
+.quick-deploy-confirmation{margin:12px 0 0;padding:12px;border:1px solid rgba(255,138,0,.6);background:rgba(255,138,0,.045)}
+.quick-deploy-confirmation>div{display:grid;gap:5px;margin-bottom:10px}
+.quick-deploy-confirmation span{color:var(--muted);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+.quick-deploy-confirmation code{color:var(--orange);overflow-wrap:anywhere}
+.quick-deploy-confirmation label{display:grid;gap:5px}
+.quick-deploy-confirmation input{width:100%;border:1px solid var(--orange);background:var(--bg);color:var(--text);padding:9px 10px;font:inherit}
+.quick-deploy-confirmation small{display:block;margin-top:8px;color:var(--muted);font-size:.72rem}
+.final-product-actions #deploy-built-terminal,.final-product-actions #confirm-deploy-built-terminal{color:var(--green);border-color:var(--green)}
+.final-product-actions #download-built-terminal{color:var(--cyan);border-color:var(--cyan)}
+.final-product-actions button:disabled{opacity:.42;cursor:not-allowed}
+.terminal-ready-link a[aria-disabled="true"]{color:var(--muted);pointer-events:none;text-decoration:none}
+
+
+/* Chapter 20B FIX7 — native live-link actions and deterministic success-dialog controls. */
+.action-link,.deployment-success-open{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 10px;border:1px solid var(--line-bright);background:#04110b;color:var(--green);text-decoration:none;font:inherit;font-weight:700;letter-spacing:.04em;cursor:pointer}
+.action-link[aria-disabled="true"],.deployment-success-open[aria-disabled="true"]{opacity:.4;pointer-events:none;cursor:not-allowed}
+.final-product-actions .action-link{width:100%}
+.deployment-success-header{grid-template-columns:minmax(0,1fr) auto!important;align-items:center}
+.deployment-success-header>div{display:grid;gap:5px}
+.deployment-success-header form,.deployment-success-actions form{margin:0}
+.deployment-success-x{min-width:34px!important;width:34px;height:34px;padding:0!important;border-color:var(--danger)!important;background:transparent!important;color:var(--danger)!important;font-size:1.15rem!important;box-shadow:none!important}
+.deployment-success-actions>a,.deployment-success-actions button{min-width:132px}
+.deployment-success-actions form{display:flex}
+.deployment-success-actions form button{width:100%}
+@media(max-width:560px){.deployment-success-actions>a,.deployment-success-actions form,.deployment-success-actions button{width:100%}}
+
+
+/* Chapter 21 canonical Builder footer: same visual grammar as generated terminals. */
+.ctb-canonical-builder-footer{margin-top:18px!important;padding:14px 4px 4px!important;border-top:2px solid #ff2d2d!important;display:grid!important;justify-items:center!important;gap:4px!important;text-align:center!important}
+.ctb-canonical-builder-footer .footer-title{font-size:.72rem!important;font-weight:700!important;letter-spacing:.08em!important}
+.ctb-canonical-builder-footer .footer-version{font-size:.64rem!important;margin:0 0 7px!important}
+.ctb-canonical-builder-footer .builder-signature{display:flex;align-items:center;justify-content:center;gap:8px}
+.ctb-canonical-builder-footer .builder-signature-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;display:block}
+.ctb-canonical-builder-footer .builder-signature-copy{font-size:.72rem;line-height:1.2;color:#d8e0dc}
+.ctb-canonical-builder-footer .builder-signature-copy strong{color:#fff}
+.ctb-canonical-builder-footer .builder-signature-copy a{color:#bfff00!important;text-decoration:none;border:0!important}
+
+/* Chapter 22 NFT schedule usability: keep native date/time picker affordances visible. */
+input[type="date"],input[type="time"]{color-scheme:dark;padding-right:38px}
+input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator{display:block;opacity:.95;cursor:pointer;filter:invert(84%) sepia(92%) saturate(1386%) hue-rotate(42deg) brightness(104%) contrast(108%)}
+
+
+/* Chapter 22 — deployment decision hierarchy: deploy stays green, close/cancel is red. */
+.final-product-actions #close-build-complete-action{
+  color:var(--danger)!important;
+  border-color:var(--danger)!important;
+  background:#120306!important;
+  box-shadow:none!important;
+}
+.final-product-actions #close-build-complete-action:hover{
+  background:#1b0509!important;
+  box-shadow:0 0 20px rgba(255,90,103,.15)!important;
+}
+
+
+/* Chapter 22 — reusable Additional Links builder */
+.additional-links-builder{margin-top:18px;padding-top:14px;border-top:1px solid rgba(0,255,65,.18)}
+.additional-links-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px}
+.additional-links-heading>div{display:flex;flex-direction:column;gap:3px}.additional-links-heading small{color:var(--muted)}
+.additional-links-list{display:grid;gap:10px}.additional-link-row{display:grid;grid-template-columns:minmax(90px,.55fr) minmax(180px,1.3fr) minmax(220px,1.5fr) auto auto;gap:8px;align-items:end;padding:10px;border:1px solid rgba(0,255,65,.16);background:rgba(0,0,0,.16)}
+.additional-link-row label{margin:0}.additional-link-highlight{display:flex!important;align-items:center;gap:7px;padding-bottom:8px;white-space:nowrap}.additional-link-highlight input{width:auto!important}.additional-link-remove{border-color:rgba(255,70,70,.65)!important;color:#ff5a5a!important}
+@media(max-width:900px){.additional-link-row{grid-template-columns:1fr}.additional-links-heading{align-items:flex-start;flex-direction:column}.additional-link-highlight{padding-bottom:0}}
+
+
+/* Post-acceptance cleanup: optional mascot background removal */
+.mascot-background-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px}
+.mascot-background-tools button{padding:7px 10px;font-size:.68rem}
+.mascot-background-tools small{width:100%;color:var(--muted);font-size:.66rem}
+
+
+/* Chapter 22B — Simplified v1 RC: workflow skeleton + pre-test cleanup. */
+.guided-deploy-stage{display:none}
+.simplified-opensea-field{display:none}
+body.guided-mode .form-stack{display:flex;flex-direction:column}
+body.guided-mode #guided-project{order:1}
+body.guided-mode #guided-modules{order:2}
+body.guided-mode #guided-token{order:3}
+body.guided-mode #guided-brand{order:4}
+body.guided-mode #guided-links{order:5}
+body.guided-mode #guided-nft-mint{order:6}
+/* Simplified mode has one numbered stepper only. Internal Builder section badges stay Builder-only. */
+body.guided-mode .panel[data-simple-stage]>.section-heading{display:none}
+body.guided-mode .panel[data-simple-stage]::before{content:attr(data-simple-title);display:block;margin:0 0 8px;color:#f4fff7;font-size:.91rem;font-weight:800;line-height:1.3;letter-spacing:.06em}
+body.guided-mode .panel[data-simple-stage]::after{content:attr(data-simple-subtitle);display:block;position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+body.guided-mode #guided-token,
+body.guided-mode #guided-brand,
+body.guided-mode #guided-links,
+body.guided-mode #guided-nft-mint{margin-left:18px;border-left:2px solid rgba(111,211,255,.45)}
+body.guided-mode #guided-token{margin-top:4px}
+body.guided-mode #guided-modules{border-color:rgba(57,255,20,.55)}
+body.guided-mode #guided-generate{scroll-margin-top:16px;position:relative;margin-top:4px;padding-top:42px}
+body.guided-mode #guided-generate:before{content:attr(data-simple-title);position:absolute;left:18px;top:12px;color:#fff;font-size:.78rem;font-weight:800;letter-spacing:.08em}
+body.guided-mode #guided-generate .action-copy p{margin:0}
+body.guided-mode .guided-deploy-stage{display:block;max-width:920px;margin:0 auto 18px;padding:16px 18px;border:1px solid var(--line);background:#020806;scroll-margin-top:16px}
+body.guided-mode .guided-deploy-stage-head{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+body.guided-mode .guided-deploy-stage-head>div{display:grid;gap:2px}
+body.guided-mode .guided-deploy-stage-head strong{color:#fff;font-size:.82rem;letter-spacing:.08em}
+body.guided-mode .guided-deploy-stage-head small{color:#91aa9b;font-size:.66rem}
+body.guided-mode .guided-deploy-stage p{margin:0 0 8px;color:#b8c9bf;font-size:.76rem;line-height:1.5}
+body.guided-mode .guided-deploy-stage>span{color:var(--green);font-size:.68rem}
+body.advanced-mode .guided-deploy-stage{display:none!important}
+body.guided-mode .simplified-opensea-field{display:grid}
+body.advanced-mode .simplified-opensea-field{display:none!important}
+.opensea-slug-control{display:flex;align-items:stretch;width:100%;border:1px solid var(--line);background:#020806}
+.opensea-slug-control>span{display:flex;align-items:center;padding:0 10px;color:var(--muted);border-right:1px solid var(--line);white-space:nowrap;font-size:.72rem}
+.opensea-slug-control>input{border:0!important;min-width:0;flex:1}
+.opensea-slug-control:focus-within{border-color:var(--green)}
+@media(max-width:680px){body.guided-mode #guided-token,body.guided-mode #guided-brand,body.guided-mode #guided-links,body.guided-mode #guided-nft-mint{margin-left:0}.opensea-slug-control{display:grid}.opensea-slug-control>span{border-right:0;border-bottom:1px solid var(--line);padding:9px 10px;white-space:normal}}
+
+/* Chapter 22B — Simplified v1 RC UI overhaul.
+   This layer intentionally affects Simplified mode only. Builder Mode keeps the accepted terminal-style UI. */
+.simple-only{display:none}
+body.guided-mode .simple-only{display:revert}
+body.guided-mode .advanced-only{display:none!important}
+
+body.guided-mode{
+  --simple-width:1040px;
+  --bg:#090b12;
+  --panel:#111520;
+  --panel-2:#151a27;
+  --green:#7c5cff;
+  --orange:#ffb454;
+  --cyan:#58d8ff;
+  --text:#f7f8fc;
+  --muted:#9aa4b5;
+  --field-label:#d8deea;
+  --placeholder:#667085;
+  --line:#252c3b;
+  --line-bright:#394257;
+  --danger:#ff6376;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(124,92,255,.14),transparent 34rem),
+    radial-gradient(circle at 92% 12%,rgba(88,216,255,.08),transparent 30rem),
+    #090b12;
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;
+}
+body.guided-mode .shell{width:min(1180px,calc(100% - 32px));margin:24px auto 44px}
+body.guided-mode .terminal-window{border:0;border-radius:28px;background:rgba(11,14,23,.82);box-shadow:0 24px 90px rgba(0,0,0,.42);overflow:hidden;backdrop-filter:blur(18px)}
+body.guided-mode .hero{max-width:var(--simple-width);margin:0 auto;padding:44px 8px 22px;border:0;display:grid;justify-items:center;text-align:center;overflow:visible}
+body.guided-mode .simple-brand-mark{display:grid;place-items:center;width:54px;height:54px;margin-bottom:18px;border-radius:16px;background:linear-gradient(135deg,#7c5cff,#44d7ff);color:#fff;font-size:.88rem;font-weight:900;letter-spacing:.08em;box-shadow:0 12px 32px rgba(124,92,255,.26)}
+body.guided-mode h1{margin:0;color:#fff;font-family:inherit;font-size:clamp(1.75rem,4vw,2.7rem);font-weight:800;line-height:1.08;letter-spacing:-.035em;text-shadow:none}
+body.guided-mode .tagline{max-width:620px;margin:12px auto 0;color:#aab4c5;font-family:inherit;font-size:.96rem;line-height:1.55;letter-spacing:0;text-align:center}
+body.guided-mode #builder{padding:0 24px 30px}
+
+/* One coherent page grid. */
+body.guided-mode .project-toolbar,
+body.guided-mode .builder-mode-bar,
+body.guided-mode .guided-overview,
+body.guided-mode .form-stack,
+body.guided-mode .action-bar,
+body.guided-mode .guided-deploy-stage{
+  width:100%;max-width:var(--simple-width);margin-left:auto;margin-right:auto;
+}
+body.guided-mode .workspace{display:block}
+body.guided-mode .form-stack{display:flex;flex-direction:column}
+body.guided-mode .console-panel{display:none}
+
+/* Workspace controls: compact app toolbar instead of terminal header. */
+body.guided-mode .project-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;margin-top:6px;padding:14px 16px;border:1px solid rgba(255,255,255,.07);border-radius:16px;background:rgba(18,22,33,.82);box-shadow:0 8px 28px rgba(0,0,0,.12)}
+body.guided-mode .project-current{display:flex;align-items:center;gap:9px;min-width:0}
+body.guided-mode .workspace-label{display:none}
+body.guided-mode #current-project{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f7f8fc;font-size:.88rem;font-weight:750;letter-spacing:0}
+body.guided-mode #project-state{padding:5px 8px;border:0;border-radius:999px;background:rgba(255,180,84,.11);color:#ffc87a;font-size:.61rem;font-weight:800;letter-spacing:.04em}
+body.guided-mode .project-controls{display:flex;align-items:center;gap:8px}
+body.guided-mode .project-controls select{min-width:190px;height:38px;padding:0 34px 0 11px;border:1px solid #30384a;border-radius:10px;background:#0d111b;color:#dce2ed;font-size:.72rem}
+body.guided-mode .project-controls button{min-width:0;height:38px;padding:0 13px;border:1px solid #30384a;border-radius:10px;background:#171c28;color:#e8ecf4;font-size:.70rem;font-weight:750;letter-spacing:0;box-shadow:none}
+body.guided-mode .project-controls button:hover{border-color:#58657e;background:#1d2331;transform:none;box-shadow:none}
+body.guided-mode #save-project{border-color:rgba(124,92,255,.55);background:rgba(124,92,255,.13);color:#cbbfff}
+
+/* Builder Mode remains available, but no longer competes with the primary experience. */
+body.guided-mode .builder-mode-bar{display:flex;justify-content:flex-end;margin-top:8px;padding:0;border:0;background:transparent}
+body.guided-mode .builder-mode-copy{display:none}
+body.guided-mode .builder-mode-switch{display:block;min-width:0}
+body.guided-mode #guided-mode{display:none}
+body.guided-mode #advanced-mode{padding:7px 10px;border:0;border-radius:9px;background:transparent;color:#8f99aa;font-size:.67rem;font-weight:700;letter-spacing:0;box-shadow:none}
+body.guided-mode #advanced-mode::before{content:"⚙ ";opacity:.72}
+body.guided-mode #advanced-mode:hover{background:rgba(255,255,255,.045);color:#d8deea;transform:none;box-shadow:none}
+
+/* Five-step journey. */
+body.guided-mode .guided-overview{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px;margin-bottom:22px;padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:18px;background:rgba(18,22,33,.68)}
+body.guided-mode .guided-overview a{display:flex;align-items:center;gap:10px;min-width:0;padding:11px 12px;border:0;border-radius:12px;background:transparent;color:#d9dfeb;text-decoration:none;transition:background .15s ease,transform .15s ease}
+body.guided-mode .guided-overview a:hover{border:0;background:rgba(124,92,255,.11);transform:translateY(-1px)}
+body.guided-mode .guided-overview b{display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;border:0;border-radius:9px;background:rgba(124,92,255,.14);color:#b8a8ff;font-size:.70rem;font-weight:850}
+body.guided-mode .guided-overview span{display:grid;gap:1px;min-width:0;color:#eef1f7;font-size:.68rem;font-weight:800;letter-spacing:.015em}
+body.guided-mode .guided-overview small{color:#7f8a9e;font-size:.60rem;font-weight:500;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Core cards. */
+body.guided-mode .panel{position:relative;margin:0 0 14px;padding:26px;border:1px solid rgba(255,255,255,.075);border-radius:20px;background:linear-gradient(180deg,rgba(18,22,33,.96),rgba(14,18,28,.96));box-shadow:0 10px 36px rgba(0,0,0,.14);scroll-margin-top:18px}
+body.guided-mode #guided-project{order:1}
+body.guided-mode #guided-modules{order:2}
+body.guided-mode #guided-token{order:3}
+body.guided-mode #guided-brand{order:4}
+body.guided-mode #guided-links{order:5}
+body.guided-mode #guided-nft-mint{order:6}
+body.guided-mode #guided-token,
+body.guided-mode #guided-brand,
+body.guided-mode #guided-links,
+body.guided-mode #guided-nft-mint{margin-left:0;border-left:1px solid rgba(255,255,255,.075)}
+body.guided-mode #guided-modules{border-color:rgba(124,92,255,.28)}
+body.guided-mode .panel[data-simple-stage]>.section-heading{display:none}
+body.guided-mode .panel[data-simple-stage]::before{content:attr(data-simple-title);display:block;margin:0;color:#f5f7fb;font-family:inherit;font-size:1.12rem;font-weight:800;line-height:1.2;letter-spacing:-.015em}
+body.guided-mode .panel[data-simple-stage]::after{display:none}
+body.guided-mode .guided-step-note{display:block;max-width:760px;margin:7px 0 21px;color:#8f9aad;font-size:.78rem;line-height:1.55}
+
+/* Friendly form language and controls. */
+body.guided-mode .grid{gap:16px}
+body.guided-mode label{gap:8px;color:#d3d9e5;font-family:inherit;font-size:.75rem;font-weight:650;letter-spacing:0}
+body.guided-mode label>span:first-child::before{content:none}
+body.guided-mode input:not([type="checkbox"]):not([type="color"]),
+body.guided-mode textarea,
+body.guided-mode select{min-height:44px;border:1px solid #30384a;border-radius:12px;background:#0d111a;color:#f5f7fb;padding:11px 13px;font-family:inherit;font-size:.78rem;box-shadow:none;caret-color:#9d8bff;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+body.guided-mode textarea{min-height:92px}
+body.guided-mode select{padding-right:34px}
+body.guided-mode input:not([type="checkbox"]):not([type="color"]):focus,
+body.guided-mode textarea:focus,
+body.guided-mode select:focus{border-color:#7c5cff;background:#101521;box-shadow:0 0 0 3px rgba(124,92,255,.12);outline:none}
+body.guided-mode input::placeholder,body.guided-mode textarea::placeholder{color:#5f697b}
+body.guided-mode .field-help,body.guided-mode .checks small,body.guided-mode .nft-phase-help,body.guided-mode .nft-mint-heading small{color:#7f8a9e;font-size:.69rem;line-height:1.5;font-weight:450}
+body.guided-mode .evm-badge{padding:3px 6px;border:0;border-radius:6px;background:rgba(88,216,255,.10);color:#7bddf7;font-size:.55rem;font-weight:800;letter-spacing:.02em}
+body.guided-mode .contract-check{margin-top:2px;padding:9px 11px;border:1px solid #252c3b;border-radius:10px;background:#0b0f18;color:#8d98aa;font-family:inherit;font-size:.67rem;line-height:1.4}
+body.guided-mode .field-error,body.guided-mode .inline-warning{font-family:inherit;font-size:.68rem}
+
+/* Module picker: product cards rather than diagnostic toggles. */
+body.guided-mode .checks{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+body.guided-mode .checks label{position:relative;display:flex;align-items:flex-start;gap:10px;min-height:98px;padding:16px;border:1px solid #293143;border-radius:15px;background:#0d111a;cursor:pointer;transition:border-color .15s ease,background .15s ease,transform .15s ease,box-shadow .15s ease}
+body.guided-mode .checks label:hover{border-color:#45506a;background:#111622;transform:translateY(-1px)}
+body.guided-mode .checks label:has(input:checked){border-color:rgba(124,92,255,.62);background:linear-gradient(145deg,rgba(124,92,255,.11),rgba(88,216,255,.035));box-shadow:inset 0 0 0 1px rgba(124,92,255,.08)}
+body.guided-mode .checks input{appearance:none;width:18px;height:18px;flex:0 0 18px;margin:0;padding:0;border:1px solid #4a556d;border-radius:6px;background:#0a0e16;display:grid;place-items:center;box-shadow:none}
+body.guided-mode .checks input:checked{border-color:#8d77ff;background:#7c5cff}
+body.guided-mode .checks input:checked::after{content:"✓";color:#fff;font-size:.70rem;font-weight:900;line-height:1}
+body.guided-mode .checks span{display:grid;gap:5px}
+body.guided-mode .checks strong{color:#f2f4f8;font-family:inherit;font-size:.76rem;font-weight:800;letter-spacing:0}
+body.guided-mode .checks small{color:#838ea1;font-size:.67rem}
+
+/* Upload / branding. */
+body.guided-mode .upload{margin-top:14px;padding:16px;border:1px dashed #3a4357;border-radius:16px;background:#0c1018}
+body.guided-mode .upload-label{color:#d9dfeb;font-weight:750}
+body.guided-mode .upload-control{min-height:44px;padding:10px 12px;border:1px solid #30384a;border-radius:11px;background:#101520}
+body.guided-mode .upload-control:hover,body.guided-mode .upload-control:focus-within{border-color:#6f5ce8;box-shadow:0 0 0 3px rgba(124,92,255,.10)}
+body.guided-mode .upload-control strong{color:#b7a9ff;font-family:inherit;font-size:.68rem;letter-spacing:0}
+body.guided-mode .upload-control span{color:#7f8a9e;font-family:inherit}
+body.guided-mode .mascot-background-tools button,
+body.guided-mode .additional-links-heading button,
+body.guided-mode .phase-add-button,
+body.guided-mode .timezone-button,
+body.guided-mode #confirm-nft-mint-details{border:1px solid #394257;border-radius:10px;background:#171c28;color:#dfe4ee;box-shadow:none;font-family:inherit;font-size:.68rem;letter-spacing:0}
+body.guided-mode .mascot-background-tools button:hover,
+body.guided-mode .additional-links-heading button:hover,
+body.guided-mode .phase-add-button:hover,
+body.guided-mode .timezone-button:hover,
+body.guided-mode #confirm-nft-mint-details:hover{border-color:#5d6880;background:#1d2331;transform:none;box-shadow:none}
+
+/* Links and extras. */
+body.guided-mode .additional-links-builder{margin-top:20px;padding-top:18px;border-top:1px solid #252c3b}
+body.guided-mode .additional-links-heading strong{color:#f0f3f8;font-size:.78rem}
+body.guided-mode .additional-links-heading small{color:#7f8a9e;font-size:.67rem}
+body.guided-mode .additional-link-row{padding:13px;border:1px solid #2b3344;border-radius:14px;background:#0d111a}
+
+/* NFT configuration keeps all capability but loses the console feel. */
+body.guided-mode .nft-mint-schedule{padding:18px;border:1px solid #2a3243;border-radius:16px;background:#0c1019}
+body.guided-mode .nft-mint-heading>span{color:#eef1f7;font-size:.84rem;font-weight:800}
+body.guided-mode .nft-phase-help{padding:11px 12px;border:1px solid #293143;border-radius:10px;background:#101520}
+body.guided-mode .nft-mint-explicit-confirm{border-top-color:#293143}
+body.guided-mode input[type="date"],body.guided-mode input[type="time"]{color-scheme:dark}
+body.guided-mode input[type="date"]::-webkit-calendar-picker-indicator,body.guided-mode input[type="time"]::-webkit-calendar-picker-indicator{filter:none;opacity:.78}
+
+/* Generate and deploy become clear product actions. */
+body.guided-mode #guided-generate{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;margin-top:2px;margin-bottom:14px;padding:24px 26px;border:1px solid rgba(124,92,255,.26);border-radius:20px;background:linear-gradient(145deg,rgba(124,92,255,.10),rgba(18,22,33,.96));scroll-margin-top:18px}
+body.guided-mode #guided-generate:before{content:"Generate";position:static;display:block;grid-column:1/-1;margin:0 0 -7px;color:#f6f7fb;font-family:inherit;font-size:1.12rem;font-weight:800;letter-spacing:-.015em}
+body.guided-mode #guided-generate .action-copy{display:block;color:#8f9aad;font-family:inherit;font-size:.75rem;line-height:1.5}
+body.guided-mode #guided-generate .action-copy .ok{display:none}
+body.guided-mode .action-buttons{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+body.guided-mode .action-buttons button{min-width:0;height:43px;padding:0 16px;border:0;border-radius:11px;background:linear-gradient(135deg,#7c5cff,#6650e8);color:#fff;font-family:inherit;font-size:.70rem;font-weight:800;letter-spacing:0;box-shadow:0 8px 22px rgba(124,92,255,.20)}
+body.guided-mode .action-buttons button:hover{transform:translateY(-1px);box-shadow:0 11px 28px rgba(124,92,255,.28)}
+body.guided-mode .action-buttons .preview-button{border:1px solid #394257;background:#171c28;color:#dfe5ee;box-shadow:none}
+body.guided-mode .action-buttons .preview-button:hover{background:#1e2432;box-shadow:none}
+body.guided-mode .action-buttons button span{display:none}
+body.guided-mode #status{max-width:var(--simple-width);margin:0 auto 10px;color:#ffbd72;font-family:inherit;font-size:.72rem}
+body.guided-mode .guided-deploy-stage{display:block;margin-top:0;margin-bottom:0;padding:24px 26px;border:1px solid rgba(88,216,255,.15);border-radius:20px;background:linear-gradient(145deg,rgba(88,216,255,.045),rgba(18,22,33,.96));scroll-margin-top:18px}
+body.guided-mode .guided-deploy-stage-head{margin-bottom:8px}
+body.guided-mode .guided-deploy-stage-head strong{color:#f6f7fb;font-family:inherit;font-size:1.12rem;font-weight:800;letter-spacing:-.015em}
+body.guided-mode .guided-deploy-stage-head small{display:none}
+body.guided-mode .guided-deploy-stage p{max-width:760px;margin:0;color:#8f9aad;font-family:inherit;font-size:.75rem;line-height:1.55}
+body.guided-mode .guided-deploy-stage>span{display:none}
+
+/* Modern dialogs / transient UI while in Simplified mode. */
+body.guided-mode dialog{border:1px solid rgba(255,255,255,.09);border-radius:20px;background:#111520;color:#f5f7fb;box-shadow:0 28px 90px rgba(0,0,0,.55);font-family:inherit}
+body.guided-mode dialog::backdrop{background:rgba(3,5,10,.72);backdrop-filter:blur(5px)}
+body.guided-mode .auto-save-toast{border:1px solid rgba(124,92,255,.35);border-radius:12px;background:#151a27;color:#eef1f7;box-shadow:0 14px 38px rgba(0,0,0,.36);font-family:inherit}
+body.guided-mode .auto-save-toast strong{color:#b9aaff}
+
+/* Footer becomes a quiet product signature. */
+body.guided-mode .ctb-canonical-builder-footer{max-width:var(--simple-width);margin:18px auto 0!important;padding:20px 4px 4px!important;border-top:1px solid rgba(255,255,255,.07)!important;gap:6px!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{color:#a8b1c1!important;font-family:inherit;font-size:.70rem!important;font-weight:750!important;letter-spacing:.02em!important;text-shadow:none!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-version{color:#626d80!important;font-family:inherit;font-size:.60rem!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{color:#778297;font-family:inherit;font-size:.67rem;text-shadow:none}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#aeb7c7}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#9d8bff!important;text-shadow:none!important}
+
+@media(max-width:900px){
+  body.guided-mode .checks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.guided-mode .guided-overview{grid-template-columns:repeat(5,minmax(90px,1fr));overflow-x:auto;scrollbar-width:none}
+  body.guided-mode .guided-overview::-webkit-scrollbar{display:none}
+  body.guided-mode .guided-overview a:last-child{grid-column:auto}
+}
+@media(max-width:720px){
+  body.guided-mode .shell{width:min(100% - 16px,1180px);margin:8px auto 24px}
+  body.guided-mode .terminal-window{border-radius:20px}
+  body.guided-mode .hero{padding:30px 14px 18px}
+  body.guided-mode #builder{padding:0 12px 20px}
+  body.guided-mode .project-toolbar{grid-template-columns:1fr;gap:11px;padding:13px}
+  body.guided-mode .project-controls{display:grid;grid-template-columns:minmax(0,1fr) auto auto;width:100%}
+  body.guided-mode .project-controls select{min-width:0;width:100%}
+  body.guided-mode .builder-mode-bar{margin-top:5px}
+  body.guided-mode .guided-overview{margin-top:6px;margin-bottom:14px;padding:6px}
+  body.guided-mode .panel{padding:20px;border-radius:17px}
+  body.guided-mode .grid{grid-template-columns:1fr}
+  body.guided-mode .span-2{grid-column:auto}
+  body.guided-mode .checks{grid-template-columns:1fr}
+  body.guided-mode #guided-generate{grid-template-columns:1fr;padding:21px}
+  body.guided-mode .action-buttons{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  body.guided-mode .action-buttons button{width:100%}
+  body.guided-mode .guided-deploy-stage{padding:21px}
+}
+@media(max-width:480px){
+  body.guided-mode .project-controls{grid-template-columns:1fr 1fr}
+  body.guided-mode .project-controls select{grid-column:1/-1}
+  body.guided-mode .action-buttons{grid-template-columns:1fr}
+  body.guided-mode .simple-brand-mark{width:48px;height:48px;border-radius:14px}
+}
+
+/* Chapter 22B — Simplified v1 RC Pass 3: pastel crypto color + typography polish.
+   Simplified mode only; Builder Mode remains untouched. */
+body.guided-mode{
+  --rh-yellow:#ffd84d;
+  --pastel-violet:#a78bfa;
+  --pastel-cyan:#67e8f9;
+  --pastel-mint:#7ef0c5;
+  --pastel-coral:#ff9f9f;
+  --panel:#121724;
+  --panel-2:#181e2e;
+  --green:var(--pastel-violet);
+  --orange:var(--rh-yellow);
+  --cyan:var(--pastel-cyan);
+  --text:#f8f9fc;
+  --muted:#aeb7c8;
+  --field-label:#e4e8f0;
+  --placeholder:#7b8699;
+  --line:#2d3547;
+  --line-bright:#48536b;
+  font-size:16px;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(167,139,250,.16),transparent 34rem),
+    radial-gradient(circle at 92% 10%,rgba(103,232,249,.10),transparent 30rem),
+    radial-gradient(circle at 54% 100%,rgba(255,216,77,.055),transparent 32rem),
+    #090b12;
+}
+body.guided-mode .simple-brand-mark{background:linear-gradient(135deg,var(--pastel-violet),var(--pastel-cyan));font-size:.94rem}
+body.guided-mode h1{font-size:clamp(2rem,4vw,2.9rem)}
+body.guided-mode .tagline{font-size:1.03rem;color:#b9c2d2}
+
+/* Workspace and navigation: readable at a glance. */
+body.guided-mode #current-project{font-size:.95rem}
+body.guided-mode #project-state{background:rgba(255,216,77,.14);color:#ffe781;font-size:.68rem}
+body.guided-mode .project-controls select{font-size:.80rem}
+body.guided-mode .project-controls button{font-size:.78rem}
+body.guided-mode #save-project{border-color:rgba(255,216,77,.48);background:rgba(255,216,77,.10);color:#ffe47a}
+body.guided-mode #advanced-mode{font-size:.74rem}
+body.guided-mode .guided-overview a:hover{background:rgba(167,139,250,.12)}
+body.guided-mode .guided-overview b{background:rgba(255,216,77,.14);color:#ffe47a;font-size:.77rem}
+body.guided-mode .guided-overview span{font-size:.75rem}
+body.guided-mode .guided-overview small{font-size:.66rem;color:#929db0}
+
+/* Card hierarchy and copy. */
+body.guided-mode .panel{border-color:rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(20,25,38,.97),rgba(15,20,31,.97))}
+body.guided-mode #guided-modules{border-color:rgba(167,139,250,.36)}
+body.guided-mode .panel[data-simple-stage]::before{font-size:1.08rem;letter-spacing:.025em}
+body.guided-mode .panel p,body.guided-mode .panel .helper,body.guided-mode .hint{font-size:.82rem;line-height:1.58}
+body.guided-mode label,body.guided-mode .field-label{font-size:.80rem}
+body.guided-mode input,body.guided-mode textarea,body.guided-mode select{font-size:.86rem}
+body.guided-mode input,body.guided-mode select{min-height:44px}
+body.guided-mode textarea{line-height:1.5}
+body.guided-mode .contract-check{font-size:.74rem}
+body.guided-mode .field-error,body.guided-mode .inline-warning{font-size:.74rem}
+
+/* Module cards: distinct pastel accents with a warm Robinhood selection cue. */
+body.guided-mode .checks label{border-color:#333d52;background:#101521}
+body.guided-mode .checks label:hover{border-color:#56627c;background:#151b29}
+body.guided-mode .checks label:has(input:checked){
+  border-color:rgba(255,216,77,.62);
+  background:linear-gradient(145deg,rgba(255,216,77,.085),rgba(167,139,250,.08),rgba(103,232,249,.03));
+  box-shadow:inset 0 0 0 1px rgba(255,216,77,.08),0 8px 28px rgba(0,0,0,.10);
+}
+body.guided-mode .checks input{width:20px;height:20px;flex-basis:20px;border-color:#61708e}
+body.guided-mode .checks input:checked{border-color:#f7cd35;background:var(--rh-yellow)}
+body.guided-mode .checks input:checked::after{color:#17130a;font-size:.76rem}
+body.guided-mode .checks strong{font-size:.84rem}
+body.guided-mode .checks small{font-size:.74rem;color:#9da8ba;line-height:1.45}
+body.guided-mode .checks label:nth-child(3n+1) strong{color:#c8b9ff}
+body.guided-mode .checks label:nth-child(3n+2) strong{color:#8feaf8}
+body.guided-mode .checks label:nth-child(3n+3) strong{color:#9cf0cf}
+
+/* Branding, links and NFT configuration: larger supporting text. */
+body.guided-mode .upload-label{font-size:.84rem}
+body.guided-mode .upload-control strong{font-size:.76rem;color:#c7baff}
+body.guided-mode .upload-control span{font-size:.76rem}
+body.guided-mode .mascot-background-tools button,
+body.guided-mode .additional-links-heading button,
+body.guided-mode .phase-add-button,
+body.guided-mode .timezone-button,
+body.guided-mode #confirm-nft-mint-details{font-size:.76rem}
+body.guided-mode .additional-links-heading strong{font-size:.88rem}
+body.guided-mode .additional-links-heading small{font-size:.74rem}
+body.guided-mode .nft-mint-heading>span{font-size:.95rem}
+body.guided-mode .nft-phase-help{font-size:.78rem}
+
+/* Calls to action: Robinhood yellow for the primary action, pastel secondary accents. */
+body.guided-mode #guided-generate{border-color:rgba(255,216,77,.28);background:linear-gradient(145deg,rgba(255,216,77,.065),rgba(167,139,250,.055),rgba(18,22,33,.97))}
+body.guided-mode #guided-generate:before,body.guided-mode .guided-deploy-stage-head strong{font-size:1.24rem}
+body.guided-mode #guided-generate .action-copy,body.guided-mode .guided-deploy-stage p{font-size:.84rem;color:#aeb8ca}
+body.guided-mode .action-buttons button{height:46px;font-size:.79rem;background:linear-gradient(135deg,#ffe36f,#ffd23f);color:#17140a;box-shadow:0 9px 25px rgba(255,216,77,.16)}
+body.guided-mode .action-buttons button:hover{box-shadow:0 12px 30px rgba(255,216,77,.22)}
+body.guided-mode .action-buttons .preview-button{border:1px solid rgba(103,232,249,.32);background:rgba(103,232,249,.07);color:#baf3fb}
+body.guided-mode .action-buttons .preview-button:hover{background:rgba(103,232,249,.11)}
+body.guided-mode #status{font-size:.79rem;color:#ffe17a}
+body.guided-mode .guided-deploy-stage{border-color:rgba(126,240,197,.20);background:linear-gradient(145deg,rgba(126,240,197,.055),rgba(18,22,33,.97))}
+
+/* Footer stays quiet but legible. */
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.77rem!important;color:#b6c0d0!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-version{font-size:.67rem!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.74rem}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#ffe16b!important}
+
+@media(max-width:720px){
+  body.guided-mode{font-size:15.5px}
+  body.guided-mode .guided-overview span{font-size:.73rem}
+  body.guided-mode .guided-overview small{font-size:.64rem}
+  body.guided-mode .panel[data-simple-stage]::before{font-size:1.02rem}
+  body.guided-mode .checks strong{font-size:.82rem}
+  body.guided-mode .checks small{font-size:.73rem}
+}
+
+/* Chapter 22B — RC Pass 3: progressive NFT disclosure in Simplified mode. */
+body.guided-mode.nft-module-disabled .simple-nft-config{display:none!important}
+body.guided-mode .simple-nft-locked{display:none;grid-column:1/-1;padding:15px 16px;border:1px dashed rgba(255,216,77,.30);border-radius:14px;background:linear-gradient(135deg,rgba(255,216,77,.045),rgba(167,139,250,.045));color:#9faabd}
+body.guided-mode.nft-module-disabled .simple-nft-locked{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+body.guided-mode .simple-nft-locked strong{color:#ffe27a;font-size:.84rem;font-weight:800}
+body.guided-mode .simple-nft-locked span{font-size:.79rem;line-height:1.5}
+body.advanced-mode .simple-nft-locked{display:none!important}
+
+/* Chapter 22B — Simplified v1 RC Pass 4: vivid crypto canvas + section personality.
+   Presentation-only and scoped to Simplified mode. Builder Mode remains untouched. */
+body.guided-mode{
+  --rh-yellow:#f6ff63;
+  --sun-yellow:#ffe45f;
+  --tangerine:#ff9a62;
+  --hot-coral:#ff7f86;
+  --pastel-violet:#b79cff;
+  --pastel-cyan:#75eaff;
+  --pastel-mint:#7af5c7;
+  --simple-canvas:#090c14;
+  background:
+    radial-gradient(ellipse 62rem 38rem at -8% -4%,rgba(246,255,99,.16),transparent 58%),
+    radial-gradient(ellipse 54rem 34rem at 106% 8%,rgba(255,154,98,.14),transparent 58%),
+    radial-gradient(ellipse 58rem 40rem at 84% 52%,rgba(183,156,255,.115),transparent 60%),
+    radial-gradient(ellipse 48rem 34rem at 8% 68%,rgba(117,234,255,.095),transparent 60%),
+    radial-gradient(ellipse 48rem 30rem at 48% 106%,rgba(122,245,199,.085),transparent 60%),
+    var(--simple-canvas);
+  background-attachment:fixed;
+}
+body.guided-mode::before,
+body.guided-mode::after{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  pointer-events:none;
+  filter:blur(22px);
+  border-radius:999px;
+  opacity:.9;
+}
+body.guided-mode::before{
+  width:22rem;height:22rem;left:-10rem;top:28vh;
+  background:radial-gradient(circle,rgba(246,255,99,.10),rgba(117,234,255,.035) 48%,transparent 72%);
+}
+body.guided-mode::after{
+  width:25rem;height:25rem;right:-12rem;top:62vh;
+  background:radial-gradient(circle,rgba(255,154,98,.10),rgba(183,156,255,.045) 50%,transparent 74%);
+}
+
+/* Let the ambient canvas breathe through the app instead of covering it with a black slab. */
+body.guided-mode .terminal-window{
+  background:linear-gradient(180deg,rgba(9,12,20,.72),rgba(8,11,18,.84));
+  border-color:rgba(255,255,255,.075);
+  box-shadow:0 30px 90px rgba(0,0,0,.34),0 0 0 1px rgba(255,255,255,.018) inset;
+  backdrop-filter:blur(8px);
+}
+body.guided-mode .hero{
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 12%,rgba(246,255,99,.09),transparent 26rem),
+    radial-gradient(circle at 64% 34%,rgba(183,156,255,.08),transparent 23rem);
+}
+body.guided-mode .simple-brand-mark{
+  background:linear-gradient(135deg,var(--rh-yellow) 0%,var(--tangerine) 46%,var(--pastel-violet) 100%);
+  color:#11140a;
+  box-shadow:0 10px 34px rgba(246,255,99,.15),0 8px 28px rgba(183,156,255,.12);
+}
+body.guided-mode h1{
+  text-shadow:0 8px 34px rgba(183,156,255,.08);
+}
+
+/* Navigation gets a little more life without becoming decorative noise. */
+body.guided-mode .project-toolbar,
+body.guided-mode .guided-overview{
+  background:linear-gradient(135deg,rgba(18,23,36,.88),rgba(12,17,28,.88));
+  border-color:rgba(255,255,255,.09);
+  box-shadow:0 14px 34px rgba(0,0,0,.13);
+}
+body.guided-mode .guided-overview a:nth-child(1) b{background:rgba(246,255,99,.15);color:#f8ff91}
+body.guided-mode .guided-overview a:nth-child(2) b{background:rgba(117,234,255,.14);color:#a8f3ff}
+body.guided-mode .guided-overview a:nth-child(3) b{background:rgba(183,156,255,.16);color:#d6c8ff}
+body.guided-mode .guided-overview a:nth-child(4) b{background:rgba(255,154,98,.15);color:#ffc09d}
+body.guided-mode .guided-overview a:nth-child(5) b{background:rgba(122,245,199,.14);color:#a8f9da}
+
+/* Stage cards: same component family, different personalities. */
+body.guided-mode .panel,
+body.guided-mode #guided-generate,
+body.guided-mode .guided-deploy-stage{
+  box-shadow:0 18px 42px rgba(0,0,0,.13),inset 0 1px 0 rgba(255,255,255,.025);
+}
+body.guided-mode #guided-project{
+  border-color:rgba(246,255,99,.22);
+  background:linear-gradient(145deg,rgba(246,255,99,.045),rgba(19,24,37,.96) 31%,rgba(14,19,30,.97));
+}
+body.guided-mode #guided-modules{
+  border-color:rgba(117,234,255,.27);
+  background:linear-gradient(145deg,rgba(117,234,255,.048),rgba(19,24,37,.96) 31%,rgba(14,19,30,.97));
+}
+body.guided-mode #guided-token{
+  border-color:rgba(255,154,98,.23);
+  background:linear-gradient(145deg,rgba(255,154,98,.042),rgba(19,24,37,.96) 30%,rgba(14,19,30,.97));
+}
+body.guided-mode #guided-brand{
+  border-color:rgba(183,156,255,.25);
+  background:linear-gradient(145deg,rgba(183,156,255,.045),rgba(19,24,37,.96) 31%,rgba(14,19,30,.97));
+}
+body.guided-mode #guided-links{
+  border-color:rgba(117,234,255,.22);
+  background:linear-gradient(145deg,rgba(117,234,255,.035),rgba(19,24,37,.96) 31%,rgba(14,19,30,.97));
+}
+body.guided-mode #guided-nft-mint{
+  border-color:rgba(255,127,134,.24);
+  background:linear-gradient(145deg,rgba(255,127,134,.04),rgba(183,156,255,.035) 23%,rgba(14,19,30,.97) 48%);
+}
+body.guided-mode #guided-generate{
+  border-color:rgba(246,255,99,.32);
+  background:linear-gradient(135deg,rgba(246,255,99,.075),rgba(255,154,98,.042) 35%,rgba(17,22,34,.96) 72%);
+}
+body.guided-mode .guided-deploy-stage{
+  border-color:rgba(122,245,199,.27);
+  background:linear-gradient(135deg,rgba(122,245,199,.065),rgba(117,234,255,.032) 34%,rgba(17,22,34,.96) 72%);
+}
+
+/* The section titles carry the palette so color is visible even on long forms. */
+body.guided-mode #guided-project[data-simple-stage]::before{color:#f5ff91}
+body.guided-mode #guided-modules[data-simple-stage]::before{color:#aaf4ff}
+body.guided-mode #guided-token[data-simple-stage]::before{color:#ffc09d}
+body.guided-mode #guided-brand[data-simple-stage]::before{color:#d9ccff}
+body.guided-mode #guided-links[data-simple-stage]::before{color:#aaf4ff}
+body.guided-mode #guided-nft-mint[data-simple-stage]::before{color:#ffb4b8}
+
+/* Module cards get individual pastel identities instead of one repeated yellow outline. */
+body.guided-mode .checks label:nth-child(6n+1){--module-accent:246,255,99}
+body.guided-mode .checks label:nth-child(6n+2){--module-accent:255,154,98}
+body.guided-mode .checks label:nth-child(6n+3){--module-accent:122,245,199}
+body.guided-mode .checks label:nth-child(6n+4){--module-accent:183,156,255}
+body.guided-mode .checks label:nth-child(6n+5){--module-accent:117,234,255}
+body.guided-mode .checks label:nth-child(6n+6){--module-accent:255,127,134}
+body.guided-mode .checks label{
+  border-color:rgba(var(--module-accent,117,234,255),.20);
+  background:linear-gradient(145deg,rgba(var(--module-accent,117,234,255),.035),rgba(15,20,32,.94) 46%);
+}
+body.guided-mode .checks label:hover{
+  border-color:rgba(var(--module-accent,117,234,255),.48);
+  background:linear-gradient(145deg,rgba(var(--module-accent,117,234,255),.075),rgba(18,24,37,.96) 48%);
+}
+body.guided-mode .checks label:has(input:checked){
+  border-color:rgba(var(--module-accent,246,255,99),.72);
+  background:linear-gradient(145deg,rgba(var(--module-accent,246,255,99),.13),rgba(var(--module-accent,246,255,99),.045) 36%,rgba(17,22,34,.96) 74%);
+  box-shadow:0 10px 28px rgba(var(--module-accent,246,255,99),.07),inset 0 0 0 1px rgba(var(--module-accent,246,255,99),.06);
+}
+body.guided-mode .checks label:nth-child(6n+1) strong{color:#f5ff91}
+body.guided-mode .checks label:nth-child(6n+2) strong{color:#ffc09d}
+body.guided-mode .checks label:nth-child(6n+3) strong{color:#a7f7d8}
+body.guided-mode .checks label:nth-child(6n+4) strong{color:#d9ccff}
+body.guided-mode .checks label:nth-child(6n+5) strong{color:#aaf4ff}
+body.guided-mode .checks label:nth-child(6n+6) strong{color:#ffb4b8}
+body.guided-mode .checks input:checked{
+  border-color:rgb(var(--module-accent,246,255,99));
+  background:rgb(var(--module-accent,246,255,99));
+}
+
+/* Fields stay calm, but focus states now echo the lively palette. */
+body.guided-mode input:focus,
+body.guided-mode textarea:focus,
+body.guided-mode select:focus{
+  border-color:rgba(246,255,99,.62);
+  box-shadow:0 0 0 3px rgba(246,255,99,.075);
+}
+body.guided-mode #guided-links input:focus,
+body.guided-mode #guided-links textarea:focus{border-color:rgba(117,234,255,.62);box-shadow:0 0 0 3px rgba(117,234,255,.07)}
+body.guided-mode #guided-brand input:focus,
+body.guided-mode #guided-brand textarea:focus{border-color:rgba(183,156,255,.62);box-shadow:0 0 0 3px rgba(183,156,255,.07)}
+body.guided-mode #guided-nft-mint input:focus,
+body.guided-mode #guided-nft-mint textarea:focus,
+body.guided-mode #guided-nft-mint select:focus{border-color:rgba(255,127,134,.62);box-shadow:0 0 0 3px rgba(255,127,134,.07)}
+
+/* Strong, friendly calls to action. */
+body.guided-mode .action-buttons button:not(.preview-button){
+  border-color:#f6ff63;
+  background:linear-gradient(135deg,#f6ff78 0%,#ffe45f 52%,#ffb766 100%);
+  color:#151509;
+  box-shadow:0 12px 34px rgba(246,255,99,.17),0 8px 24px rgba(255,154,98,.10);
+}
+body.guided-mode .action-buttons button:not(.preview-button):hover{
+  box-shadow:0 15px 38px rgba(246,255,99,.23),0 10px 28px rgba(255,154,98,.14);
+}
+body.guided-mode .action-buttons .preview-button{
+  border-color:rgba(183,156,255,.42);
+  background:linear-gradient(135deg,rgba(183,156,255,.12),rgba(117,234,255,.07));
+  color:#e0d7ff;
+}
+body.guided-mode #status{color:#f3fb7f}
+
+@media(max-width:720px){
+  body.guided-mode{background-attachment:scroll}
+  body.guided-mode::before,body.guided-mode::after{display:none}
+  body.guided-mode .terminal-window{backdrop-filter:none}
+}
+
+/* Chapter 22B RC Pass 5 — guided terminal baseline */
+body.guided-mode .terminal-baseline{margin:18px 0 20px;padding:18px;border:1px solid rgba(246,255,99,.28);border-radius:18px;background:linear-gradient(135deg,rgba(246,255,99,.055),rgba(117,234,255,.035) 45%,rgba(183,156,255,.045));}
+body.guided-mode .terminal-baseline legend{padding:0 8px;color:#f8f9fb;font-size:1rem;font-weight:850;letter-spacing:-.01em}
+body.guided-mode .terminal-baseline>p{margin:4px 0 14px;color:#9eabba;font-size:.79rem;line-height:1.5}
+body.guided-mode .terminal-baseline-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+body.guided-mode .terminal-baseline-options label{display:flex;align-items:flex-start;gap:11px;min-height:88px;padding:15px;border:1px solid #364158;border-radius:15px;background:rgba(13,18,29,.78);cursor:pointer;transition:.16s ease}
+body.guided-mode .terminal-baseline-options label:hover{transform:translateY(-1px);border-color:#65728f;background:#141b2a}
+body.guided-mode .terminal-baseline-options label:has(input:checked){border-color:#f6ff63;background:linear-gradient(145deg,rgba(246,255,99,.14),rgba(255,154,98,.055));box-shadow:0 0 0 1px rgba(246,255,99,.06),0 10px 30px rgba(246,255,99,.055)}
+body.guided-mode .terminal-baseline-options input{appearance:none;width:20px;height:20px;flex:0 0 20px;margin:1px 0 0;border:1px solid #66728b;border-radius:999px;background:#090e17;display:grid;place-items:center}
+body.guided-mode .terminal-baseline-options input:checked{border:6px solid #f6ff63;background:#1b1b10}
+body.guided-mode .terminal-baseline-options span{display:grid;gap:5px}
+body.guided-mode .terminal-baseline-options strong{font-size:.86rem;color:#f5f7fb}
+body.guided-mode .terminal-baseline-options small{font-size:.74rem;line-height:1.45;color:#9ca8ba}
+body.guided-mode .terminal-baseline-options label:nth-child(1) strong{color:#f5ff91}
+body.guided-mode .terminal-baseline-options label:nth-child(2) strong{color:#d9ccff}
+body.guided-mode .terminal-baseline-options label:nth-child(3) strong{color:#aaf4ff}
+body.guided-mode .baseline-modules-lock{display:none;margin:2px 0 12px;padding:14px 16px;border:1px dashed rgba(246,255,99,.38);border-radius:14px;background:rgba(246,255,99,.045);gap:7px;flex-direction:column}
+body.guided-mode.baseline-unselected .baseline-modules-lock{display:flex}
+body.guided-mode .baseline-modules-lock strong{color:#f5ff91;font-size:.84rem}
+body.guided-mode .baseline-modules-lock span{color:#9da8ba;font-size:.76rem;line-height:1.45}
+body.guided-mode.baseline-unselected #guided-modules .checks{opacity:.42;filter:saturate(.55)}
+body.guided-mode .checks label[data-baseline-state="locked"],body.guided-mode .checks label[data-baseline-state="unavailable"]{cursor:not-allowed;opacity:.46;filter:saturate(.42);border-style:dashed;box-shadow:none!important;transform:none!important}
+body.guided-mode .checks label[data-baseline-state="required"]{cursor:default;border-color:rgba(246,255,99,.72);box-shadow:inset 0 0 0 1px rgba(246,255,99,.08),0 8px 28px rgba(246,255,99,.045)}
+body.guided-mode .checks label[data-baseline-state="required"]::after{content:"BASELINE";position:absolute;right:11px;top:10px;padding:3px 6px;border-radius:999px;background:rgba(246,255,99,.14);color:#f5ff91;font-size:.55rem;font-weight:850;letter-spacing:.07em}
+body.guided-mode .checks input:disabled{pointer-events:none}
+body.guided-mode.baseline-nft .simple-token-config{display:none!important}
+body.guided-mode.baseline-unselected .simple-token-config{opacity:.55}
+@media(max-width:760px){body.guided-mode .terminal-baseline-options{grid-template-columns:1fr}body.guided-mode .terminal-baseline-options label{min-height:76px}}
+
+/* CPB RC Pass 6 — cheerful community-native polish.
+   User-facing Simplified mode only; Builder Mode mechanics remain intact. */
+body.guided-mode{
+  --cpb-lime:#eaff4f;
+  --cpb-yellow:#ffd84d;
+  --cpb-orange:#ff9b54;
+  --cpb-coral:#ff7188;
+  --cpb-violet:#b48cff;
+  --cpb-aqua:#67e8f9;
+  --cpb-mint:#73f3bf;
+  --cpb-ink:#0a0d13;
+  background:
+    radial-gradient(ellipse 60rem 38rem at -7% 0%,rgba(234,255,79,.22),transparent 57%),
+    radial-gradient(ellipse 48rem 32rem at 104% 10%,rgba(255,155,84,.20),transparent 58%),
+    radial-gradient(ellipse 52rem 34rem at 85% 48%,rgba(180,140,255,.16),transparent 60%),
+    radial-gradient(ellipse 45rem 32rem at 8% 67%,rgba(103,232,249,.14),transparent 60%),
+    radial-gradient(ellipse 48rem 32rem at 53% 105%,rgba(115,243,191,.12),transparent 60%),
+    #080b13;
+}
+/* Dim, abstract community/network atmosphere — decorative only. */
+body.guided-mode::before{
+  content:""!important;display:block!important;
+  position:fixed;inset:0;z-index:-1;pointer-events:none;border-radius:0;filter:none;opacity:.42;
+  background-image:
+    radial-gradient(circle at 15% 18%,rgba(234,255,79,.55) 0 2px,transparent 3px),
+    radial-gradient(circle at 22% 25%,rgba(234,255,79,.30) 0 3px,transparent 4px),
+    radial-gradient(circle at 79% 20%,rgba(234,255,79,.38) 0 2px,transparent 3px),
+    radial-gradient(circle at 86% 30%,rgba(255,155,84,.28) 0 3px,transparent 4px),
+    radial-gradient(circle at 14% 72%,rgba(103,232,249,.24) 0 3px,transparent 4px),
+    radial-gradient(circle at 83% 73%,rgba(180,140,255,.26) 0 3px,transparent 4px),
+    linear-gradient(32deg,transparent 14.8%,rgba(234,255,79,.09) 15%,rgba(234,255,79,.09) 15.12%,transparent 15.3%),
+    linear-gradient(145deg,transparent 79.4%,rgba(234,255,79,.07) 79.6%,rgba(234,255,79,.07) 79.75%,transparent 79.95%);
+  background-size:100% 100%;
+}
+body.guided-mode::after{
+  content:""!important;display:block!important;
+  position:fixed;inset:auto -7rem 13vh auto;width:29rem;height:29rem;z-index:-1;pointer-events:none;
+  border:1px solid rgba(234,255,79,.07);border-radius:50%;filter:none;opacity:.7;
+  background:
+    radial-gradient(circle at 30% 28%,rgba(234,255,79,.14) 0 4px,transparent 5px),
+    radial-gradient(circle at 64% 42%,rgba(255,155,84,.12) 0 5px,transparent 6px),
+    radial-gradient(circle at 43% 67%,rgba(103,232,249,.10) 0 4px,transparent 5px),
+    radial-gradient(circle at center,transparent 0 42%,rgba(234,255,79,.035) 42.5% 43%,transparent 43.5%);
+  animation:cpb-community-drift 18s ease-in-out infinite alternate;
+}
+@keyframes cpb-community-drift{from{transform:translate3d(0,0,0) rotate(-2deg)}to{transform:translate3d(-18px,-12px,0) rotate(3deg)}}
+
+/* Header: brighter CPB identity without RGB/gaming noise. */
+body.guided-mode .hero{overflow:hidden;padding-top:32px;padding-bottom:26px}
+body.guided-mode .hero::before{
+  content:"";position:absolute;left:50%;top:-9rem;width:46rem;height:22rem;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(ellipse,rgba(234,255,79,.16),rgba(255,216,77,.07) 33%,rgba(255,155,84,.035) 50%,transparent 70%);
+  filter:blur(8px);animation:cpb-hero-breathe 7s ease-in-out infinite alternate;
+}
+body.guided-mode .hero h1 .simple-only{
+  display:inline-block;
+  background:linear-gradient(100deg,var(--cpb-lime) 0%,var(--cpb-yellow) 34%,var(--cpb-orange) 58%,var(--cpb-lime) 82%,var(--cpb-yellow) 100%);
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 30px rgba(234,255,79,.10);
+  animation:cpb-title-flow 8s ease-in-out infinite;
+}
+body.guided-mode .hero .tagline.simple-only{color:#d8dfeb;font-size:.94rem;letter-spacing:0;font-weight:560}
+body.guided-mode .rh-chain-line{display:inline-flex;align-items:center;justify-content:center;gap:.34em;margin:10px auto 0;padding:7px 12px;border:1px solid rgba(234,255,79,.24);border-radius:999px;background:linear-gradient(120deg,rgba(234,255,79,.09),rgba(255,216,77,.055),rgba(255,155,84,.045));color:#dfe6cf;font-size:.79rem;font-weight:600;line-height:1.35;letter-spacing:.005em;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 24px rgba(0,0,0,.10)}
+body.guided-mode .rh-chain-line strong{color:var(--cpb-lime);font-weight:850;text-shadow:0 0 18px rgba(234,255,79,.12)}
+body.guided-mode .simple-brand-mark{border-radius:15px;animation:cpb-brand-float 6s ease-in-out infinite}
+@keyframes cpb-title-flow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes cpb-hero-breathe{from{opacity:.72;transform:translateX(-50%) scale(.96)}to{opacity:1;transform:translateX(-50%) scale(1.04)}}
+@keyframes cpb-brand-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-3px) rotate(1deg)}}
+
+/* Modern motion language. */
+body.guided-mode .panel,body.guided-mode .checks label,body.guided-mode .project-toolbar,body.guided-mode .guided-overview,
+body.guided-mode .action-bar,body.guided-mode .guided-deploy-stage,body.guided-mode button{
+  transition:transform .20s ease,border-color .20s ease,background .20s ease,box-shadow .20s ease,opacity .20s ease;
+}
+body.guided-mode .panel:hover{box-shadow:0 22px 52px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.035)}
+body.guided-mode button:active{transform:translateY(1px) scale(.99)}
+
+/* Baseline selection: explicit checkmark, joyful selected fills, still fully interactive. */
+body.guided-mode .terminal-baseline{border-color:rgba(234,255,79,.42);background:linear-gradient(135deg,rgba(234,255,79,.09),rgba(103,232,249,.05) 47%,rgba(180,140,255,.065));box-shadow:0 18px 44px rgba(0,0,0,.12)}
+body.guided-mode .terminal-baseline legend{font-size:1.06rem;color:#fbffe6}
+body.guided-mode .terminal-baseline>p{font-size:.84rem;color:#b0bbca}
+body.guided-mode .terminal-baseline-options label{position:relative;overflow:hidden;min-height:94px;border-color:rgba(255,255,255,.12);background:rgba(14,19,30,.86)}
+body.guided-mode .terminal-baseline-options label:hover{transform:translateY(-2px);border-color:rgba(234,255,79,.48);box-shadow:0 12px 28px rgba(0,0,0,.14)}
+body.guided-mode .terminal-baseline-options label:has(input:checked){transform:translateY(-2px);border-color:var(--cpb-lime);background:linear-gradient(145deg,rgba(234,255,79,.20),rgba(255,216,77,.10) 43%,rgba(255,155,84,.075));box-shadow:0 14px 34px rgba(234,255,79,.10),inset 0 0 0 1px rgba(234,255,79,.12)}
+body.guided-mode .terminal-baseline-options input{border-radius:7px;border-color:#6b778d;background:#0b1019;transition:.18s ease}
+body.guided-mode .terminal-baseline-options input:checked{border:0;background:linear-gradient(135deg,var(--cpb-lime),var(--cpb-yellow));box-shadow:0 0 0 3px rgba(234,255,79,.12)}
+body.guided-mode .terminal-baseline-options input:checked::after{content:"✓";color:#10120a;font-size:.82rem;font-weight:950;line-height:1}
+body.guided-mode .terminal-baseline-options label:has(input:checked)::after{content:"Selected ✓";position:absolute;right:11px;top:10px;padding:4px 8px;border-radius:999px;background:var(--cpb-lime);color:#11140a;font-size:.59rem;font-weight:900;letter-spacing:.02em}
+body.guided-mode .baseline-modules-lock{border-style:solid;border-color:rgba(234,255,79,.30);background:linear-gradient(135deg,rgba(234,255,79,.07),rgba(180,140,255,.04))}
+
+/* Stronger, cheerful module personalities. */
+body.guided-mode .checks label{min-height:86px}
+body.guided-mode .checks label:hover{transform:translateY(-2px)}
+body.guided-mode .checks label:has(input:checked){transform:translateY(-1px);box-shadow:0 13px 34px rgba(var(--module-accent,246,255,99),.10),inset 0 0 0 1px rgba(var(--module-accent,246,255,99),.08)}
+body.guided-mode .checks label[data-baseline-state="required"]::after{content:"Included ✓";background:rgba(234,255,79,.92);color:#11140a;letter-spacing:0}
+
+/* Replace old console/warning vibe with modern product status surfaces. */
+body.guided-mode .console-panel{border-color:rgba(103,232,249,.20);background:linear-gradient(145deg,rgba(103,232,249,.055),rgba(14,19,30,.94) 32%);border-radius:20px;box-shadow:0 18px 42px rgba(0,0,0,.12)}
+body.guided-mode .console-heading{font-family:inherit;letter-spacing:0;text-transform:none}
+body.guided-mode .console-heading span{font-weight:800;color:#eef6ff}
+body.guided-mode .console-heading em{color:#91a3b7;font-style:normal;font-weight:550}
+body.guided-mode #preview{font-family:inherit;white-space:pre-wrap;line-height:1.6;border-radius:14px;background:rgba(8,13,21,.62);color:#bcc8d8}
+body.guided-mode .console-status-line span,body.guided-mode .action-copy .ok{padding:4px 8px;border-radius:999px;background:rgba(115,243,191,.13);color:#9dffd7;font-weight:800;letter-spacing:0;text-transform:none}
+body.guided-mode .inline-warning{border:1px solid rgba(255,155,84,.26);border-radius:13px;background:rgba(255,155,84,.07);color:#ffc49f;padding:11px 13px}
+body.guided-mode .inline-warning.success{border-color:rgba(57,255,20,.34);background:rgba(57,255,20,.08);color:#8dff79}
+body.guided-mode .contract-check{font-family:inherit;border-radius:10px;letter-spacing:0}
+body.guided-mode .evm-badge{border-radius:999px;background:rgba(180,140,255,.13);color:#daccff;padding:3px 6px;font-size:.62rem;letter-spacing:.03em}
+
+/* Footer becomes a signature brand card. */
+body.guided-mode .ctb-canonical-builder-footer{
+  width:min(100% - 28px,1180px);margin:18px auto 28px!important;padding:18px 22px!important;
+  border:0!important;border-radius:24px!important;
+  background:linear-gradient(112deg,#eaff4f 0%,#f5ff68 34%,#ffd84d 73%,#ffc65b 100%)!important;
+  box-shadow:0 18px 48px rgba(234,255,79,.13),0 9px 28px rgba(0,0,0,.18)!important;
+  color:#10130c!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.92rem!important;color:#10130c!important;font-weight:900!important;letter-spacing:-.01em!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-version{font-size:.72rem!important;color:#343817!important;font-weight:750!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.80rem;color:#242713!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#10130c!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#5a2dbf!important;font-weight:900;text-decoration:none;border-bottom:1px solid rgba(90,45,191,.34)}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{color:#32127c!important;border-bottom-color:#32127c}
+body.guided-mode .builder-signature-avatar{box-shadow:0 0 0 3px rgba(16,19,12,.12)}
+
+@media(max-width:720px){
+  body.guided-mode::before,body.guided-mode::after{display:none!important}
+  body.guided-mode .hero{padding-top:24px;padding-bottom:22px}
+  body.guided-mode .hero h1 .simple-only{font-size:clamp(1.65rem,8vw,2.15rem)}
+  body.guided-mode .ctb-canonical-builder-footer{width:calc(100% - 18px);border-radius:18px!important;padding:16px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  body.guided-mode *,body.guided-mode *::before,body.guided-mode *::after{animation:none!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+
+
+/* CPB RC Pass 8 — Robinhood lime, elegant hero, crypto-culture backdrop, slim signature footer. */
+body.guided-mode{
+  --rh-lime:#ccff00;
+  --rh-lime-soft:#dcff52;
+  --rh-ink:#10130b;
+  --rh-violet:#7b5cff;
+}
+
+/* Recognizable but restrained crypto / NFT / meme / community atmosphere. */
+body.guided-mode::before{
+  content:""!important;display:block!important;position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.30;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='%23ccff00' stroke-width='3' opacity='.72'%3E%3Ccircle cx='110' cy='110' r='70'/%3E%3Ccircle cx='110' cy='110' r='54' opacity='.5'/%3E%3Cpath d='M92 88c8-10 34-10 38 4 5 18-30 14-30 30 0 13 24 14 34 2M112 70v78'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='260' viewBox='0 0 240 260'%3E%3Cg fill='none' stroke='%23ccff00' stroke-width='3' opacity='.66'%3E%3Crect x='38' y='30' width='164' height='200' rx='25'/%3E%3Ccircle cx='88' cy='90' r='23'/%3E%3Cpath d='M60 184l43-48 27 27 21-22 31 43M157 73l10 10 18-22'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='220' viewBox='0 0 240 220'%3E%3Cg fill='none' stroke='%23ccff00' stroke-width='3' opacity='.64'%3E%3Cpath d='M36 50h168a20 20 0 0 1 20 20v78a20 20 0 0 1-20 20h-78l-34 29 7-29H36a20 20 0 0 1-20-20V70a20 20 0 0 1 20-20z'/%3E%3Ccircle cx='78' cy='103' r='6'/%3E%3Ccircle cx='120' cy='103' r='6'/%3E%3Ccircle cx='162' cy='103' r='6'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23ccff00' stroke-width='3' opacity='.62'%3E%3Ccircle cx='120' cy='120' r='74'/%3E%3Ccircle cx='92' cy='105' r='7'/%3E%3Ccircle cx='148' cy='105' r='7'/%3E%3Cpath d='M80 142c21 25 59 25 80 0M70 68l-18-17M170 68l18-17'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='220' viewBox='0 0 260 220'%3E%3Cg fill='none' stroke='%23ccff00' stroke-width='3' opacity='.62'%3E%3Ccircle cx='130' cy='74' r='28'/%3E%3Ccircle cx='76' cy='105' r='22'/%3E%3Ccircle cx='184' cy='105' r='22'/%3E%3Cpath d='M78 178c3-40 24-59 52-59s50 19 53 59M31 178c2-28 17-44 41-44M229 178c-2-28-17-44-41-44'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='220' viewBox='0 0 260 220'%3E%3Cg fill='none' stroke='%23ccff00' stroke-width='3' opacity='.58'%3E%3Cpath d='M101 70l-28-18-35 35 18 28M159 150l28 18 35-35-18-28M91 130l78-40M83 148l94-56'/%3E%3Crect x='64' y='77' width='75' height='49' rx='24' transform='rotate(-45 101 101)'/%3E%3Crect x='121' y='94' width='75' height='49' rx='24' transform='rotate(-45 159 119)'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:3% 8%,96% 23%,2% 43%,97% 57%,3% 75%,96% 89%;
+  background-size:150px 150px,160px 174px,150px 138px,150px 150px,165px 140px,170px 144px;
+  filter:drop-shadow(0 0 18px rgba(204,255,0,.08));
+}
+body.guided-mode::after{
+  content:""!important;display:block!important;position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:1;border:0;border-radius:0;
+  background:
+    radial-gradient(ellipse 48rem 30rem at -5% 10%,rgba(204,255,0,.18),transparent 61%),
+    radial-gradient(ellipse 42rem 30rem at 104% 32%,rgba(255,146,68,.14),transparent 62%),
+    radial-gradient(ellipse 44rem 32rem at -4% 72%,rgba(126,92,255,.12),transparent 62%),
+    radial-gradient(ellipse 44rem 31rem at 104% 88%,rgba(70,227,225,.10),transparent 63%);
+  animation:cpb-community-drift 20s ease-in-out infinite alternate;
+}
+
+/* Clean hero: no floating logo; Robinhood line is elegant text, not a badge. */
+body.guided-mode .simple-brand-mark{display:none!important}
+body.guided-mode .hero{padding-top:38px;padding-bottom:28px}
+body.guided-mode .hero h1 .simple-only{
+  background:linear-gradient(105deg,#ccff00 0%,#eaff66 22%,#ffffff 34%,#ccff00 45%,#ffb347 66%,#ccff00 82%,#f5ffae 100%);
+  background-size:320% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 22px rgba(204,255,0,.13),0 0 52px rgba(204,255,0,.07);
+  animation:cpb-title-shine 4.8s cubic-bezier(.45,0,.2,1) infinite;
+}
+@keyframes cpb-title-shine{0%{background-position:110% 50%}48%,100%{background-position:-30% 50%}}
+body.guided-mode .hero::before{
+  background:radial-gradient(ellipse,rgba(204,255,0,.17),rgba(204,255,0,.065) 35%,rgba(255,164,75,.03) 54%,transparent 72%);
+}
+body.guided-mode .rh-chain-line{
+  display:block;margin:10px auto 0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;
+  color:#a9b59b;font-size:.82rem;font-weight:570;letter-spacing:.012em;
+}
+body.guided-mode .rh-chain-line strong{color:#ccff00;font-weight:850;text-shadow:0 0 16px rgba(204,255,0,.16)}
+
+/* Robinhood lime becomes the canonical cheerful primary accent. */
+body.guided-mode .terminal-baseline{border-color:rgba(204,255,0,.40)}
+body.guided-mode .terminal-baseline-options label:hover{border-color:rgba(204,255,0,.54)}
+body.guided-mode .terminal-baseline-options label:has(input:checked){border-color:#ccff00;background:linear-gradient(145deg,rgba(204,255,0,.20),rgba(220,255,82,.10) 43%,rgba(255,151,71,.075));box-shadow:0 14px 34px rgba(204,255,0,.11),inset 0 0 0 1px rgba(204,255,0,.13)}
+body.guided-mode .terminal-baseline-options input:checked{background:linear-gradient(135deg,#ccff00,#eaff66);box-shadow:0 0 0 3px rgba(204,255,0,.14)}
+body.guided-mode .terminal-baseline-options label:has(input:checked)::after{background:#ccff00;color:#10130b}
+
+/* Slim, elegant signature footer. */
+body.guided-mode .ctb-canonical-builder-footer{
+  width:min(100% - 36px,1120px);margin:16px auto 24px!important;padding:10px 18px!important;
+  border:0!important;border-radius:16px!important;
+  background:#ccff00!important;
+  box-shadow:0 10px 28px rgba(204,255,0,.10),0 6px 20px rgba(0,0,0,.15)!important;
+  color:#10130b!important;gap:2px!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.78rem!important;color:#10130b!important;font-weight:900!important;line-height:1.15!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-version{font-size:.61rem!important;color:#354000!important;font-weight:800!important;margin:0!important;line-height:1.1!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature{gap:7px!important;margin-top:2px!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-avatar{width:24px!important;height:24px!important;box-shadow:0 0 0 2px rgba(16,19,11,.12)}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.70rem!important;color:#242b0c!important;line-height:1.15!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#10130b!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#6436d8!important;font-weight:950!important;border-bottom-color:rgba(100,54,216,.40)!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{color:#3c168f!important;border-bottom-color:#3c168f!important}
+
+@media(max-width:900px){
+  body.guided-mode::before{opacity:.20;background-size:120px 120px,128px 140px,120px 110px,120px 120px,132px 112px,136px 116px}
+}
+@media(max-width:720px){
+  body.guided-mode::before,body.guided-mode::after{display:none!important}
+  body.guided-mode .hero{padding-top:28px;padding-bottom:22px}
+  body.guided-mode .ctb-canonical-builder-footer{width:calc(100% - 20px);padding:9px 12px!important;border-radius:14px!important}
+}
+
+
+/* CPB RC Pass 9 — cheerful modules, stateful deploy, refined footer/actions, visible culture backdrop, flash-free first paint. */
+body.guided-mode::before{
+  opacity:.48;
+  background-position:1.5% 7%,98.5% 22%,1.2% 42%,98.5% 58%,1.5% 76%,98.4% 91%;
+  background-size:178px 178px,188px 204px,180px 165px,176px 176px,194px 164px,198px 168px;
+  filter:drop-shadow(0 0 20px rgba(204,255,0,.14));
+}
+body.guided-mode::after{
+  background:
+    radial-gradient(ellipse 52rem 32rem at -4% 8%,rgba(204,255,0,.22),transparent 61%),
+    radial-gradient(ellipse 47rem 31rem at 103% 28%,rgba(255,170,0,.18),transparent 62%),
+    radial-gradient(ellipse 45rem 33rem at -3% 69%,rgba(126,92,255,.15),transparent 62%),
+    radial-gradient(ellipse 47rem 32rem at 104% 87%,rgba(255,116,72,.13),transparent 63%);
+}
+
+/* Module cards are products: thicker borders and distinct cheerful identities. */
+body.guided-mode .checks label{border-width:2px}
+body.guided-mode .checks label:nth-child(6n+1){--module-accent:255,224,67}
+body.guided-mode .checks label:nth-child(6n+2){--module-accent:255,145,55}
+body.guided-mode .checks label:nth-child(6n+3){--module-accent:87,231,196}
+body.guided-mode .checks label:nth-child(6n+4){--module-accent:173,129,255}
+body.guided-mode .checks label:nth-child(6n+5){--module-accent:80,213,255}
+body.guided-mode .checks label:nth-child(6n+6){--module-accent:255,103,130}
+body.guided-mode .checks label{border-color:rgba(var(--module-accent),.30)}
+body.guided-mode .checks label:hover{border-color:rgba(var(--module-accent),.72);background:linear-gradient(145deg,rgba(var(--module-accent),.10),rgba(16,21,33,.96))}
+body.guided-mode .checks label:has(input:checked){border-color:rgb(var(--module-accent));background:linear-gradient(145deg,rgba(var(--module-accent),.17),rgba(16,21,33,.96));box-shadow:0 14px 34px rgba(var(--module-accent),.10),inset 0 0 0 1px rgba(var(--module-accent),.08)}
+body.guided-mode .checks label:nth-child(6n+1) strong{color:#ffe85c}
+body.guided-mode .checks label:nth-child(6n+2) strong{color:#ffad67}
+body.guided-mode .checks label:nth-child(6n+3) strong{color:#8df2d5}
+body.guided-mode .checks label:nth-child(6n+4) strong{color:#d8bcff}
+body.guided-mode .checks label:nth-child(6n+5) strong{color:#9ce9ff}
+body.guided-mode .checks label:nth-child(6n+6) strong{color:#ff9daf}
+
+/* Deploy is a real readiness indicator: red until the current configuration is built; neon green when current. */
+body.guided-mode .guided-deploy-stage{border:2px solid rgba(255,74,86,.82);background:linear-gradient(145deg,rgba(255,74,86,.07),rgba(18,22,33,.97));box-shadow:0 0 0 1px rgba(255,74,86,.04),0 16px 40px rgba(255,74,86,.04)}
+body.guided-mode .guided-deploy-stage-head strong{color:#ff7a84}
+body.guided-mode.portal-build-ready .guided-deploy-stage{border-color:#39ff14;background:linear-gradient(145deg,rgba(57,255,20,.075),rgba(18,22,33,.97));box-shadow:0 0 24px rgba(57,255,20,.09),0 16px 40px rgba(0,0,0,.12)}
+body.guided-mode.portal-build-ready .guided-deploy-stage-head strong{color:#71ff59}
+
+/* Additional Links destructive action: compact, secondary, elegant. */
+body.guided-mode .additional-link-remove{align-self:end;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px!important;border:1px solid rgba(255,105,112,.48)!important;border-radius:999px!important;background:rgba(255,105,112,.055)!important;color:#ff8f95!important;font-size:.70rem!important;font-weight:750!important;letter-spacing:0!important;box-shadow:none!important}
+body.guided-mode .additional-link-remove span:first-child{font-size:1.05rem;line-height:1}
+body.guided-mode .additional-link-remove:hover{border-color:rgba(255,105,112,.85)!important;background:rgba(255,105,112,.12)!important;color:#ffb1b5!important;transform:translateY(-1px)}
+
+/* Footer keeps its footprint, but gets clearer hierarchy and a living signature. */
+body.guided-mode .ctb-canonical-builder-footer{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:28px!important;padding:14px 22px!important;color:#10130b!important}
+body.guided-mode .cpb-footer-copy{display:grid;gap:2px;text-align:left}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.84rem!important;color:#11150b!important;font-weight:950!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-chain{font-size:.69rem;color:#27320b;font-weight:760;line-height:1.25}
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline{font-size:.66rem;color:#485900;font-weight:850;letter-spacing:.055em}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature{display:flex!important;align-items:center!important;gap:10px!important;margin:0!important}
+body.guided-mode .builder-signature-avatar-wrap{position:relative;display:grid;place-items:center;width:34px;height:34px;border-radius:50%}
+body.guided-mode .builder-signature-avatar-wrap::before{content:"";position:absolute;inset:-4px;border:2px solid rgba(103,54,216,.68);border-radius:50%;box-shadow:0 0 12px rgba(103,54,216,.26);animation:cpb-avatar-ring 3.2s ease-in-out infinite}
+body.guided-mode .builder-signature-avatar{width:28px!important;height:28px!important;border-radius:50%!important;box-shadow:0 3px 10px rgba(0,0,0,.16)!important;animation:cpb-avatar-float 3.2s ease-in-out infinite}
+body.guided-mode .builder-signature-avatar-wrap:hover .builder-signature-avatar{transform:translateY(-2px) scale(1.05)}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.72rem!important;color:#1b210d!important;white-space:nowrap}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy span{color:#1b210d!important;font-weight:760!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#10130b!important;font-weight:950!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#6535d9!important}
+@keyframes cpb-avatar-ring{0%,100%{transform:scale(.94);opacity:.58}50%{transform:scale(1.08);opacity:1}}
+@keyframes cpb-avatar-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+
+/* Floating Robinhood-lime back-to-top control. */
+body.guided-mode .back-to-top{position:fixed;right:24px;bottom:24px;z-index:40;display:grid!important;place-items:center;width:48px;height:48px;padding:0;border:0;border-radius:50%;background:#ccff00;color:#0b0d08;font-size:1.35rem;font-weight:950;line-height:1;box-shadow:0 10px 28px rgba(204,255,0,.18),0 6px 18px rgba(0,0,0,.28);opacity:0;pointer-events:none;transform:translateY(10px) scale(.92);transition:opacity .2s ease,transform .2s ease,box-shadow .2s ease}
+body.guided-mode .back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+body.guided-mode .back-to-top:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 0 0 5px rgba(204,255,0,.10),0 12px 32px rgba(204,255,0,.24),0 7px 20px rgba(0,0,0,.28)}
+body.advanced-mode .back-to-top{display:none!important}
+
+@media(max-width:900px){body.guided-mode::before{opacity:.34}}
+@media(max-width:720px){
+  body.guided-mode::before{display:block!important;opacity:.20;background-size:92px 92px,96px 106px,92px 84px,92px 92px,98px 84px,100px 86px}
+  body.guided-mode .ctb-canonical-builder-footer{display:grid!important;justify-items:center!important;text-align:center!important;gap:9px!important}
+  body.guided-mode .cpb-footer-copy{text-align:center}
+  body.guided-mode .back-to-top{right:14px;bottom:14px;width:44px;height:44px}
+}
+
+/* CPB RC Pass 10 — four-step deployment flow, story-led hero, visible culture art, unified modern feedback. */
+body.guided-mode .guided-overview{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+/* Header story: Build -> Launch -> Grow, then the CPB title receives the shine. */
+body.guided-mode .cpb-motto{display:flex!important;justify-content:center;align-items:center;gap:10px;margin:15px auto 0;font-size:1.02rem;font-weight:900;letter-spacing:.015em}
+body.guided-mode .cpb-motto span{display:inline-block;opacity:0;transform:translateY(8px) scale(.96);filter:blur(3px)}
+body.guided-mode .cpb-motto .motto-build{color:#b99cff;animation:cpb-motto-in .62s .25s cubic-bezier(.2,.75,.25,1) forwards,cpb-motto-violet-glow 2.8s 3.1s ease-in-out infinite alternate}
+body.guided-mode .cpb-motto .motto-launch{color:#ff9a48;animation:cpb-motto-in .62s .92s cubic-bezier(.2,.75,.25,1) forwards,cpb-motto-orange-glow 2.8s 3.25s ease-in-out infinite alternate}
+body.guided-mode .cpb-motto .motto-grow{color:#ccff00;animation:cpb-motto-in .62s 1.59s cubic-bezier(.2,.75,.25,1) forwards,cpb-motto-lime-glow 2.8s 3.4s ease-in-out infinite alternate}
+body.guided-mode .hero h1 .simple-only{animation:cpb-title-after-motto 8s 2.45s cubic-bezier(.45,0,.2,1) infinite;background-position:110% 50%}
+@keyframes cpb-motto-in{to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes cpb-motto-violet-glow{from{text-shadow:0 0 4px rgba(185,156,255,.15)}to{text-shadow:0 0 18px rgba(185,156,255,.48)}}
+@keyframes cpb-motto-orange-glow{from{text-shadow:0 0 4px rgba(255,154,72,.13)}to{text-shadow:0 0 18px rgba(255,154,72,.42)}}
+@keyframes cpb-motto-lime-glow{from{text-shadow:0 0 4px rgba(204,255,0,.14)}to{text-shadow:0 0 20px rgba(204,255,0,.48)}}
+@keyframes cpb-title-after-motto{0%,7%{background-position:110% 50%;text-shadow:0 0 22px rgba(204,255,0,.13),0 0 52px rgba(204,255,0,.07)}20%{background-position:-30% 50%;text-shadow:0 0 28px rgba(204,255,0,.28),0 0 62px rgba(255,179,71,.10)}33%,100%{background-position:-30% 50%;text-shadow:0 0 22px rgba(204,255,0,.13),0 0 52px rgba(204,255,0,.07)}}
+
+/* Real decorative illustrations live in the outer breathing space instead of disappearing behind the body. */
+body.guided-mode .cpb-culture-art{display:block!important;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+body.guided-mode .shell{position:relative;z-index:2}
+body.guided-mode .culture-motif{position:absolute;width:150px;height:150px;fill:none;stroke:#ccff00;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.24;filter:drop-shadow(0 0 12px rgba(204,255,0,.18))}
+body.guided-mode .motif-build{left:10px;top:17%;stroke:#ccff00;transform:rotate(-5deg)}
+body.guided-mode .motif-deploy{right:8px;top:36%;stroke:#ff9a48;opacity:.22;filter:drop-shadow(0 0 12px rgba(255,154,72,.16));transform:rotate(5deg)}
+body.guided-mode .motif-grow{left:8px;top:60%;stroke:#b99cff;opacity:.22;filter:drop-shadow(0 0 12px rgba(185,156,255,.16));transform:rotate(-3deg)}
+body.guided-mode .motif-community{right:8px;top:79%;stroke:#ccff00;opacity:.23;transform:rotate(3deg)}
+body.advanced-mode .cpb-culture-art{display:none!important}
+
+/* One final Deploy stage. Red means the current configuration still needs a fresh build; green means the current build is ready. */
+body.guided-mode #guided-deploy{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;max-width:1120px;margin:4px auto 18px;padding:25px 26px;border:2px solid rgba(255,74,86,.84)!important;border-radius:20px;background:linear-gradient(145deg,rgba(255,74,86,.065),rgba(18,22,33,.97))!important;box-shadow:0 16px 40px rgba(255,74,86,.045);scroll-margin-top:18px}
+body.guided-mode #guided-deploy::before{content:"Deploy";position:static;display:block;grid-column:1/-1;margin:0 0 -6px;color:#ff7a84;font-size:1.24rem;font-weight:850;letter-spacing:-.015em}
+body.guided-mode #guided-deploy .action-copy{font-size:.84rem;color:#aeb8ca;line-height:1.55}
+body.guided-mode #guided-deploy .action-copy .ok{display:none}
+body.guided-mode.portal-build-ready #guided-deploy{border-color:#39ff14!important;background:linear-gradient(145deg,rgba(57,255,20,.075),rgba(18,22,33,.97))!important;box-shadow:0 0 26px rgba(57,255,20,.09),0 16px 40px rgba(0,0,0,.12)}
+body.guided-mode.portal-build-ready #guided-deploy::before{color:#71ff59}
+
+/* Elegant animated transition into the footer. */
+body.guided-mode .cpb-prefooter-energy{display:grid!important;gap:9px;width:min(100% - 64px,1080px);margin:26px auto 14px;padding:2px 0;overflow:hidden}
+body.guided-mode .energy-line{position:relative;display:block;height:1px;border-radius:999px;overflow:visible;background:rgba(255,255,255,.06)}
+body.guided-mode .energy-line::after{content:"";position:absolute;top:-1px;left:-24%;width:24%;height:3px;border-radius:999px;animation:cpb-energy-sweep 4.8s ease-in-out infinite}
+body.guided-mode .energy-lime::after{background:linear-gradient(90deg,transparent,#ccff00,transparent);box-shadow:0 0 12px rgba(204,255,0,.48),0 0 28px rgba(204,255,0,.18)}
+body.guided-mode .energy-violet::after{background:linear-gradient(90deg,transparent,#9d7cff,transparent);box-shadow:0 0 12px rgba(157,124,255,.42),0 0 26px rgba(157,124,255,.16);animation-delay:.7s}
+@keyframes cpb-energy-sweep{0%{left:-24%;opacity:0}12%{opacity:1}72%{opacity:1}100%{left:100%;opacity:0}}
+body.advanced-mode .cpb-prefooter-energy{display:none!important}
+
+/* Footer readability and borderless animated avatar. */
+body.guided-mode .ctb-canonical-builder-footer .footer-title{color:#11150b!important;text-shadow:0 1px 0 rgba(255,255,255,.22),0 1px 7px rgba(46,55,0,.08)}
+body.guided-mode .ctb-canonical-builder-footer .footer-chain{color:#20290a!important;text-shadow:0 1px 0 rgba(255,255,255,.18)}
+body.guided-mode .builder-signature-avatar-wrap::before{border:0!important;inset:-5px;background:radial-gradient(circle,rgba(103,54,216,.24),rgba(103,54,216,.08) 45%,transparent 70%);box-shadow:none!important;filter:blur(1px);animation:cpb-avatar-halo 3.2s ease-in-out infinite}
+body.guided-mode .builder-signature-avatar{box-shadow:0 4px 12px rgba(0,0,0,.18)!important}
+@keyframes cpb-avatar-halo{0%,100%{transform:scale(.88);opacity:.48}50%{transform:scale(1.16);opacity:.9}}
+
+/* Unified CPB feedback system for dialogs and toasts. */
+body.guided-mode dialog.nft-mint-confirm,body.guided-mode dialog.build-complete,body.guided-mode dialog.deployment-success-dialog{border:1px solid rgba(185,156,255,.30)!important;border-radius:20px!important;background:#111622!important;color:#eef2f8!important;box-shadow:0 26px 90px rgba(0,0,0,.58),0 0 36px rgba(185,156,255,.08)!important;overflow:hidden;font-family:inherit}
+body.guided-mode dialog::backdrop{background:rgba(3,5,10,.76)!important;backdrop-filter:blur(7px)!important}
+body.guided-mode .nft-mint-confirm-head,body.guided-mode .build-modal-head,body.guided-mode .deployment-success-panel header{padding:16px 18px!important;border-bottom:1px solid rgba(255,255,255,.08)!important;background:linear-gradient(120deg,rgba(185,156,255,.10),rgba(204,255,0,.035))!important;color:#f5f7fb!important;font-size:.88rem!important;font-weight:850!important;letter-spacing:.01em!important;text-transform:none!important}
+body.guided-mode .nft-mint-confirm-head button,body.guided-mode .build-modal-head button,body.guided-mode .deployment-success-x{border:0!important;border-radius:50%!important;background:rgba(255,255,255,.06)!important;color:#aeb8c8!important;width:34px;height:34px;padding:0!important;box-shadow:none!important}
+body.guided-mode .nft-mint-confirm-body>strong,body.guided-mode .build-summary strong,body.guided-mode .deployment-success-body strong{color:#f6f8fb!important;letter-spacing:0!important;text-transform:none!important}
+body.guided-mode .nft-time-review{border:1px solid rgba(255,255,255,.08)!important;border-radius:14px!important;background:#0c111b!important}
+body.guided-mode .nft-mint-confirm-actions,body.guided-mode .deployment-success-actions{border-top:1px solid rgba(255,255,255,.08)!important;padding:14px 18px!important}
+body.guided-mode .nft-mint-confirm-actions button,body.guided-mode .build-actions button,body.guided-mode .deployment-success-actions button,body.guided-mode .deployment-success-open{border-radius:12px!important;font-family:inherit!important;font-weight:800!important;letter-spacing:0!important}
+body.guided-mode .deployment-toast,body.guided-mode .auto-save-toast,body.guided-mode .release-alert{border-radius:14px!important;background:#141a27!important;color:#eef2f8!important;box-shadow:0 18px 48px rgba(0,0,0,.42)!important;font-family:inherit!important;letter-spacing:0!important}
+body.guided-mode .deployment-toast strong,body.guided-mode .auto-save-toast strong{font-size:.76rem!important;letter-spacing:0!important;text-transform:none!important}
+body.guided-mode .deployment-toast.success{border-color:rgba(57,255,20,.55)!important}.deployment-toast.success strong{color:#71ff59!important}
+body.guided-mode .deployment-toast.fail{border-color:rgba(255,103,130,.58)!important}.deployment-toast.fail strong{color:#ff8da2!important}
+body.guided-mode .deployment-success-header span{color:#ccff00!important;letter-spacing:0!important;text-transform:none!important}
+body.guided-mode .quick-deploy-state{border-radius:12px!important;border-color:rgba(204,255,0,.25)!important;background:rgba(204,255,0,.045)!important;color:#dce7c8!important}
+
+@media(max-width:1120px){body.guided-mode .culture-motif{width:112px;height:112px;opacity:.17}body.guided-mode .motif-build,body.guided-mode .motif-grow{left:-18px}body.guided-mode .motif-deploy,body.guided-mode .motif-community{right:-18px}}
+@media(max-width:780px){body.guided-mode .cpb-culture-art{display:none!important}body.guided-mode .cpb-motto{font-size:.92rem;gap:8px}body.guided-mode #guided-deploy{grid-template-columns:1fr;padding:21px}body.guided-mode .cpb-prefooter-energy{width:calc(100% - 34px)}}
+@media(prefers-reduced-motion:reduce){body.guided-mode .cpb-motto span{opacity:1;transform:none;filter:none;animation:none!important}body.guided-mode .hero h1 .simple-only,body.guided-mode .energy-line::after,body.guided-mode .builder-signature-avatar-wrap::before{animation:none!important}.energy-line::after{left:38%!important;opacity:.7!important}}
+
+/* CPB RC Pass 11 — simplified selection language.
+   Baselines and modules use one cue only: empty square = off, solid square = on. */
+body.guided-mode .terminal-baseline-options input,
+body.guided-mode .checks input{
+  display:block;
+  place-items:unset;
+}
+body.guided-mode .terminal-baseline-options input:checked::after,
+body.guided-mode .checks input:checked::after{
+  content:none!important;
+  display:none!important;
+}
+body.guided-mode .terminal-baseline-options label:has(input:checked)::after,
+body.guided-mode .checks label[data-baseline-state="required"]::after{
+  content:none!important;
+  display:none!important;
+}
+body.guided-mode .terminal-baseline-options input{
+  border-radius:6px;
+}
+body.guided-mode .terminal-baseline-options input:checked{
+  border:1px solid #ccff00;
+  background:#ccff00;
+  box-shadow:0 0 0 3px rgba(204,255,0,.12);
+}
+body.guided-mode .checks input{
+  border-radius:5px;
+  transition:border-color .16s ease,background .16s ease,box-shadow .16s ease;
+}
+body.guided-mode .checks input:checked{
+  border-color:rgb(var(--module-accent,204,255,0));
+  background:rgb(var(--module-accent,204,255,0));
+  box-shadow:0 0 0 3px rgba(var(--module-accent,204,255,0),.10);
+}
+
+
+/* CPB RC Pass 12 — consolidated final polish.
+   Clean black canvas, letter-by-letter hero story, compact deploy ending,
+   final footer palette, and single-signal baseline/module selection. */
+
+/* Clean canvas: remove all decorative culture illustrations and pseudo-art. */
+body.guided-mode .cpb-culture-art{display:none!important}
+body.guided-mode::before,body.guided-mode::after{content:none!important;display:none!important;background:none!important;filter:none!important}
+
+/* Baseline: whole card is the control; the small square is the only selection signal. */
+body.guided-mode .terminal-baseline-options label{
+  cursor:pointer;
+  border:2px solid rgba(255,255,255,.13)!important;
+  background:rgba(14,19,30,.88)!important;
+  box-shadow:none!important;
+}
+body.guided-mode .terminal-baseline-options label:hover{
+  border-color:rgba(57,255,20,.42)!important;
+  background:rgba(17,23,35,.96)!important;
+}
+body.guided-mode .terminal-baseline-options label:has(input:checked){
+  border-color:rgba(57,255,20,.78)!important;
+  background:linear-gradient(145deg,rgba(57,255,20,.075),rgba(14,19,30,.94))!important;
+  box-shadow:0 0 0 1px rgba(57,255,20,.045),0 10px 26px rgba(57,255,20,.035)!important;
+  transform:none!important;
+}
+body.guided-mode .terminal-baseline-options label:has(input:checked)::after{content:none!important;display:none!important}
+body.guided-mode .terminal-baseline-options input{
+  appearance:none!important;
+  width:20px!important;height:20px!important;flex:0 0 20px!important;
+  margin:1px 0 0!important;
+  border:2px solid #6f7a8d!important;
+  border-radius:5px!important;
+  background:#080d15!important;
+  box-shadow:none!important;
+  transition:none!important;
+}
+body.guided-mode .terminal-baseline-options input::after,
+body.guided-mode .terminal-baseline-options input:checked::after{content:none!important;display:none!important}
+body.guided-mode .terminal-baseline-options input:checked{
+  border-color:#39ff14!important;
+  background:#39ff14!important;
+  box-shadow:0 0 0 3px rgba(57,255,20,.12),0 0 13px rgba(57,255,20,.18)!important;
+}
+
+/* Modules retain their cheerful card-specific fills; no ticks or status badges. */
+body.guided-mode .checks input:checked::after{content:none!important;display:none!important}
+body.guided-mode .checks label[data-baseline-state="required"]::after{content:none!important;display:none!important}
+
+/* Header story: reveal every letter slowly, word by word, then sweep the title. */
+body.guided-mode .cpb-motto{
+  display:flex!important;justify-content:center;align-items:center;gap:14px;
+  margin:17px auto 0;font-size:1.24rem;font-weight:900;letter-spacing:.018em;
+}
+body.guided-mode .cpb-motto .motto-word{display:inline-flex;white-space:nowrap}
+body.guided-mode .cpb-motto .motto-letter{
+  display:inline-block;opacity:0;transform:translateY(7px);filter:blur(2px);
+  animation:cpb-letter-reveal .54s cubic-bezier(.2,.78,.25,1) forwards;
+  animation-delay:calc(.22s + (var(--letter-index) * .145s));
+}
+body.guided-mode .cpb-motto .motto-build{color:#b99cff}
+body.guided-mode .cpb-motto .motto-launch{color:#ff9a48}
+body.guided-mode .cpb-motto .motto-grow{color:#ccff00}
+body.guided-mode .hero h1 .simple-only{
+  animation:cpb-title-after-letters 7.5s 3.35s cubic-bezier(.45,0,.2,1) infinite!important;
+  background-position:110% 50%;
+}
+@keyframes cpb-letter-reveal{from{opacity:0;transform:translateY(7px);filter:blur(2px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes cpb-title-after-letters{
+  0%,8%{background-position:110% 50%;text-shadow:0 0 18px rgba(204,255,0,.10)}
+  22%{background-position:-30% 50%;text-shadow:0 0 30px rgba(204,255,0,.26),0 0 56px rgba(255,154,72,.10)}
+  38%,100%{background-position:-30% 50%;text-shadow:0 0 18px rgba(204,255,0,.10)}
+}
+
+/* Compact final Deploy card and tighten the transition into the footer. */
+body.guided-mode #guided-deploy{
+  gap:16px!important;margin:4px auto 7px!important;padding:17px 22px!important;
+  min-height:0!important;
+}
+body.guided-mode #guided-deploy::before{margin:0 0 -3px!important;font-size:1.14rem!important}
+body.guided-mode #guided-deploy .action-copy{font-size:.80rem!important;line-height:1.45!important}
+body.guided-mode .cpb-prefooter-energy{
+  gap:8px!important;margin:7px auto 8px!important;padding:0!important;
+}
+
+/* Final footer: solid dark-blue hierarchy on Robinhood lime, no text shadows. */
+body.guided-mode .ctb-canonical-builder-footer{
+  color:#08285c!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .footer-title,
+body.guided-mode .ctb-canonical-builder-footer .footer-chain,
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy span,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{
+  color:#08285c!important;text-shadow:none!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.84rem!important;font-weight:950!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-chain{font-size:.69rem!important;font-weight:760!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline{font-size:.67rem!important;font-weight:900!important;letter-spacing:.045em!important;margin-top:2px}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{border-bottom-color:rgba(8,40,92,.38)!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{color:#031b42!important;border-bottom-color:#031b42!important}
+
+/* Borderless animated avatar: motion comes from a soft halo, not a ring. */
+body.guided-mode .builder-signature-avatar-wrap::before{
+  border:0!important;inset:-6px!important;
+  background:radial-gradient(circle,rgba(8,40,92,.22),rgba(8,40,92,.08) 46%,transparent 72%)!important;
+  box-shadow:none!important;filter:blur(1.5px)!important;
+}
+body.guided-mode .builder-signature-avatar{border:0!important;outline:0!important;box-shadow:0 4px 12px rgba(0,0,0,.16)!important}
+
+@media(max-width:780px){
+  body.guided-mode .cpb-motto{font-size:1.08rem!important;gap:10px!important}
+  body.guided-mode #guided-deploy{padding:16px 18px!important}
+  body.guided-mode .cpb-prefooter-energy{margin:6px auto 7px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  body.guided-mode .cpb-motto .motto-letter{opacity:1!important;transform:none!important;filter:none!important;animation:none!important}
+  body.guided-mode .hero h1 .simple-only{animation:none!important}
+}
+
+/* CPB RC Pass 12.1 — final footer/deploy alignment hotfix. */
+body.guided-mode #guided-deploy{
+  width:100%!important;
+  max-width:var(--simple-width)!important;
+  box-sizing:border-box!important;
+  margin:4px auto 3px!important;
+}
+body.guided-mode #builder{padding-bottom:8px!important}
+body.guided-mode #status:empty{display:none!important;min-height:0!important;margin:0!important;padding:0!important}
+body.guided-mode #status:not(:empty){min-height:0!important;margin:5px auto 0!important}
+body.guided-mode .cpb-prefooter-energy{
+  width:min(100% - 48px,var(--simple-width))!important;
+  margin:2px auto 5px!important;
+  gap:7px!important;
+}
+
+/* Footer copy must render crisp on Robinhood lime — no legacy glow/shadow leakage. */
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-copy,
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-copy *,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy *{
+  text-shadow:none!important;
+  filter:none!important;
+  -webkit-text-stroke:0 transparent!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-weight:850!important}
+
+@media(max-width:780px){
+  body.guided-mode #builder{padding-bottom:6px!important}
+  body.guided-mode #guided-deploy{margin-bottom:2px!important}
+  body.guided-mode .cpb-prefooter-energy{width:calc(100% - 34px)!important;margin:2px auto 5px!important}
+}
+
+/* CPB RC Pass 12.2 — baseline toggle, step colors, and final header hierarchy. */
+body.guided-mode .terminal-baseline-options label:has(input:checked){
+  border-color:#39ff14!important;
+  background:rgba(57,255,20,.055)!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.14),inset 0 0 0 1px rgba(57,255,20,.08)!important;
+}
+body.guided-mode .terminal-baseline-options input:checked{
+  border-color:#39ff14!important;
+  background:#39ff14!important;
+  box-shadow:0 0 0 3px rgba(57,255,20,.10),0 0 11px rgba(57,255,20,.17)!important;
+}
+body.guided-mode .terminal-baseline-options input:checked::after,
+body.guided-mode .terminal-baseline-options label:has(input:checked)::after{content:none!important;display:none!important}
+
+/* Step labels echo the accent of the section they lead to; helper copy stays quiet. */
+body.guided-mode .guided-overview a:nth-child(1) span{color:#f8ff91!important}
+body.guided-mode .guided-overview a:nth-child(2) span{color:#a8f3ff!important}
+body.guided-mode .guided-overview a:nth-child(3) span{color:#d6c8ff!important}
+body.guided-mode .guided-overview a:nth-child(4) span{color:#ff9a62!important}
+body.guided-mode .guided-overview a:nth-child(4).portal-ready span{color:#39ff14!important}
+body.guided-mode .guided-overview a small{color:#929db0!important}
+
+/* Header order: value proposition → animated motto → understated ecosystem context. */
+body.guided-mode .cpb-motto{margin:13px auto 0!important}
+body.guided-mode .rh-chain-line{
+  margin:13px auto 0!important;
+  color:rgba(184,196,173,.68)!important;
+  font-size:.72rem!important;
+  font-weight:540!important;
+  letter-spacing:.012em!important;
+  text-shadow:none!important;
+}
+body.guided-mode .rh-chain-line strong{
+  color:rgba(204,255,0,.84)!important;
+  font-weight:800!important;
+  text-shadow:none!important;
+}
+body.guided-mode.portal-build-ready .guided-overview a:nth-child(4) span{color:#39ff14!important}
+
+/* CPB Pass 12.3 — contract validation color language */
+body.guided-mode .contract-check.wait{color:#ffd84a;border-color:rgba(255,216,74,.55);background:rgba(255,216,74,.045)}
+body.guided-mode .contract-check.pass{color:#52ff74;border-color:rgba(82,255,116,.6);background:rgba(82,255,116,.045)}
+body.guided-mode .contract-check.fail{color:#ff6470;border-color:rgba(255,100,112,.68);background:rgba(255,100,112,.045)}
+body.guided-mode .contract-field input.contract-state-wait{border-color:#d8b72f!important;box-shadow:0 0 0 1px rgba(255,216,74,.1),0 0 14px rgba(255,216,74,.06)!important}
+body.guided-mode .contract-field input.contract-state-pass{border-color:#38e967!important;box-shadow:0 0 0 1px rgba(82,255,116,.12),0 0 16px rgba(82,255,116,.07)!important}
+body.guided-mode .contract-field input.contract-state-fail{border-color:#ff4f5f!important;box-shadow:0 0 0 1px rgba(255,100,112,.12),0 0 16px rgba(255,100,112,.07)!important}
+body.guided-mode .contract-field input.contract-state-wait:focus{border-color:#ffe55c!important}
+body.guided-mode .contract-field input.contract-state-pass:focus{border-color:#63ff80!important}
+body.guided-mode .contract-field input.contract-state-fail:focus{border-color:#ff6875!important}
+
+/* CPB Pass 12.12 — header animation controller isolation.
+   The animation classes are now driven by cpb-boot.js, not the large builder runtime. */
+/* Chapter 22C — motto animation conflict hotfix.
+   Legacy Pass 10 word animations must never drive the current motto; only letters reveal. */
+body.guided-mode .cpb-motto{
+  position:relative!important;
+  overflow:hidden!important;
+}
+body.guided-mode .cpb-motto .motto-word{
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  animation:none!important;
+}
+/* A real, visible light beam crosses the complete motto only after the final letter is revealed. */
+body.guided-mode .cpb-motto::after{
+  content:"";
+  position:absolute;
+  z-index:4;
+  pointer-events:none;
+  top:-28%;
+  bottom:-28%;
+  left:-34%;
+  width:24%;
+  opacity:0;
+  transform:skewX(-16deg);
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 18%,rgba(255,255,255,.76) 47%,rgba(255,255,255,.96) 52%,rgba(255,255,255,.28) 72%,transparent 100%);
+  filter:blur(3px);
+  mix-blend-mode:screen;
+}
+body.guided-mode .cpb-motto.cpb-motto-run::after{
+  animation:cpb-motto-light-pass 2.9s 2.95s cubic-bezier(.24,.02,.28,1) 1 both!important;
+}
+@keyframes cpb-motto-light-pass{
+  0%{left:-34%;opacity:0}
+  10%{opacity:.72}
+  82%{opacity:.72}
+  100%{left:112%;opacity:0}
+}
+
+/* Chapter 22C — mobile fit + header animation test/fix cycle 1.
+   Keep the accepted CPB design. Motto story: letter reveal → slow watchable shine → 10s replay. */
+body.guided-mode .cpb-motto .motto-letter{
+  /* Safe fallback: if the replay hook never runs, the complete motto remains readable. */
+  animation:none!important;
+  opacity:1;
+  transform:none;
+  filter:none;
+  text-shadow:none;
+}
+/* JS adds cpb-motto-animate only when the replay controller is alive. This preserves the
+   fail-safe while guaranteeing a genuinely hidden starting state for each replay. */
+body.guided-mode .cpb-motto.cpb-motto-animate .motto-letter{
+  opacity:0;
+  transform:translateY(7px);
+  filter:blur(2px);
+}
+body.guided-mode .cpb-motto.cpb-motto-animate.cpb-motto-run .motto-letter{
+  animation:cpb-letter-reveal .46s cubic-bezier(.2,.78,.25,1) forwards!important;
+  animation-delay:calc(.14s + (var(--letter-index) * .115s))!important;
+}
+
+@media(max-width:720px){
+  /* Keep all four accepted journey steps visible inside the viewport: no horizontal clipping/scrolling. */
+  body.guided-mode .guided-overview{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:3px!important;
+    overflow:visible!important;
+    padding:5px!important;
+  }
+  body.guided-mode .guided-overview a{
+    min-width:0!important;
+    gap:5px!important;
+    padding:8px 4px!important;
+  }
+  body.guided-mode .guided-overview b{
+    flex:0 0 24px!important;
+    width:24px!important;height:24px!important;
+    border-radius:7px!important;
+    font-size:.67rem!important;
+  }
+  body.guided-mode .guided-overview span{font-size:.65rem!important;letter-spacing:0!important}
+  body.guided-mode .guided-overview small{font-size:.55rem!important}
+
+  /* Footer keeps the accepted lime card and content, but fits a phone as a compact product signature. */
+  body.guided-mode .ctb-canonical-builder-footer{
+    width:calc(100% - 20px)!important;
+    box-sizing:border-box!important;
+    margin:9px auto 0!important;
+    padding:13px 12px!important;
+    gap:7px!important;
+    border-radius:18px!important;
+  }
+  body.guided-mode .cpb-footer-copy{gap:1px!important}
+  body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.76rem!important;line-height:1.2!important}
+  body.guided-mode .ctb-canonical-builder-footer .footer-chain{font-size:.62rem!important;line-height:1.2!important}
+  body.guided-mode .ctb-canonical-builder-footer .footer-tagline{font-size:.60rem!important;line-height:1.2!important;margin-top:1px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature{gap:7px!important}
+  body.guided-mode .builder-signature-avatar-wrap{width:30px!important;height:30px!important}
+  body.guided-mode .builder-signature-avatar{width:25px!important;height:25px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.65rem!important;line-height:1.25!important;white-space:normal!important;text-align:center!important}
+}
+@media(max-width:520px){
+  body.guided-mode .guided-overview small{display:none!important}
+  body.guided-mode .guided-overview a{justify-content:center!important;gap:4px!important}
+  body.guided-mode .guided-overview span{font-size:.62rem!important}
+}
+@media(max-width:390px){
+  body.guided-mode .guided-overview a{padding:7px 2px!important}
+  body.guided-mode .guided-overview b{flex-basis:22px!important;width:22px!important;height:22px!important}
+  body.guided-mode .guided-overview span{font-size:.58rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+  body.guided-mode .cpb-motto::after{display:none!important}
+  body.guided-mode .cpb-motto .motto-letter,
+  body.guided-mode .cpb-motto.cpb-motto-run .motto-letter{
+    opacity:1!important;transform:none!important;filter:none!important;animation:none!important;text-shadow:none!important;
+  }
+}
+/* Chapter 22C — mobile-only Robinhood Chain line break. */
+body.guided-mode .rh-chain-line .rh-mobile-chain-break{display:none}
+@media(max-width:720px){
+  body.guided-mode .rh-chain-line{display:block!important;text-align:center!important}
+  body.guided-mode .rh-chain-line .rh-mobile-chain-break{display:block!important}
+}
+
+
+
+/* Chapter 22C Test-1 polish bundle */
+body.guided-mode .build-complete{width:min(720px,calc(100% - 24px))!important}
+body.guided-mode .build-modal-head{background:linear-gradient(110deg,rgba(185,156,255,.14),rgba(255,138,0,.07),rgba(204,255,0,.05))!important}
+body.guided-mode .build-summary{padding:18px!important}
+body.guided-mode .build-summary strong#built-project{color:#ffe36f!important;font-size:1.08rem!important}
+body.guided-mode .built-modules{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin-top:12px!important}
+body.guided-mode .built-modules span{border:1px solid rgba(103,232,249,.26)!important;border-radius:999px!important;background:rgba(103,232,249,.06)!important;color:#aef2fb!important;padding:5px 9px!important;font-size:.66rem!important}
+body.guided-mode .terminal-ready-link{margin:12px 18px 0!important;padding:14px!important;border:1px solid rgba(185,156,255,.35)!important;border-radius:14px!important;background:linear-gradient(135deg,rgba(185,156,255,.055),rgba(57,255,20,.025))!important}
+body.guided-mode .terminal-ready-link span{color:#ffe36f!important}
+body.guided-mode .terminal-ready-link a{color:#67e8f9!important}
+body.guided-mode .quick-deploy-state{margin:14px 18px 0!important;padding:11px 13px!important;border-color:rgba(204,255,0,.34)!important;background:linear-gradient(90deg,rgba(204,255,0,.06),rgba(255,138,0,.035))!important}
+body.guided-mode .quick-deploy-confirmation{margin:12px 18px 0!important;padding:15px!important;border:1px solid rgba(255,138,0,.40)!important;border-radius:14px!important;background:linear-gradient(135deg,rgba(255,138,0,.07),rgba(185,156,255,.045))!important}
+body.guided-mode .quick-deploy-confirmation code{color:#ccff00!important;font-size:.98rem!important;font-weight:900!important}
+body.guided-mode .quick-deploy-confirmation input{border:1px solid rgba(185,156,255,.58)!important;border-radius:11px!important;background:#0d1220!important;color:#fff!important;padding:11px 12px!important;box-shadow:0 0 0 2px rgba(185,156,255,.05)!important}
+body.guided-mode .build-actions{padding:14px 18px 16px!important;gap:10px!important}
+body.guided-mode .final-product-actions #deploy-built-terminal,body.guided-mode .final-product-actions #confirm-deploy-built-terminal{border:0!important;border-radius:12px!important;background:linear-gradient(135deg,#ffe36f,#ffd23f)!important;color:#17140a!important;box-shadow:0 9px 25px rgba(255,216,77,.18)!important;font-weight:900!important}
+body.guided-mode .final-product-actions #deploy-built-terminal:hover,body.guided-mode .final-product-actions #confirm-deploy-built-terminal:hover{box-shadow:0 12px 30px rgba(255,216,77,.26)!important;transform:translateY(-1px)}
+body.guided-mode .final-product-actions #close-build-complete-action{border:1px solid rgba(255,74,86,.7)!important;border-radius:12px!important;background:rgba(255,74,86,.07)!important;color:#ff7a84!important}
+body.guided-mode .build-note{margin:0 18px 16px!important;color:#7f899b!important}
+.deployment-close-confirm{width:min(500px,calc(100% - 28px));padding:0;border:1px solid rgba(255,138,0,.38);border-radius:18px;background:#111622;color:#f5f7fb;box-shadow:0 26px 90px rgba(0,0,0,.62);overflow:hidden}.deployment-close-confirm::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(4px)}.deployment-close-panel{padding:22px}.deployment-close-kicker{display:block;color:#ff8a00;font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.deployment-close-panel strong{display:block;margin-top:5px;color:#ffe36f;font-size:1.12rem}.deployment-close-panel p{color:#aeb8ca;line-height:1.55}.deployment-close-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}.deployment-close-actions button{min-height:44px;border-radius:11px;font-weight:850}.deployment-close-actions #keep-deployment-open{border:0;background:linear-gradient(135deg,#ffe36f,#ffd23f);color:#17140a}.deployment-close-actions #close-deployment-anyway{border:1px solid rgba(255,74,86,.7);background:rgba(255,74,86,.07);color:#ff7a84}@media(max-width:520px){.deployment-close-actions{grid-template-columns:1fr}}
+
+
+/* TEMPORARY CHAPTER 22C QA FIELD — intentionally isolated for one-step removal after testing. */
+.qa-transfer-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:9px 24px 0;padding:9px 11px;border:1px dashed rgba(157,227,255,.34);border-radius:12px;background:rgba(6,16,20,.72)}
+.qa-transfer-label{color:#9de3ff;font-size:.62rem;font-weight:800;letter-spacing:.09em}
+.qa-transfer-actions{display:flex;gap:7px;flex-wrap:wrap}
+.qa-transfer-actions button{min-width:0;padding:8px 10px;border:1px solid rgba(157,227,255,.48);border-radius:9px;background:rgba(157,227,255,.06);color:#c9f1ff;font-size:.61rem;font-weight:800;box-shadow:none}
+.qa-transfer-actions button:hover{background:rgba(157,227,255,.12);box-shadow:0 0 16px rgba(157,227,255,.12)}
+@media(max-width:680px){.qa-transfer-tools{margin:8px 10px 0;align-items:stretch;flex-direction:column}.qa-transfer-actions{display:grid;grid-template-columns:1fr 1fr}.qa-transfer-actions button{width:100%}}
+
+
+/* Chapter 22C Pass 12.17 — temporary QA visibility + simplified UI cleanup + 2x footer avatar. */
+body.guided-mode .qa-transfer-tools{display:flex!important}
+body.guided-mode .builder-mode-bar{display:none!important}
+body.guided-mode .builder-signature-avatar-wrap{width:68px!important;height:68px!important}
+body.guided-mode .builder-signature-avatar{width:56px!important;height:56px!important}
+@media(max-width:720px){
+  body.guided-mode .builder-signature-avatar-wrap{width:60px!important;height:60px!important}
+  body.guided-mode .builder-signature-avatar{width:50px!important;height:50px!important}
+}
+
+
+/* Chapter 22C Pass 12.20 — footer avatar geometry + mobile centering only. */
+body.guided-mode .builder-signature-avatar-wrap{
+  width:64px!important;height:64px!important;min-width:64px!important;flex:0 0 64px!important;
+  aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;
+}
+body.guided-mode .builder-signature-avatar-wrap::before{inset:0!important;pointer-events:none!important}
+body.guided-mode .builder-signature-avatar{
+  width:56px!important;height:56px!important;min-width:56px!important;max-width:56px!important;
+  aspect-ratio:1/1!important;border-radius:50%!important;clip-path:circle(50%)!important;
+  object-fit:cover!important;object-position:center!important;display:block!important;
+}
+@media(max-width:720px){
+  body.guided-mode .ctb-canonical-builder-footer{
+    flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:12px!important;text-align:center!important;
+  }
+  body.guided-mode .cpb-footer-copy{justify-items:center!important;text-align:center!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature{flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:8px!important}
+  body.guided-mode .builder-signature-avatar-wrap{width:58px!important;height:58px!important;min-width:58px!important;flex-basis:58px!important}
+  body.guided-mode .builder-signature-avatar{width:52px!important;height:52px!important;min-width:52px!important;max-width:52px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{white-space:normal!important;text-align:center!important}
+}
+
+
+/* Chapter 22C Pass 12.21 — tested deployment + footer/portal polish batch. */
+/* Desktop footer copy: preserve layout, normalize rhythm and emphasize lines 1 + 3. */
+body.guided-mode .cpb-footer-copy{gap:4px!important;align-content:center!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.90rem!important;line-height:1.18!important;margin:0!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-chain{font-size:.69rem!important;line-height:1.18!important;margin:0!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline{font-size:.74rem!important;line-height:1.18!important;margin:0!important}
+
+/* Avatar: one square clipping box and one square image at every breakpoint. */
+body.guided-mode .builder-signature-avatar-wrap{
+  width:54px!important;height:54px!important;min-width:54px!important;max-width:54px!important;flex:0 0 54px!important;
+  padding:0!important;margin:0!important;border-radius:50%!important;overflow:hidden!important;display:block!important;
+  aspect-ratio:1/1!important;background:#f5e9f4!important;line-height:0!important
+}
+body.guided-mode .builder-signature-avatar-wrap::before{display:none!important;content:none!important}
+body.guided-mode .builder-signature-avatar{
+  width:54px!important;height:54px!important;min-width:54px!important;max-width:54px!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:50%!important;clip-path:circle(50%)!important;
+  object-fit:cover!important;object-position:center!important;display:block!important;transform:none!important;animation:cpb-avatar-float 3.2s ease-in-out infinite!important
+}
+
+/* Pre-success target is deliberately disabled/dimmed. */
+body.guided-mode .terminal-ready-link a[aria-disabled="true"]{color:#6f7d8e!important;opacity:.62!important;pointer-events:none!important;cursor:default!important;text-decoration:none!important}
+
+/* Final deployment success: clear neon success + stronger CPB action hierarchy. */
+body.guided-mode #deployment-success-title{color:#39ff14!important;text-shadow:0 0 14px rgba(57,255,20,.20)!important}
+body.guided-mode .deployment-success-open{border:1px solid rgba(204,255,0,.75)!important;background:linear-gradient(135deg,#ccff00,#a8ff00)!important;color:#10140a!important;box-shadow:0 8px 22px rgba(204,255,0,.16)!important}
+body.guided-mode #deployment-success-close{border:1px solid rgba(255,74,86,.72)!important;background:rgba(255,74,86,.07)!important;color:#ff7a84!important;box-shadow:none!important}
+body.guided-mode .deployment-success-open:hover{filter:brightness(1.04);transform:translateY(-1px)}
+body.guided-mode #deployment-success-close:hover{background:rgba(255,74,86,.14)!important;color:#ff9aa3!important}
+
+@media(max-width:780px){
+  body.guided-mode .ctb-canonical-builder-footer{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;gap:11px!important}
+  body.guided-mode .cpb-footer-copy{display:grid!important;justify-items:center!important;text-align:center!important;gap:4px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important}
+  body.guided-mode .builder-signature-avatar-wrap{width:50px!important;height:50px!important;min-width:50px!important;max-width:50px!important;flex-basis:50px!important}
+  body.guided-mode .builder-signature-avatar{width:50px!important;height:50px!important;min-width:50px!important;max-width:50px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{text-align:center!important;white-space:normal!important}
+}
+
+
+/* Chapter 22C Pass 12.22 — canonical 25 / 50 / 25 CPB footer. */
+body.guided-mode .ctb-canonical-builder-footer{
+  display:grid!important;grid-template-columns:25% 50% 25%!important;align-items:stretch!important;gap:0!important;
+  padding:0!important;overflow:hidden!important;border-radius:16px!important;background:#ccff00!important;min-height:74px!important
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-zone{min-width:0!important}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone{
+  display:grid!important;align-content:center!important;gap:4px!important;padding:12px 18px!important;background:#14264a!important;text-align:left!important
+}
+body.guided-mode .ctb-canonical-builder-footer .footer-title,
+body.guided-mode .ctb-canonical-builder-footer .footer-chain,
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline{color:#ccff00!important;text-shadow:none!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.90rem!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-chain{font-size:.69rem!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline{font-size:.74rem!important}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{display:block!important;background:#ccff00!important;min-width:0!important}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;padding:10px 14px!important;margin:0!important;background:#14264a!important;color:#fff!important
+}
+body.guided-mode .builder-signature-avatar-wrap{
+  width:auto!important;height:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important;padding:0!important;margin:0!important;
+  border-radius:0!important;overflow:visible!important;background:transparent!important;display:block!important;line-height:0!important
+}
+body.guided-mode .builder-signature-avatar-wrap::before{display:none!important;content:none!important}
+body.guided-mode .builder-signature-avatar{
+  width:30px!important;height:30px!important;min-width:30px!important;max-width:30px!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:5px!important;clip-path:none!important;object-fit:contain!important;object-position:center!important;display:block!important;animation:none!important;transform:none!important
+}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.69rem!important;color:#fff!important;white-space:normal!important;line-height:1.25!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy span,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#fff!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#8fe8ff!important;text-decoration:none!important;font-weight:900!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{text-decoration:underline!important}
+@media(max-width:780px){
+  body.guided-mode .ctb-canonical-builder-footer{grid-template-columns:1fr!important;min-height:0!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone{justify-items:center!important;text-align:center!important;padding:12px 14px!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{height:26px!important;min-height:26px!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{flex-direction:row!important;padding:11px 14px!important;gap:9px!important;text-align:center!important}
+  body.guided-mode .builder-signature-avatar{width:30px!important;height:30px!important;min-width:30px!important;max-width:30px!important}
+}
+
+
+/* Chapter 22C Pass 12.23 — signature footer: one-piece curved 25 / 50 / 25 bar. */
+body.guided-mode .ctb-canonical-builder-footer{
+  position:relative!important;
+  display:grid!important;grid-template-columns:25% 50% 25%!important;align-items:stretch!important;gap:0!important;
+  padding:0!important;overflow:hidden!important;border-radius:18px!important;background:#14264a!important;min-height:78px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.22)!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone,
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{position:relative!important;z-index:1!important;background:#14264a!important}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{
+  position:relative!important;z-index:3!important;display:block!important;background:#ccff00!important;
+  margin:0 -13px!important;border-radius:20px!important;min-width:0!important;
+  box-shadow:0 0 0 1px rgba(204,255,0,.10),0 0 24px rgba(204,255,0,.08)!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone{padding-right:28px!important}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{padding-left:28px!important;justify-content:flex-start!important;gap:11px!important}
+body.guided-mode .builder-signature-avatar-wrap{
+  width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important;flex:0 0 46px!important;
+  border-radius:50%!important;overflow:hidden!important;background:#0c162b!important;display:block!important;line-height:0!important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.10)!important;
+}
+body.guided-mode .builder-signature-avatar{
+  width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important;
+  border-radius:50%!important;clip-path:circle(50%)!important;object-fit:cover!important;object-position:center!important;
+  display:block!important;margin:0!important;padding:0!important;border:0!important;transform:none!important;animation:none!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{display:flex!important;align-items:baseline!important;gap:4px!important;flex-wrap:wrap!important;font-size:.70rem!important;line-height:1.18!important;color:#cbd5e1!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy span{color:#cbd5e1!important;font-weight:650!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#fff!important;font-size:.82rem!important;font-weight:950!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#8fe8ff!important;font-weight:850!important;text-decoration:none!important;border:0!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{color:#c9f4ff!important;text-decoration:underline!important}
+@media(max-width:780px){
+  body.guided-mode .ctb-canonical-builder-footer{grid-template-columns:1fr!important;min-height:0!important;border-radius:18px!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone{padding:13px 14px!important;justify-items:center!important;text-align:center!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{height:24px!important;min-height:24px!important;margin:-7px 0!important;border-radius:18px!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{padding:14px!important;justify-content:center!important;gap:10px!important;text-align:left!important}
+  body.guided-mode .builder-signature-avatar-wrap,body.guided-mode .builder-signature-avatar{width:44px!important;height:44px!important;min-width:44px!important;max-width:44px!important;flex-basis:44px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{justify-content:center!important;text-align:left!important}
+}
+
+/* Pass 12.24 — canonical one-piece signature footer */
+body.guided-mode .ctb-canonical-builder-footer{
+  background:#ccff00!important;
+  grid-template-columns:25% 50% 25%!important;
+  gap:0!important;
+  overflow:hidden!important;
+  border-radius:18px!important;
+  min-height:76px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.20)!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone,
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{
+  background:#071126!important;
+  z-index:2!important;
+  margin:0!important;
+  border-radius:18px!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{
+  background:#ccff00!important;
+  margin:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  z-index:1!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone{
+  padding:12px 16px!important;
+  color:#ccff00!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{
+  padding:10px 14px!important;
+  justify-content:flex-start!important;
+  gap:10px!important;
+  color:#fff!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .builder-avatar-wrap{
+  width:46px!important;height:46px!important;min-width:46px!important;flex:0 0 46px!important;
+  border-radius:50%!important;overflow:hidden!important;background:#0a1326!important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.10)!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .builder-avatar{
+  width:46px!important;height:46px!important;min-width:46px!important;max-width:46px!important;
+  border-radius:50%!important;clip-path:circle(50%)!important;object-fit:cover!important;object-position:center!important;display:block!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{color:#cbd5e1!important;line-height:1.18!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#fff!important;font-weight:950!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#8fe8ff!important;text-decoration:none!important;font-weight:900!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{color:#d5f7ff!important;text-decoration:underline!important}
+@media(max-width:720px){
+  body.guided-mode .ctb-canonical-builder-footer{grid-template-columns:1fr!important;background:#ccff00!important;border-radius:18px!important;overflow:hidden!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-left-zone,
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{border-radius:18px!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{height:24px!important;min-height:24px!important;background:#ccff00!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-right-zone{justify-content:center!important}
+}
+
+
+/* Chapter 22C Pass 12.25 — restore canonical single-lime footer, 25% smaller. */
+body.guided-mode .ctb-canonical-builder-footer{
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;
+  width:calc(100% - 18px)!important;min-height:0!important;margin-left:auto!important;margin-right:auto!important;
+  padding:10px 16px!important;border-radius:14px!important;overflow:hidden!important;background:#ccff00!important;color:#14264a!important;
+  box-shadow:none!important;grid-template-columns:none!important;
+}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-center-zone{display:none!important}
+body.guided-mode .ctb-canonical-builder-footer .cpb-footer-copy{display:grid!important;gap:2px!important;text-align:left!important;color:#14264a!important;background:transparent!important;padding:0!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-title{font-size:.82rem!important;line-height:1.15!important;color:#14264a!important;font-weight:950!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-chain{font-size:.62rem!important;line-height:1.15!important;color:#26375b!important;font-weight:760!important}
+body.guided-mode .ctb-canonical-builder-footer .footer-tagline{font-size:.66rem!important;line-height:1.15!important;color:#3d4a1a!important;font-weight:900!important;margin-top:1px!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:7px!important;background:transparent!important;padding:0!important;margin:0!important;color:#14264a!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-avatar-wrap{width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;flex:0 0 34px!important;border-radius:50%!important;overflow:hidden!important;background:transparent!important;display:block!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-avatar{width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;border-radius:50%!important;clip-path:circle(50%)!important;object-fit:cover!important;object-position:center!important;display:block!important;box-shadow:none!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{font-size:.66rem!important;line-height:1.15!important;color:#14264a!important;white-space:nowrap!important;text-align:left!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy span,
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy strong{color:#14264a!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a{color:#3c168f!important;text-decoration:none!important;font-weight:900!important;border:0!important}
+body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy a:hover{text-decoration:underline!important;color:#2a0e67!important}
+@media(max-width:760px){
+  body.guided-mode .ctb-canonical-builder-footer{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;text-align:center!important;gap:7px!important;padding:9px 12px!important;border-radius:13px!important}
+  body.guided-mode .ctb-canonical-builder-footer .cpb-footer-copy{justify-items:center!important;text-align:center!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature{justify-content:center!important;flex-direction:row!important;gap:7px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature-avatar-wrap,body.guided-mode .ctb-canonical-builder-footer .builder-signature-avatar{width:32px!important;height:32px!important;min-width:32px!important;max-width:32px!important;flex-basis:32px!important}
+  body.guided-mode .ctb-canonical-builder-footer .builder-signature-copy{white-space:normal!important;text-align:center!important;font-size:.64rem!important}
+}
+
+
+/* Chapter 22C Pass 12.28 — deployment modal viewport safety. */
+body.guided-mode dialog.build-complete{
+  max-height:calc(100dvh - 24px)!important;
+  overflow:hidden!important;
+}
+body.guided-mode .build-modal{
+  max-height:calc(100dvh - 26px)!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable!important;
+}
+body.guided-mode .build-actions.final-product-actions{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:12!important;
+  background:linear-gradient(180deg,rgba(17,22,34,.90),#111622 28%)!important;
+  border-top:1px solid rgba(255,255,255,.07)!important;
+  box-shadow:0 -12px 28px rgba(5,7,12,.32)!important;
+}
+@media(max-height:760px){
+  body.guided-mode dialog.build-complete{max-height:calc(100dvh - 12px)!important}
+  body.guided-mode .build-modal{max-height:calc(100dvh - 14px)!important}
+  body.guided-mode .build-modal-head{padding:11px 14px!important}
+  body.guided-mode .build-summary{padding-top:12px!important;padding-bottom:8px!important}
+  body.guided-mode .terminal-ready-link{margin-top:8px!important}
+  body.guided-mode .quick-deploy-confirmation{margin-top:8px!important;padding:11px!important}
+  body.guided-mode .build-actions{padding:10px 14px 12px!important}
+  body.guided-mode .build-note{margin-top:2px!important;margin-bottom:10px!important}
+}
+
+
+/* CPB deployment live-status alignment refinement. */
+body.guided-mode #status:not(:empty){
+  padding-left:16px!important;
+  font-size:.84rem!important;
+  line-height:1.45!important;
+}
+@media(max-width:640px){body.guided-mode #status:not(:empty){padding-left:10px!important;font-size:.80rem!important}}
+
+
+/* CPB final NFT acceptance — make required mint confirmation unmistakable. */
+#nft-mint-confirmed-state.warn{
+  color:var(--danger,#ff3b30)!important;
+  font-size:.92rem!important;
+  font-weight:950!important;
+  line-height:1.35!important;
+  letter-spacing:.025em!important;
+  text-shadow:0 0 10px rgba(255,59,48,.18)!important;
+}
+#confirm-nft-mint-details:not(.is-confirmed){
+  background:rgba(255,59,48,.08)!important;
+  color:var(--danger,#ff3b30)!important;
+  border-color:var(--danger,#ff3b30)!important;
+  box-shadow:0 0 0 1px rgba(255,59,48,.08) inset!important;
+}
+#confirm-nft-mint-details:not(.is-confirmed):hover,
+#confirm-nft-mint-details:not(.is-confirmed):focus-visible{
+  background:rgba(255,59,48,.15)!important;
+  box-shadow:0 0 12px rgba(255,59,48,.18)!important;
+}
+#confirm-nft-mint-details.is-confirmed{
+  background:rgba(57,255,20,.06)!important;
+  color:var(--green)!important;
+  border-color:var(--green)!important;
+}
+/* Mint review modal: primary CONFIRM is green; CHANGE/EDIT uses CPB yellow. */
+.nft-mint-confirm-actions #nft-mint-edit{
+  color:var(--yellow,#ffd84d)!important;
+  border-color:var(--yellow,#ffd84d)!important;
+  background:rgba(255,216,77,.05)!important;
+}
+.nft-mint-confirm-actions #nft-mint-edit:hover,
+.nft-mint-confirm-actions #nft-mint-edit:focus-visible{
+  background:rgba(255,216,77,.12)!important;
+}
+.nft-mint-confirm-actions #nft-mint-proceed{
+  color:var(--green)!important;
+  border-color:var(--green)!important;
+  background:rgba(57,255,20,.05)!important;
+}

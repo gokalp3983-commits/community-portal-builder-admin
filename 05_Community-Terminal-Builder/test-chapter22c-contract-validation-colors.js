@@ -1,0 +1,13 @@
+const fs=require("fs");
+const assert=require("assert");
+const html=fs.readFileSync("public/index.html","utf8");
+const js=fs.readFileSync("public/app.js","utf8");
+const css=fs.readFileSync("public/style.css","utf8");
+assert(html.includes('id="token-format-check"'),"token format feedback must be separate from market feedback");
+assert(js.includes('showTokenFormatCheck("pass","Valid EVM contract address format.")'),"valid token EVM syntax must produce green format state");
+assert(js.includes('showContractCheck("warn","Valid EVM address, but DexScreener returned no market.'),"DexScreener no-market result must stay an independent warning");
+assert(js.includes('syncContractInputState(contractInput,normalized)'),"token input border must follow format state");
+assert(js.includes('output.className="contract-check pass";output.textContent="Valid NFT contract address detected."'),"valid NFT syntax must keep green format feedback");
+assert(js.includes('syncContractInputState(form.elements.nftContract,"pass")'),"NFT input border must turn green for valid syntax");
+assert(css.includes('.contract-state-pass{border-color:#38e967!important'),"green contract input border style must remain present");
+console.log("Chapter 22C contract validation state regression passed.");

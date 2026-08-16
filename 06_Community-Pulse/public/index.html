@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style id="ctb-style-guard">html{background:#000}html:not(.ctb-styles-ready) body{visibility:hidden}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="{{PROJECT_NAME}} Community Pulse — explainable community and market signals.">
+  <title>{{PROJECT_NAME}} Community Pulse</title>
+  <link rel="stylesheet" href="/style.css?v=pulse-ui-pass1">
+  <link rel="stylesheet" href="/pulse.css?v=pulse-ui-pass1">
+  <script>
+(()=>{
+  const root=document.documentElement;
+  const links=[...document.querySelectorAll('link[rel="stylesheet"]')];
+  if(!links.length){root.classList.add("ctb-styles-ready");return;}
+  let remaining=links.length,revealed=false;
+  const settle=()=>{remaining-=1;if(remaining<=0&&!revealed){revealed=true;root.classList.add("ctb-styles-ready");}};
+  for(const link of links){if(link.sheet){settle();continue;}link.addEventListener("load",settle,{once:true});link.addEventListener("error",settle,{once:true});}
+  setTimeout(()=>{if(!revealed){revealed=true;root.classList.add("ctb-styles-ready");}},8000);
+})();
+  </script>
+</head>
+<body>
+  <div id="terminal-workspace" class="terminal-workspace">
+    <main id="terminal-frame" class="shell terminal-frame">
+      <section class="terminal portal-shell" aria-label="{{PROJECT_NAME}} Community Pulse">
+        <div id="terminal-header" class="terminal-area terminal-header portal-hero">
+          <header class="header community-header">
+            <a data-project-home class="portal-brand" href="#" title="Return to {{PROJECT_NAME}} Community Portal">
+              <img data-project-mascot class="mascot community-mascot" src="" alt="">
+            </a>
+            <div class="community-title-row">
+              <div class="portal-heading-copy">
+                <h1>{{PROJECT_NAME}} COMMUNITY PORTAL</h1>
+                <p class="community-subtitle">Independent Community Tools <span aria-hidden="true">•</span> {{PROJECT_ECOSYSTEM}} Ecosystem</p>
+              </div>
+              <div class="module-status-stack">
+                <div class="module-subtitle">Community Pulse</div>
+                <span class="online-status"><span class="online-dot" aria-hidden="true">●</span> ONLINE</span>
+              </div>
+            </div>
+          </header>
+        </div>
+
+        <div class="portal-header-energy" aria-hidden="true">
+          <span class="energy-line energy-lime"></span>
+          <span class="energy-line energy-violet"></span>
+        </div>
+
+        <div id="terminal-application" class="terminal-area terminal-application pulse-application">
+          <section class="portal-panel pulse-overview-panel" aria-labelledby="pulseOverviewTitle">
+            <div class="portal-section-heading compact">
+              <div>
+                <span class="portal-section-kicker">PULSE STATUS</span>
+                <h2 id="pulseOverviewTitle">Community Signal Overview</h2>
+              </div>
+              <span class="portal-status-chip portal-status-ready">LIVE</span>
+            </div>
+            <div class="pulse-purpose">
+              <strong>What this shows</strong>
+              <p>A compact, explainable view of community-specific market, holder, whale, fresh-wallet and NFT signals.</p>
+              <p class="pulse-trust">No prediction engine. No price target. Every label is derived from visible metrics.</p>
+            </div>
+            <div id="pulseStatus" class="pulse-live-status" aria-live="polite">[ CONNECTING ] Building community pulse…</div>
+          </section>
+
+          <section class="portal-panel pulse-signals-panel" aria-labelledby="pulseSignalsTitle">
+            <div class="portal-section-heading compact">
+              <div>
+                <span class="portal-section-kicker">LIVE SIGNALS</span>
+                <h2 id="pulseSignalsTitle">Community Pulse</h2>
+              </div>
+            </div>
+            <div class="pulse-grid">
+              <article class="pulse-card pulse-market"><span>MARKET</span><strong id="marketState">—</strong><small id="marketEvidence">Waiting for market data.</small></article>
+              <article class="pulse-card pulse-holders"><span>HOLDERS</span><strong id="holderState">—</strong><small id="holderEvidence">Waiting for holder data.</small></article>
+              <article class="pulse-card pulse-whales"><span>WHALES</span><strong id="whaleState">—</strong><small id="whaleEvidence">Waiting for activity data.</small></article>
+              <article class="pulse-card pulse-fresh"><span>NEW WALLETS</span><strong id="freshState">—</strong><small id="freshEvidence">Waiting for activity data.</small></article>
+              <article class="pulse-card pulse-nft"><span>NFT</span><strong id="nftState">—</strong><small id="nftEvidence">Checking project configuration.</small></article>
+              <article class="pulse-card pulse-overall"><span>COMMUNITY PULSE</span><strong id="overallState">BUILDING</strong><small id="overallEvidence">Combining available signals.</small></article>
+            </div>
+          </section>
+
+          <section class="portal-panel pulse-method-panel" aria-labelledby="pulseMethodTitle">
+            <div class="portal-section-heading compact">
+              <div>
+                <span class="portal-section-kicker">METHODOLOGY</span>
+                <h2 id="pulseMethodTitle">How Signals Are Built</h2>
+              </div>
+            </div>
+            <p>Market direction uses 24h price change. Holder concentration uses current Top-10 distribution. Whale and fresh-wallet labels use classified recent transfer activity when available.</p>
+            <p class="pulse-method-note">Missing or rate-limited data is shown as unavailable rather than inferred.</p>
+          </section>
+        </div>
+
+        <div id="terminal-footer" class="terminal-area terminal-footer">
+          <footer class="footer"><span data-project-footer></span></footer>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="/project-config.js"></script>
+  <script src="/project-runtime.js"></script>
+  <script src="/pulse.js?v=pulse-ui-pass1"></script>
+</body>
+</html>

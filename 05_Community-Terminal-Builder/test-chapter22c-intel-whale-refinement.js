@@ -1,0 +1,21 @@
+"use strict";
+const fs=require("fs");
+const path=require("path");
+const assert=(c,m)=>{if(!c)throw new Error(m);console.log(`PASS ${m}`)};
+const root=path.join(__dirname,"..");
+const whaleJs=fs.readFileSync(path.join(root,"02_Whale-Activity-Tracker/public/whale.js"),"utf8");
+const whaleCss=fs.readFileSync(path.join(root,"02_Whale-Activity-Tracker/public/whale.css"),"utf8");
+const whaleShared=fs.readFileSync(path.join(root,"02_Whale-Activity-Tracker/public/style.css"),"utf8");
+const landingShared=fs.readFileSync(path.join(root,"01_Landing-Page/public/style.css"),"utf8");
+const intelJs=fs.readFileSync(path.join(root,"04_Meme-Intel/public/intel.js"),"utf8");
+const intelHtml=fs.readFileSync(path.join(root,"04_Meme-Intel/public/index.html"),"utf8");
+assert(whaleShared===landingShared,"Whales retains exact shared Landing stylesheet");
+assert(whaleJs.includes('changeLabel=window.matchMedia("(max-width: 600px)").matches?"24H CHANGE":"24H PRICE CHANGE"'),"Whales uses compact mobile 24H CHANGE label");
+assert(whaleJs.includes('outputStart.scrollIntoView({behavior:"smooth",block:"start"})'),"Whales returns viewport to first command output line");
+assert(intelJs.includes('outputStart.scrollIntoView({behavior:"smooth",block:"start"})'),"Intel returns viewport to first command output line");
+for(const label of ["N/A (Contract)","N/A (Unranked)","N/A (No Balance)"]){assert(whaleJs.includes(label),`Whales contextual rank note includes ${label}`)}
+assert(whaleJs.includes('hasKnownStatus')&&whaleJs.includes('if(!hasKnownStatus)return ""'),"Holder-rank note is contextual only");
+assert(whaleCss.includes('.holder-rank-note{'),"Holder-rank note has module-scoped styling");
+assert(intelHtml.includes('<div class="module-subtitle">Meme Intelligence Portal</div>'),"Intel uses accepted portal module subtitle");
+assert(!intelHtml.includes('Meme Intelligence Terminal'),"Intel user-facing header no longer uses Terminal terminology");
+console.log("Intel/Whale refinement checks passed.");

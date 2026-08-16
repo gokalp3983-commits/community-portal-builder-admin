@@ -1,0 +1,18 @@
+const fs=require('fs');
+const assert=require('assert');
+const html=fs.readFileSync('public/index.html','utf8');
+const css=fs.readFileSync('public/style.css','utf8');
+assert(html.includes('class="cpb-motto simple-only"'),'header motto missing');
+assert(html.includes('motto-build')&&html.includes('motto-launch')&&html.includes('motto-grow'),'motto sequence missing');
+assert(html.includes('class="cpb-culture-art simple-only"'),'culture art layer missing');
+for(const x of ['motif-build','motif-deploy','motif-grow','motif-community']) assert(html.includes(x),`${x} missing`);
+assert(!html.includes('href="#guided-generate"'),'legacy Generate step still exposed');
+assert(html.includes('<a href="#guided-deploy"><b>4</b><span>DEPLOY'),'Deploy is not final step 4');
+assert(html.includes('class="action-bar guided-deploy-stage" id="guided-deploy"'),'Generate/Deploy not merged');
+assert((html.match(/id="guided-deploy"/g)||[]).length===1,'guided-deploy duplicated');
+assert(html.includes('cpb-prefooter-energy'),'pre-footer energy lines missing');
+assert(css.includes('@keyframes cpb-title-after-motto'),'title-after-motto animation missing');
+assert(css.includes('builder-signature-avatar-wrap::before{border:0!important'),'avatar border removal missing');
+assert(css.includes('dialog.nft-mint-confirm')&&css.includes('dialog.build-complete')&&css.includes('dialog.deployment-success-dialog'),'unified modal styling missing');
+assert(css.includes('.cpb-culture-art')&&css.includes('z-index:0'),'visible culture art styling missing');
+console.log('PASS CPB Pass 10 unified Deploy + story-led visual polish');

@@ -1,0 +1,962 @@
+const CFG = window.PROJECT_CONFIG;
+
+
+const boot=document.getElementById("boot");
+const history=document.getElementById("history");
+const promptRow=document.getElementById("promptRow");
+const input=document.getElementById("commandInput");
+const marketPriceStatus=document.getElementById("marketPriceStatus");
+const marketCapStatus=document.getElementById("marketCapStatus");
+const marketHoldersStatus=document.getElementById("marketHoldersStatus");
+const marketVolumeStatus=document.getElementById("marketVolumeStatus");
+const marketUpdatedStatus=document.getElementById("marketUpdatedStatus");
+const marketPrice=document.getElementById("marketPrice");
+const marketPriceChange=document.getElementById("marketPriceChange");
+const marketCap=document.getElementById("marketCap");
+const marketHolders=document.getElementById("marketHolders");
+const marketVolume=document.getElementById("marketVolume");
+const marketUpdated=document.getElementById("marketUpdated");
+const backToTopButton=document.getElementById("backToTop");
+
+if ("scrollRestoration" in window.history) window.history.scrollRestoration="manual";
+window.scrollTo(0,0);
+window.addEventListener("pageshow",()=>window.scrollTo(0,0));
+const syncBackToTop=()=>{ if(backToTopButton) backToTopButton.classList.toggle("visible",window.scrollY>420); };
+window.addEventListener("scroll",syncBackToTop,{passive:true});
+backToTopButton?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+syncBackToTop();
+const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+
+function esc(v){
+  return String(v??"")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function short(a){
+  const v=String(a||"");
+  return v.length>14?`${v.slice(0,8)}...${v.slice(-6)}`:v;
+}
+
+function walletWithCopy(address){
+  const full=String(address||"");
+
+  return `
+    <span class="wallet-cell" title="${esc(full)}">
+      <span class="cyan">${esc(short(full))}</span>
+      <button
+        type="button"
+        class="copy-wallet"
+        data-wallet="${esc(full)}"
+        aria-label="Copy full wallet address"
+        title="Copy full wallet address"
+      >⧉</button>
+    </span>
+  `;
+}
+
+function labeledAddress(address,label="",tag=""){
+  if(!label)return walletWithCopy(address);
+
+  return `
+    <span class="wallet-cell">
+      <span class="orange">[ ${esc(tag||"INFRA")} ]</span>
+      <span class="yellow">${esc(label)}</span>
+      ${walletWithCopy(address)}
+    </span>
+  `;
+}
+
+function showCopyNotice(){
+  const notice=document.createElement("div");
+  notice.className="copy-notice";
+  notice.textContent="[ OK ] Wallet address copied to clipboard.";
+  history.append(notice);
+  notice.scrollIntoView({behavior:"smooth",block:"nearest"});
+  setTimeout(()=>notice.remove(),2000);
+}
+
+async function copyWallet(address){
+  try{
+    await navigator.clipboard.writeText(address);
+  }catch{
+    const area=document.createElement("textarea");
+    area.value=address;
+    area.setAttribute("readonly","");
+    area.style.position="absolute";
+    area.style.left="-9999px";
+    document.body.append(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
+
+  showCopyNotice();
+}
+async function getJson(url){
+  const response=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"}});
+  const data=await response.json();
+
+  if(!response.ok){
+    const error=new Error(data.error||"Request failed.");
+    error.status=response.status;
+    error.warming=Boolean(data.warming);
+    error.hours=data.hours;
+    throw error;
+  }
+
+  return data;
+}
+
+function cacheWarmingMessage(command,hours){
+  const period=Number(hours)===12?"12-hour":"24-hour";
+  block(`
+    <div class="yellow">[ CACHE ] ${period} activity data is warming up.</div>
+    <div class="muted">The shared background refresh is still running. Please run <span class="cyan">${esc(command)}</span> again shortly.</div>
+  `);
+}
+function echo(command){
+  const line=document.createElement("div");
+  line.className="line command-output-start";
+  line.tabIndex=-1;
+  line.innerHTML=`<span class="green">${window.PROJECT_PROMPT}</span> ${esc(command)}`;
+  history.append(line);
+  return line;
+}
+function showProgress(message){
+  const line=document.createElement("div");
+  line.className="line muted";
+  line.innerHTML=`<span class="orange">⟳</span> ${esc(message)}`;
+  history.append(line);
+  line.scrollIntoView({behavior:"smooth",block:"nearest"});
+  return line;
+}
+function block(html){
+  const el=document.createElement("div");
+  el.className="block";el.innerHTML=html;history.append(el);
+  el.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function visualBars(items,{title="Visual Summary",valueFormatter=(value)=>formatCompactBalance(value),signed=false}={}){
+  const normalized=(Array.isArray(items)?items:[])
+    .map((item)=>({label:String(item?.label||"—"),value:Number(item?.value)||0,tone:item?.tone||"aqua"}))
+    .filter((item)=>Number.isFinite(item.value));
+  if(!normalized.length)return "";
+  const max=Math.max(...normalized.map((item)=>Math.abs(item.value)),1);
+  const rows=normalized.map((item)=>{
+    const width=Math.max(4,Math.min(100,(Math.abs(item.value)/max)*100));
+    const rendered=signed?formatSignedTokenAmount(item.value):valueFormatter(item.value);
+    return `<div class="whale-visual-row">
+      <span class="whale-visual-label">${esc(item.label)}</span>
+      <span class="whale-visual-track"><span class="whale-visual-fill tone-${esc(item.tone)}" style="width:${width.toFixed(2)}%"></span></span>
+      <strong class="whale-visual-value tone-text-${esc(item.tone)}">${esc(rendered)}</strong>
+    </div>`;
+  }).join("");
+  return `<div class="whale-visual-summary"><div class="whale-visual-title">${esc(title)}</div>${rows}</div>`;
+}
+
+function whaleBalanceVisual(whales,title="Top Holdings"){
+  return visualBars((whales||[]).slice(0,10).map((whale)=>({
+    label:`#${whale.rank}`,
+    value:Number(whale.balance)||0,
+    tone:"aqua"
+  })),{title,valueFormatter:formatCompactBalance});
+}
+
+function moverVisual(whales){
+  return visualBars((whales||[]).filter((whale)=>Number(whale?.movement?.rankChange)!==0).slice(0,10).map((whale)=>({
+    label:`#${whale.rank} ${Number(whale.movement.rankChange)>0?"▲":"▼"}`,
+    value:Number(whale.movement.rankChange)||0,
+    tone:Number(whale.movement.rankChange)>0?"green":"red"
+  })),{title:"Largest Rank Moves",valueFormatter:(value)=>`${value>0?"+":""}${Math.trunc(value)}`,signed:false});
+}
+
+function flowVisual(rows,title){
+  return visualBars((rows||[]).slice(0,8).map((row,index)=>({
+    label:`#${index+1} ${short(row.wallet)}`,
+    value:Number(row.net)||0,
+    tone:Number(row.net)>0?"green":Number(row.net)<0?"red":"muted"
+  })),{title,signed:true});
+}
+
+function statusVisual(summary={}){
+  return visualBars([
+    {label:"Accumulating",value:Number(summary.accumulating||0),tone:"green"},
+    {label:"Distributing",value:Number(summary.distributing||0),tone:"red"},
+    {label:"Balanced",value:Number(summary.balanced||0),tone:"yellow"},
+    {label:"Dormant",value:Number(summary.dormant||0),tone:"muted"}
+  ],{title:"Top-30 Activity Mix",valueFormatter:(value)=>String(Math.trunc(value))});
+}
+
+function statsVisual(stats={}){
+  return `<div class="whale-visual-summary whale-stat-visual">
+    <div class="whale-visual-title">Holder Concentration</div>
+    <div class="whale-stat-grid">
+      <div class="whale-stat-tile"><span>TOP 10 CONTROL</span><strong>${Number(stats.top10ControlPct||0).toFixed(2)}%</strong></div>
+      <div class="whale-stat-tile"><span>TOP 100 CONTROL</span><strong>${Number(stats.top100ControlPct||0).toFixed(2)}%</strong></div>
+      <div class="whale-stat-tile"><span>NET TRACKED FLOW</span><strong>${esc(formatSignedTokenAmount(stats.netWhaleFlowSigned||0))}</strong></div>
+      <div class="whale-stat-tile"><span>STATUS</span><strong>${esc(stats.sentiment||"—")}</strong></div>
+    </div>
+  </div>`;
+}
+function help(){
+  block(`
+    <div class="yellow">Whale Activity Tracker Commands</div>
+    <div class="kv"><span class="cyan">whales</span><span>Current Top-30 whales</span></div>
+    <div class="kv"><span class="cyan">whales12</span><span>Top-30 activity (12h)</span></div>
+    <div class="kv"><span class="cyan">whale &lt;rank&gt;</span><span>Whale profile</span></div>
+    <div class="kv"><span class="cyan">rank &lt;wallet&gt;</span><span>Wallet lookup</span></div>
+    <div class="kv"><span class="cyan">leaderboard</span><span>Holder rankings</span></div>
+    <div class="kv"><span class="cyan">activity</span><span>24h market activity</span></div>
+    <div class="kv"><span class="cyan">traders12</span><span>Top buyers/sellers (12h)</span></div>
+    <div class="kv"><span class="cyan">transactions</span><span>Recent whale trades</span></div>
+    <div class="kv"><span class="cyan">accumulators</span><span>Net accumulators (24h)</span></div>
+    <div class="kv"><span class="cyan">distributors</span><span>Net distributors (24h)</span></div>
+    <div class="kv"><span class="cyan">newwhales</span><span>New Top-30 whales</span></div>
+    <div class="kv"><span class="cyan">movers</span><span>Rank changes</span></div>
+    <div class="kv"><span class="cyan">stats</span><span>Market statistics</span></div>
+    <div class="kv"><span class="cyan">clear</span><span>Clears the current tracker output.</span></div>
+  `);
+}
+function whaleTable(data,title,limit=30,visualMode="holdings"){
+  const rows=data.whales.slice(0,limit).map(w=>`
+    <tr>
+      <td>#${w.rank}</td><td>${walletWithCopy(w.address)}</td>
+      <td>${formatTokenAmount(w.balance)}</td>
+      <td class="${w.movement.status==="ACCUMULATING"?"green":w.movement.status==="DISTRIBUTING"?"red":""}">
+        ${esc(w.movement.status)}
+      </td>
+      <td>${data.snapshot.comparisonAvailable?formatSignedTokenAmount(w.movement.signedDelta):"baseline"}</td>
+    </tr>`).join("");
+  const visual=visualMode==="movers"?moverVisual(data.whales):whaleBalanceVisual(data.whales,limit>30?"Top 10 Holder Balances":"Top 10 Whale Balances");
+  block(`
+    ${visual}
+    <div class="yellow">${title}</div>
+    <div class="muted">${
+      data.snapshot.comparisonAvailable
+      ?"Compared with the previous server snapshot."
+      :`Baseline created. Movement appears after the next ${data.snapshot.intervalMinutes}-minute snapshot.`
+    }</div>
+    <table>
+      <thead><tr><th>Rank</th><th>Wallet</th><th>Balance</th><th>Status</th><th>Change</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`);
+}
+async function rank(wallet){
+  const d=await getJson(`/api/rank?wallet=${encodeURIComponent(wallet)}`);
+  if(d.excluded){
+    block(`
+      <div class="orange">Labeled Infrastructure Address</div>
+      <div class="kv"><span>Address</span>${labeledAddress(d.wallet,d.label,d.tag)}</div>
+      <div class="kv"><span>Type</span><span>${esc(d.type)}</span></div>
+      <div class="muted">${esc(d.reason)}</div>
+    `);
+    return;
+  }
+
+  if(!d.found){
+    block(`<div class="red">Wallet not found in the current holder list.</div>`);
+    return;
+  }
+  block(`
+    <div class="yellow">Wallet Rank</div>
+    <div class="kv"><span>Wallet</span>${walletWithCopy(d.wallet)}</div>
+    <div class="kv"><span>Current Rank</span><span>#${d.rank}</span></div>
+    <div class="kv"><span>Balance</span><span>${formatTokenAmount(d.balance)} ${CFG.project.name}</span></div>
+    <div class="kv"><span>Status</span><span>${esc(d.movement.status)}</span></div>
+    <div class="kv"><span>Balance Change</span><span>${formatSignedTokenAmount(d.movement.signedDelta)}</span></div>
+    <div class="kv"><span>Rank Change</span><span>${d.movement.rankChange>0?"▲ +":d.movement.rankChange<0?"▼ ":"="}${Math.abs(d.movement.rankChange)}</span></div>
+  `);
+}
+
+async function whaleProfile(rankNumber){
+  const d=await getJson(`/api/whale/${encodeURIComponent(rankNumber)}`);
+
+  block(`
+    <div class="yellow">Whale #${d.whaleRank}</div>
+    <div class="kv"><span>Wallet</span><span>${walletWithCopy(d.wallet)}</span></div>
+    <div class="kv"><span>Current Rank</span><span>#${d.whaleRank}</span></div>
+    <div class="kv"><span>Current Balance</span><span>${formatTokenAmount(d.balance)} ${CFG.project.name}</span></div>
+    <div class="kv"><span>Status</span><span class="${
+      d.movement.status==="ACCUMULATING"
+        ?"green"
+        :d.movement.status==="DISTRIBUTING"
+          ?"red"
+          :""
+    }">${esc(d.movement.status)}</span></div>
+    <div class="kv"><span>Balance Change</span><span>${formatSignedTokenAmount(d.movement.signedDelta)}</span></div>
+    <div class="kv"><span>Previous Rank</span><span>#${d.movement.previousRank}</span></div>
+    <div class="kv"><span>Rank Change</span><span>${d.movement.rankChange>0?"▲ +":d.movement.rankChange<0?"▼ ":"="}${Math.abs(d.movement.rankChange)}</span></div>
+    <div class="muted">${
+      d.snapshot.comparisonAvailable
+        ?"Compared with the previous server snapshot."
+        :"Baseline snapshot only. Movement data will appear after the next snapshot."
+    }</div>
+  `);
+}
+
+
+
+function cacheNotice(data){
+  const response=data?.responseCache;
+  const sources=data?.cache;
+
+  if(!response?.stale&&!sources?.stale)return "";
+
+  const age=response?.ageSeconds ?? Math.max(
+    Number(sources?.holders?.ageSeconds||0),
+    Number(sources?.market?.ageSeconds||0),
+    Number(sources?.transfers?.ageSeconds||0)
+  );
+
+  return `
+    <div class="yellow">
+      [ CACHE ] Background activity data is ${formatAge(age)} old.
+    </div>
+  `;
+}
+
+
+function cleanNumber(value){
+  const number=Number(value);
+  return Number.isFinite(number)?number:0;
+}
+
+function formatTokenAmount(value,maximumFractionDigits=2){
+  const number=cleanNumber(value);
+  const normalized=Math.abs(number)<0.005?0:number;
+
+  return normalized.toLocaleString(undefined,{
+    minimumFractionDigits:0,
+    maximumFractionDigits
+  });
+}
+
+function formatSignedTokenAmount(value,maximumFractionDigits=2){
+  const number=cleanNumber(value);
+  const normalized=Math.abs(number)<0.005?0:number;
+  const absolute=formatTokenAmount(Math.abs(normalized),maximumFractionDigits);
+
+  if(normalized>0)return `+${absolute}`;
+  if(normalized<0)return `-${absolute}`;
+  return "0";
+}
+
+function formatCompactBalance(value){
+  const number=cleanNumber(value);
+  const absolute=Math.abs(number);
+  const units=[
+    [1e12,"T"],
+    [1e9,"B"],
+    [1e6,"M"],
+    [1e3,"K"]
+  ];
+
+  for(const [threshold,suffix] of units){
+    if(absolute>=threshold){
+      const compact=number/threshold;
+      return `${compact.toLocaleString(undefined,{
+        minimumFractionDigits:0,
+        maximumFractionDigits:2
+      })}${suffix}`;
+    }
+  }
+
+  return formatTokenAmount(number);
+}
+
+function holderRankNote(rows=[]){
+  const labels=(Array.isArray(rows)?rows:[])
+    .map((row)=>String(row?.rankLabel||""))
+    .filter(Boolean);
+  const hasKnownStatus=labels.some((label)=>/Contract|Unranked|No Balance/i.test(label));
+  if(!hasKnownStatus)return "";
+  return `<div class="holder-rank-note" role="note">
+    <div><strong>N/A (Contract)</strong> — address is a smart contract, so a normal holder rank would be misleading.</div>
+    <div><strong>N/A (Unranked)</strong> — address currently holds the token but is outside the available holder-ranking dataset.</div>
+    <div><strong>N/A (No Balance)</strong> — address participated in 24h activity but currently has no token balance.</div>
+  </div>`;
+}
+
+function holderRank(value,rankLabel=""){
+  const numeric=Number(value);
+  const rank=Number.isFinite(numeric)
+    ?Math.trunc(numeric)
+    :NaN;
+
+  if(Number.isInteger(rank)&&rank>0){
+    return `#${rank.toLocaleString()}`;
+  }
+
+  if(rankLabel){
+    const className=rankLabel.includes("Contract")
+      ?"orange"
+      :rankLabel.includes("No Balance")
+        ?"muted"
+        :"yellow";
+
+    return `<span class="${className}">${esc(rankLabel)}</span>`;
+  }
+
+  return `<span class="muted">N/A</span>`;
+}
+
+
+function formatAge(totalSeconds){
+  const seconds=Math.max(0,Math.floor(Number(totalSeconds)||0));
+  if(seconds<60)return `${seconds}s`;
+  if(seconds<3600)return `${Math.floor(seconds/60)}m`;
+  if(seconds<86400)return `${Math.floor(seconds/3600)}h`;
+  return `${Math.floor(seconds/86400)}d`;
+}
+
+function compactTimeAgo(timestamp){
+  return timeAgo(timestamp).replace(/\s+ago$/,"");
+}
+
+function timeAgo(timestamp){
+  const seconds=Math.max(0,Math.floor((Date.now()-Number(timestamp))/1000));
+  if(seconds<60)return `${seconds}s ago`;
+  if(seconds<3600)return `${Math.floor(seconds/60)}m ago`;
+  if(seconds<86400)return `${Math.floor(seconds/3600)}h ago`;
+  return `${Math.floor(seconds/86400)}d ago`;
+}
+function tradeRows(rows,mode){
+  return rows.map((row,index)=>`
+    <tr>
+      <td>#${index+1}</td>
+      <td>${walletWithCopy(row.wallet)}</td>
+      <td class="rank-col">${holderRank(row.holderRank,row.rankLabel)}</td>
+      ${mode==="both"?`
+        <td class="green">${formatTokenAmount(row.bought)}</td>
+        <td class="red">${formatTokenAmount(row.sold)}</td>
+      `:`<td class="${mode==="buy"?"green":"red"}">${formatTokenAmount(mode==="buy"?row.bought:row.sold)}</td>`}
+      <td>${formatSignedTokenAmount(row.net)}</td>
+      <td>${timeAgo(row.lastActivityAt)}</td>
+    </tr>`).join("");
+}
+function traderTable(rows,title,mode="both"){
+  block(`
+    ${flowVisual(rows,title.includes("Distributor")||title.includes("Seller")?"Largest Net Outflows":"Largest Net Flows")}
+    <div class="orange">${title}</div>
+    <table>
+      <thead><tr><th>#</th><th>Wallet</th><th class="rank-col">Holder Rank</th>${mode==="both"?"<th>Bought</th><th>Sold</th>":`<th>${mode==="buy"?"Bought":"Sold"}</th>`}<th>Net</th><th>Last</th></tr></thead>
+      <tbody>${tradeRows(rows,mode)||`<tr><td colspan="${mode==="both"?7:6}" class="muted">No matching DEX activity found.</td></tr>`}</tbody>
+    </table>
+    ${holderRankNote(rows)}`);
+}
+async function activityDashboard(){
+  const d=await getJson("/api/activity?hours=24");
+  const largest=(trade,label,klass)=>trade?`
+    <div class="kv"><span>${label}</span><span class="${klass}">${formatTokenAmount(trade.amount)} ${CFG.project.name}</span></div>
+    <div class="kv"><span>Wallet</span>${walletWithCopy(trade.wallet)}</div>
+    <div class="kv"><span>Current Holder Rank</span><span>${holderRank(trade.holderRank,trade.rankLabel)}</span></div>
+    <div class="kv"><span>Time</span><span>${timeAgo(trade.timestamp)}</span></div>`:`<div class="muted">No ${label.toLowerCase()} detected.</div>`;
+  block(`
+    ${cacheNotice(d)}
+    <div class="orange">24h On-Chain Whale Activity</div>
+    ${largest(d.largestBuy,"Largest Buy","green")}
+    ${largest(d.largestSell,"Largest Sell","red")}
+    <div class="kv"><span>DEX Pair</span>${
+      labeledAddress(
+        d.pairAddress,
+        d.pairLabel?.label || `${d.pairName || CFG.project.name + "/UNKNOWN"} Liquidity Pool`,
+        d.pairLabel?.tag || "LP"
+      )
+    }</div>
+    <div class="muted">Buys and sells are classified from transfers involving the highest-liquidity ${d.pairName || CFG.project.name + "/quote"} pair.</div>
+    ${d.cache?.rankCoverage==="top-300-immediate"
+      ?'<div class="yellow">[ RANKS ] Showing immediate Top-300 ranks while the complete holder-rank cache refreshes in the background.</div>'
+      :d.cache?.rankCoverage==="full-cache"
+        ?'<div class="muted">[ RANKS ] Complete participant-holder rank cache active.</div>'
+        :''}`);
+  traderTable(d.topAccumulators,"Top 10 Net Accumulators — 24h","both");
+  traderTable(d.topDistributors,"Top 10 Net Distributors — 24h","both");
+}
+
+async function whales12(){
+  let d;
+
+  try{
+    d=await getJson("/api/whales12");
+  }catch(error){
+    if(error.warming||String(error.message||"").includes("warming up")){
+      block(`
+        <div class="yellow">[ CACHE ] Top-30 whale activity is warming up.</div>
+        <div class="muted">Please run <span class="cyan">whales12</span> again in a few seconds.</div>
+      `);
+      return;
+    }
+
+    throw error;
+  }
+  const summary=d.summary||{};
+  const rows=(d.whales||[]).map((whale)=>`
+    <tr class="${Number(whale.rank)===21?"whales12-tier-break":""}">
+      <td class="rank-col">#${Number(whale.rank).toLocaleString()}</td>
+      <td>${walletWithCopy(whale.wallet)}</td>
+      <td class="amount-col balance-col">${formatCompactBalance(whale.balance)}</td>
+      <td class="amount-col">${formatTokenAmount(whale.bought)}</td>
+      <td class="amount-col">${formatTokenAmount(whale.sold)}</td>
+      <td class="amount-col ${Number(whale.netRaw)>0?"green":Number(whale.netRaw)<0?"red":"muted"}">${formatSignedTokenAmount(whale.net)}</td>
+      <td class="rank-col">${Number(whale.trades).toLocaleString()}</td>
+      <td class="status-col status-${String(whale.status||"").toLowerCase()}">${esc(whale.statusLabel||whale.status)}</td>
+    </tr>
+  `).join("");
+
+  block(`
+    ${cacheNotice(d)}
+    ${statusVisual(summary)}
+    <div class="orange">Top-30 Whale Activity — Last 12 Hours</div>
+    <div class="whales12-summary">
+      <div><span class="muted">Accumulating</span> <span class="green">${Number(summary.accumulating||0)}</span></div>
+      <div><span class="muted">Distributing</span> <span class="red">${Number(summary.distributing||0)}</span></div>
+      <div><span class="muted">Balanced</span> <span class="yellow">${Number(summary.balanced||0)}</span></div>
+      <div><span class="muted">Dormant</span> <span>${Number(summary.dormant||0)}</span></div>
+      <div><span class="muted">Net Top-30 Flow</span> <span class="${Number(summary.netFlowRaw)>0?"green":Number(summary.netFlowRaw)<0?"red":"muted"}">${formatSignedTokenAmount(summary.netFlow||0)}</span></div>
+      <div><span class="muted">Trades</span> <span>${Number(summary.trades||0).toLocaleString()}</span></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="rank-col">Rank</th>
+          <th>Wallet</th>
+          <th class="amount-col">Balance</th>
+          <th class="amount-col">Bought</th>
+          <th class="amount-col">Sold</th>
+          <th class="amount-col">Net</th>
+          <th class="rank-col">Trades</th>
+          <th class="status-col">Status</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="muted">
+      DEX buys and sells only. Wallet-to-wallet transfers are not mixed into this signal.
+    </div>
+  `);
+}
+
+async function traders12(){
+  const d=await getJson("/api/traders12");
+  if(cacheNotice(d))block(cacheNotice(d));
+  if(d.cache?.rankCoverage==="top-300-immediate"){
+    block(`<div class="yellow">[ RANKS ] Immediate Top-300 ranks shown. Complete ranks are refreshing in the background.</div>`);
+  }
+  traderTable(d.topBuyers,`Top 10 ${CFG.project.name} Buyers — Last 12 Hours`,"buy");
+  traderTable(d.topSellers,`Top 10 ${CFG.project.name} Sellers — Last 12 Hours`,"sell");
+}
+async function recentTransactions(){
+  const d=await getJson("/api/activity?hours=24");
+  const rows=d.recentWhaleTransactions.map(t=>`
+    <tr>
+      <td class="type-col">
+        <span class="trade-type ${t.type==="BUY"?"green":"red"}">${esc(t.type)}</span>
+      </td>
+      <td class="rank-col">${holderRank(t.holderRank,t.rankLabel)}</td>
+      <td>${walletWithCopy(t.wallet)}</td>
+      <td class="amount-col">${formatTokenAmount(t.amount)}</td>
+      <td class="time-col">${compactTimeAgo(t.timestamp)}</td>
+    </tr>`).join("");
+  block(`<div class="orange">Recent Top-30 Whale Trades</div><table class="recent-trades-table">
+  <thead>
+    <tr>
+      <th class="type-col">Type</th>
+      <th class="rank-col">Holder Rank</th>
+      <th>Wallet</th>
+      <th class="amount-col">${CFG.project.name}</th>
+      <th class="time-col">Time</th>
+    </tr>
+  </thead>
+  <tbody>${rows||`<tr><td colspan="5" class="muted">No recent Top-30 whale trades found.</td></tr>`}</tbody>
+</table>${holderRankNote(d.recentWhaleTransactions)}`);
+}
+async function newWhales(){
+  const d=await getJson("/api/activity?hours=24");
+  if(!d.snapshot.comparisonAvailable){
+    block(`<div class="yellow">New-whale comparison is not ready yet.</div><div class="muted">A baseline has been created. Re-run after ${d.snapshot.intervalMinutes} minutes.</div>`);return;
+  }
+  const rows=d.newWhales.map(w=>`<tr><td>#${w.rank}</td><td>${walletWithCopy(w.address)}</td><td>${formatTokenAmount(w.balance)}</td></tr>`).join("");
+  block(`${whaleBalanceVisual(d.newWhales,"New Whale Balances")}<div class="orange">New Top-30 Whale Wallets</div><table><thead><tr><th>Rank</th><th>Wallet</th><th>Balance</th></tr></thead><tbody>${rows||`<tr><td colspan="3" class="muted">No new Top-30 entrants since the previous snapshot.</td></tr>`}</tbody></table>`);
+}
+
+async function infrastructure(){
+  const d=await getJson("/api/infrastructure");
+  const rows=d.addresses.map(item=>`
+    <tr>
+      <td class="orange">[ ${esc(item.tag)} ]</td>
+      <td>${esc(item.label)}</td>
+      <td>${walletWithCopy(item.address)}</td>
+      <td>${item.excludeFromWhaleStats
+        ?'<span class="green">EXCLUDED</span>'
+        :'<span class="muted">INCLUDED</span>'}</td>
+    </tr>`).join("");
+
+  block(`
+    <div class="orange">Labeled Infrastructure Addresses</div>
+    <table>
+      <thead><tr><th>Tag</th><th>Label</th><th>Address</th><th>Whale Stats</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="muted">${esc(d.note)}</div>
+  `);
+}
+
+async function execute(command){
+  const text=command.trim(),lower=text.toLowerCase();
+  if(!text)return;
+  highlightActiveCommand(lower);
+  echo(text);
+
+  let progress=null;
+
+  try{
+    if(lower==="help"){
+      help();
+    }
+    else if(lower==="clear"){
+      history.innerHTML="";
+    }
+    else if(lower==="whales12"){
+      progress=showProgress("Loading Top-30 whale activity for the last 12 hours... Please wait.");
+      await whales12();
+      progress.remove();
+    }
+    else if(lower==="whales"){
+      progress=showProgress("Retrieving Top 30 whale activities... Please wait.");
+      const data=await getJson("/api/whales?limit=30");
+      progress.remove();
+      whaleTable(data,"Current Whale List (Top 30 Participant Wallets)",30);
+    }
+    else if(lower==="leaderboard"){
+      progress=showProgress("Retrieving current tracked-holder rankings... Please wait.");
+      const data=await getJson("/api/whales?limit=250");
+      progress.remove();
+      whaleTable(data,"Tracked Holder Leaderboard",50);
+    }
+    else if(/^whale\s+\d+$/i.test(text)){
+      const rankNumber=Number(text.split(/\s+/)[1]);
+
+      if(rankNumber<1||rankNumber>30){
+        block(`<div class="red">Whale rank must be between 1 and 30.</div>`);
+      }else{
+        progress=showProgress(`Retrieving Whale #${rankNumber} profile... Please wait.`);
+        await whaleProfile(rankNumber);
+        progress.remove();
+      }
+    }
+    else if(lower==="activity"){
+      progress=showProgress(`Analyzing 24-hour ${CFG.project.name} DEX activity... Please wait.`);
+      await activityDashboard();progress.remove();
+    }
+    else if(lower==="traders12"||lower==="activity12"){
+      progress=showProgress(`Ranking ${CFG.project.name} buyers and sellers from the last 12 hours... Please wait.`);
+      await traders12();progress.remove();
+    }
+    else if(lower==="accumulators"){
+      progress=showProgress("Calculating 24-hour net accumulation... Please wait.");
+      const d=await getJson("/api/activity?hours=24");progress.remove();
+      traderTable(d.topAccumulators,"Top 10 Net Accumulators — 24h","both");
+    }
+    else if(lower==="distributors"){
+      progress=showProgress("Calculating 24-hour net distribution... Please wait.");
+      const d=await getJson("/api/activity?hours=24");progress.remove();
+      traderTable(d.topDistributors,"Top 10 Net Distributors — 24h","both");
+    }
+    else if(lower==="transactions"){
+      progress=showProgress("Retrieving recent Top-30 whale trades... Please wait.");
+      await recentTransactions();progress.remove();
+    }
+    else if(lower==="newwhales"){
+      progress=showProgress("Checking for new Top-30 whale wallets... Please wait.");
+      await newWhales();progress.remove();
+    }
+    else if(lower==="movers"){
+      progress=showProgress("Comparing tracked-holder snapshots... Please wait.");
+      const d=await getJson("/api/whales?limit=250");
+      progress.remove();
+
+      if(!d.snapshot.comparisonAvailable){
+        block(`<div class="yellow">Movement data is not ready yet.</div><div class="muted">Re-run after ${d.snapshot.intervalMinutes} minutes.</div>`);
+      }else{
+        d.whales.sort((a,b)=>Math.abs(b.movement.rankChange)-Math.abs(a.movement.rankChange));
+        whaleTable(d,"Biggest Tracked-Holder Movers",30,"movers");
+      }
+    }
+    else if(lower==="stats"){
+      progress=showProgress("Calculating whale statistics... Please wait.");
+      const d=await getJson("/api/stats");
+      progress.remove();
+
+      const l=d.stats.largestHolder;
+      block(`
+        ${statsVisual(d.stats)}
+        <div class="yellow">Whale Statistics</div>
+        <div class="kv"><span>Defined Whales</span><span>Top-30 whales</span></div>
+        <div class="kv"><span>On-Chain Holders</span><span>${Number(d.metadata.holdersCount).toLocaleString()}</span></div>
+        <div class="kv"><span>Participant Holders</span><span>${Number(d.metadata.participantHoldersCount||d.metadata.holdersCount).toLocaleString()}</span></div>
+        <div class="kv"><span>Top 10 Control</span><span>${Number(d.stats.top10ControlPct).toFixed(2)}%</span></div>
+        <div class="kv"><span>Top 100 Control</span><span>${Number(d.stats.top100ControlPct).toFixed(2)}%</span></div>
+        <div class="kv"><span>Largest Holder</span><span>${l?walletWithCopy(l.address):"Unavailable"}</span></div>
+        <div class="kv"><span>Largest Balance</span><span>${l?formatTokenAmount(l.balance):"Unavailable"}</span></div>
+        <div class="kv"><span>Net Tracked Flow</span><span>${formatSignedTokenAmount(d.stats.netWhaleFlowSigned)}</span></div>
+        <div class="kv"><span>Overall Status</span><span>${esc(d.stats.sentiment)}</span></div>
+        <div class="kv"><span>Excluded Infrastructure</span><span>${Number(d.metadata.excludedInfrastructureCount||0)}</span></div>`);
+    }
+    else if(lower==="infrastructure"||lower==="infra"){
+      progress=showProgress("Loading labeled infrastructure addresses... Please wait.");
+      await infrastructure();
+      progress.remove();
+    }
+    else if(lower.startsWith("rank ")){
+      progress=showProgress("Retrieving wallet rank... Please wait.");
+      await rank(text.slice(5).trim());
+      progress.remove();
+    }
+    else if(/^0x[a-fA-F0-9]{40}$/.test(text)){
+      progress=showProgress("Retrieving wallet rank... Please wait.");
+      await rank(text);
+      progress.remove();
+    }
+    else{
+      block(`<div class="red">Unknown command.</div><div class="muted">Use Available Commands above.</div>`);
+    }
+  }catch(error){
+    if(progress)progress.remove();
+
+    if(error.warming){
+      const retryCommand=(lower==="activity12")?"traders12":lower;
+      cacheWarmingMessage(retryCommand,error.hours);
+      return;
+    }
+
+    block(`<div class="red">${esc(error.message)}</div>`);
+  }
+}
+const MARKET_REFRESH_MS=30_000;
+let hasMarketData=false;
+
+function formatMarketTime(date){
+  return date.toLocaleTimeString([], {
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit"
+  });
+}
+
+function setMarketStatus(text,state=""){
+  for(const element of[
+    marketPriceStatus,
+    marketCapStatus,
+    marketHoldersStatus,
+    marketVolumeStatus,
+    marketUpdatedStatus
+  ]){
+    element.textContent=`[ ${text} ]`;
+    element.classList.toggle("error",state==="error");
+  }
+}
+
+async function refreshMarketPanel(){
+  setMarketStatus(hasMarketData?"REFRESHING":"CONNECTING");
+
+  try{
+    const d=await getJson("/api/market");
+    marketPrice.textContent=`$${Number(d.priceUsd).toFixed(5)} USD / ${d.priceEth} ETH`;
+    const change=Number(d.priceChange24h);
+    if(marketPriceChange){
+      const valid=Number.isFinite(change);
+      const arrow=valid?(change>0?"▲":change<0?"▼":"•"):"";
+      const changeLabel=window.matchMedia("(max-width: 600px)").matches?"24H CHANGE":"24H PRICE CHANGE";
+      marketPriceChange.textContent=valid?`${changeLabel}  ${arrow} ${change>0?"+":""}${change.toFixed(2)}%`:`${changeLabel}  —`;
+      marketPriceChange.classList.toggle("positive",valid&&change>0);
+      marketPriceChange.classList.toggle("negative",valid&&change<0);
+      marketPriceChange.classList.toggle("neutral",!valid||change===0);
+    }
+    marketCap.textContent=d.marketCapDisplay||"UNAVAILABLE";
+    marketHolders.textContent=d.holdersDisplay||"UNAVAILABLE";
+    marketVolume.textContent=d.volume24hDisplay||"UNAVAILABLE";
+    marketUpdated.textContent=formatMarketTime(new Date());
+    setMarketStatus("LIVE");
+    hasMarketData=true;
+  }catch{
+    setMarketStatus("UNAVAILABLE","error");
+    if(!hasMarketData){
+      marketPrice.textContent="UNAVAILABLE";
+      if(marketPriceChange){const changeLabel=window.matchMedia("(max-width: 600px)").matches?"24H CHANGE":"24H PRICE CHANGE";marketPriceChange.textContent=`${changeLabel}  —`;marketPriceChange.className="market-price-change neutral";}
+      marketCap.textContent="UNAVAILABLE";
+      marketHolders.textContent="UNAVAILABLE";
+      marketVolume.textContent="UNAVAILABLE";
+      marketUpdated.textContent="—";
+    }
+  }
+}
+
+async function start(){
+  const mobileBoot=window.matchMedia("(max-width: 760px)").matches;
+  const lines=mobileBoot ? [
+    `[ <span class="green">OK</span> ] Whale Activity Tracker ready.`,
+    `[ <span class="green">OK</span> ] Chain services connected.`,
+    `[ <span class="green">OK</span> ] Holder rankings loaded.`
+  ] : [
+    `[ <span class="green">OK</span> ] Initializing ${CFG.project.ecosystem}, ${CFG.project.name} Whale Activity Tracker`,
+    `[ <span class="green">OK</span> ] Connecting to ${CFG.project.ecosystem} services`,
+    `[ <span class="green">OK</span> ] Loading current holder rankings`
+  ];
+  for(const html of lines){
+    const line=document.createElement("div");
+    line.className="line boot-line";line.innerHTML=html;boot.append(line);
+    requestAnimationFrame(()=>line.classList.add("visible"));await sleep(180);
+  }
+  const ready=document.createElement("div");ready.className="line";
+  ready.innerHTML=mobileBoot ? `[ <span class="green">READY</span> ] Whale tracking active.` : `[ <span class="green">READY</span> ] Whale database synchronized`;
+  boot.append(ready);
+  promptRow.classList.add("visible");
+  setCommandControlsDisabled(false);
+}
+
+function setCommandControlsDisabled(disabled){
+  document.querySelectorAll("[data-quick-command], [data-guide-command]").forEach((button)=>{
+    button.disabled=disabled;
+  });
+}
+
+function appendBackToCommands(){
+  const row=document.createElement("div");
+  row.className="back-to-commands-row";
+  row.innerHTML='<button type="button" class="back-to-commands">&gt; Back to commands</button>';
+  history.append(row);
+}
+
+async function runTerminalCommand(command){
+  const text=String(command||"").trim();
+  if(!text)return;
+
+  // Any pending parameterized-command prefill belongs to the prompt only.
+  // Once another command is executed, clear it so there is one active prompt state.
+  input.value="";
+  input.disabled=true;
+  setCommandControlsDisabled(true);
+
+  let outputStart=null;
+  try{
+    const before=history.lastElementChild;
+    await execute(text);
+    outputStart=before?.nextElementSibling || history.firstElementChild;
+    if(text.toLowerCase()!=="clear")appendBackToCommands();
+  }finally{
+    input.disabled=false;
+    setCommandControlsDisabled(false);
+    input.focus({preventScroll:true});
+    if(text.toLowerCase()!=="clear" && outputStart){
+      outputStart.focus({preventScroll:true});
+      outputStart.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  }
+}
+
+input.addEventListener("keydown",async(event)=>{
+  if(event.key!=="Enter")return;
+  event.preventDefault();
+  const command=input.value;
+  input.value="";
+  await runTerminalCommand(command);
+});
+
+document.addEventListener("click",async(event)=>{
+  const quickButton=event.target.closest("[data-quick-command]");
+  if(quickButton){
+    if(quickButton.disabled)return;
+    event.preventDefault();
+    await runTerminalCommand(quickButton.dataset.quickCommand||"");
+    return;
+  }
+
+  const guideButton=event.target.closest("[data-guide-command]");
+  if(!guideButton||guideButton.disabled)return;
+  event.preventDefault();
+
+  const command=guideButton.dataset.guideCommand||"";
+  if(guideButton.dataset.commandPrefill==="true"){
+    input.value=command;
+    input.focus();
+    input.setSelectionRange(input.value.length,input.value.length);
+    return;
+  }
+
+  await runTerminalCommand(command);
+});
+
+history.addEventListener("click",async(event)=>{
+  const backButton=event.target.closest(".back-to-commands");
+  if(backButton){
+    document.getElementById("whaleCommands")?.scrollIntoView({behavior:"smooth",block:"start"});
+    return;
+  }
+
+  const button=event.target.closest(".copy-wallet");
+  if(!button)return;
+
+  const address=button.dataset.wallet;
+  if(address)await copyWallet(address);
+});
+
+
+function verifyFrontendIntegrity(){
+  const checks=[
+    ["esc",typeof esc],
+    ["walletWithCopy",typeof walletWithCopy],
+    ["getJson",typeof getJson],
+    ["block",typeof block],
+    ["formatAge",typeof formatAge],
+    ["timeAgo",typeof timeAgo],
+    ["compactTimeAgo",typeof compactTimeAgo],
+    ["holderRank",typeof holderRank],
+    ["activityDashboard",typeof activityDashboard],
+    ["traders12",typeof traders12],
+    ["recentTransactions",typeof recentTransactions],
+    ["execute",typeof execute],
+    ["runTerminalCommand",typeof runTerminalCommand],
+    ["setCommandControlsDisabled",typeof setCommandControlsDisabled]
+  ];
+
+  const missing=checks
+    .filter(([,type])=>type!=="function")
+    .map(([name])=>name);
+
+  if(missing.length){
+    throw new Error(
+      `Frontend integrity check failed: ${missing.join(", ")}`
+    );
+  }
+}
+
+verifyFrontendIntegrity();
+refreshMarketPanel();
+setInterval(refreshMarketPanel,MARKET_REFRESH_MS);
+start();
+
+function commandRoot(command){
+  return String(command||"")
+    .trim()
+    .split(/\s+/)[0]
+    .toLowerCase();
+}
+
+function highlightActiveCommand(command){
+  const root=commandRoot(command);
+  document.querySelectorAll("[data-quick-command]").forEach((button)=>{
+    button.classList.toggle("active",commandRoot(button.dataset.quickCommand)===root);
+  });
+}
+
+
+/* CPB initial viewport lock: generated portals always open at the top. */
+(() => {
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (_) {}
+  const top = () => window.scrollTo(0, 0);
+  const settle = () => { top(); requestAnimationFrame(() => requestAnimationFrame(top)); setTimeout(top, 120); setTimeout(top, 500); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", top, { once: true }); else top();
+  window.addEventListener("pageshow", settle);
+  window.addEventListener("load", settle, { once: true });
+})();

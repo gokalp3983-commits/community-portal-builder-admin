@@ -1,0 +1,22 @@
+const fs=require('fs');
+const path=require('path');
+const root=path.resolve(__dirname,'..');
+const landingIndex=fs.readFileSync(path.join(root,'01_Landing-Page/public/index.html'),'utf8');
+const landingCss=fs.readFileSync(path.join(root,'01_Landing-Page/public/style.css'),'utf8');
+const landingScript=fs.readFileSync(path.join(root,'01_Landing-Page/public/script.js'),'utf8');
+const builderIndex=fs.readFileSync(path.join(__dirname,'public/index.html'),'utf8');
+const builderCss=fs.readFileSync(path.join(__dirname,'public/style.css'),'utf8');
+const generator=fs.readFileSync(path.join(__dirname,'generator.js'),'utf8');
+function ok(name,cond){if(!cond)throw new Error(name);console.log('[ PASS ]',name)}
+ok('LIVE MARKET DATA title',landingIndex.includes('LIVE MARKET DATA'));
+ok('header image centered',landingCss.includes('object-position:center center!important'));
+ok('header further compacted',landingCss.includes('.portal-hero{padding:10px 18px 9px!important'));
+ok('READY-only boot filter',landingScript.includes('toUpperCase() === "READY"'));
+ok('READY rows single vertical column',landingCss.includes('grid-template-columns:1fr!important'));
+ok('module cards equal height desktop',landingCss.includes('.portal-modules-grid>.portal-panel{height:100%!important'));
+ok('builder footer superseded to single lime',builderCss.includes('Pass 12.25')&&builderCss.includes('background:#ccff00!important'));
+ok('builder footer center zone removed',!builderIndex.includes('cpb-footer-center-zone'));
+ok('generated footer superseded to single lime',generator.includes('padding:10px 14px!important')&&!generator.includes('cpb-portal-footer-center'));
+ok('generated footer uses exact CPB energy sweep timing',generator.includes('animation:cpb-energy-sweep 4.8s ease-in-out infinite'));
+ok('generated footer uses same portal identity structure for all modules',!generator.slice(generator.indexOf('function canonicalFooterRuntime'),generator.indexOf('function generatedValidator')).includes('moduleName === \"01_Landing-Page\" ?'));
+console.log('Chapter 22C Pass 12.22 div-by-div review checks passed.');

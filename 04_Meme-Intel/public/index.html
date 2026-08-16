@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style id="ctb-style-guard">html{background:#000}html:not(.ctb-styles-ready) body{visibility:hidden}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="{{PROJECT_NAME}} Meme Intelligence Portal — community-built {{PROJECT_ECOSYSTEM}} market intelligence.">
+  <title>{{PROJECT_NAME}} Meme Intelligence Portal</title>
+  <link rel="stylesheet" href="/style.css?v=intel-ui-pass1">
+  <link rel="stylesheet" href="/intel.css?v=intel-ui-pass1">
+  <script>
+(()=>{
+  const root=document.documentElement;
+  const links=[...document.querySelectorAll('link[rel="stylesheet"]')];
+  if(!links.length){ root.classList.add("ctb-styles-ready"); return; }
+  let remaining=links.length;
+  let revealed=false;
+  const settle=()=>{
+    remaining-=1;
+    if(remaining<=0 && !revealed){ revealed=true; root.classList.add("ctb-styles-ready"); }
+  };
+  for(const link of links){
+    if(link.sheet){ settle(); continue; }
+    link.addEventListener("load",settle,{once:true});
+    link.addEventListener("error",settle,{once:true});
+  }
+  setTimeout(()=>{ if(!revealed){ revealed=true; root.classList.add("ctb-styles-ready"); } },8000);
+})();
+  </script>
+</head>
+<body>
+  <div id="terminal-workspace" class="terminal-workspace">
+    <main id="terminal-frame" class="shell terminal-frame">
+      <section class="terminal portal-shell" aria-label="{{PROJECT_NAME}} Meme Intelligence Portal">
+        <div id="terminal-header" class="terminal-area terminal-header portal-hero">
+          <header class="header community-header">
+            <a data-project-home class="portal-brand" href="#" title="Return to {{PROJECT_NAME}} Community Portal">
+              <img data-project-mascot class="mascot community-mascot" src="" alt="">
+            </a>
+            <div class="community-title-row">
+              <div class="portal-heading-copy">
+                <h1>{{PROJECT_NAME}} COMMUNITY PORTAL</h1>
+                <p class="community-subtitle">Independent Community Tools <span aria-hidden="true">•</span> {{PROJECT_ECOSYSTEM}} Ecosystem</p>
+              </div>
+              <div class="module-status-stack">
+                <div class="module-subtitle">Meme Intelligence Portal</div>
+                <span class="online-status"><span class="online-dot" aria-hidden="true">●</span> ONLINE</span>
+              </div>
+            </div>
+          </header>
+        </div>
+
+        <div class="portal-header-energy" aria-hidden="true">
+          <span class="energy-line energy-lime"></span>
+          <span class="energy-line energy-violet"></span>
+        </div>
+
+        <div id="terminal-live-panel" class="terminal-area terminal-live-panel portal-panel portal-market-panel">
+          <div class="portal-section-heading">
+            <div>
+              <span class="portal-section-kicker">LIVE MARKET DATA</span>
+              <h2>Market Snapshot</h2>
+            </div>
+            <span class="portal-status-chip">AUTO REFRESH</span>
+          </div>
+          <section id="marketPanel" class="market-panel" aria-label="Live {{PROJECT_NAME}} market data">
+            <div class="market-line market-price-line"><span id="marketPriceStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Price</span><span class="market-colon" aria-hidden="true">:</span><span class="market-price-wrap"><strong id="marketPrice" class="market-value">—</strong><span id="marketPriceChange" class="market-price-change" aria-label="24 hour price change">24H PRICE CHANGE&nbsp; —</span></span></div>
+            <div class="market-line"><span id="marketCapStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Market Cap</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketCap" class="market-value">—</strong></div>
+            <div class="market-line"><span id="marketHoldersStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Holders</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketHolders" class="market-value">—</strong></div>
+            <div class="market-line"><span id="marketVolumeStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">24h Volume</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketVolume" class="market-value">—</strong></div>
+            <div class="market-line market-updated-line"><span id="marketUpdatedStatus" class="market-tag">[ CONNECTING ]</span><span class="market-label">Updated</span><span class="market-colon" aria-hidden="true">:</span><strong id="marketUpdated" class="market-value">—</strong></div>
+            <div class="market-line contract-address-line"><span class="market-tag contract-tag">[ CA ]</span><span class="market-label">Contract</span><span class="market-colon" aria-hidden="true">:</span><span class="contract-value-wrap"><code class="market-value contract-value" data-token-contract>—</code><button class="copy-contract" type="button" data-copy-token-contract aria-label="Copy token contract address" title="Copy token contract address">COPY</button></span></div>
+          </section>
+        </div>
+
+        <div id="terminal-application" class="terminal-area terminal-application intel-application portal-workspace">
+          <section class="intel-intro-card portal-panel portal-system-panel" aria-labelledby="intelIntroTitle">
+            <div class="portal-section-heading compact">
+              <div>
+                <span class="portal-section-kicker">INTELLIGENCE STATUS</span>
+                <h2 id="intelIntroTitle">Market Intelligence</h2>
+              </div>
+              <span class="portal-status-chip portal-status-ready">READY</span>
+            </div>
+            <div class="intel-howto">
+              <div class="intel-howto-title">How to use</div>
+              <div>Choose a command below and wait for the result. Intelligence commands combine market, holder and activity signals.</div>
+              <div class="trust">Descriptive community analytics only. No wallet connection, transaction or signature is required.</div>
+            </div>
+            <div class="intel-console" aria-label="Meme Intelligence startup status">
+              <div id="boot"></div>
+            </div>
+          </section>
+
+          <section id="intelCommands" class="intel-command-hub portal-panel intel-quick-card" aria-labelledby="intelQuickCommandsTitle">
+            <div class="portal-section-heading compact">
+              <div>
+                <span class="portal-section-kicker">QUICK COMMANDS</span>
+                <h2 id="intelQuickCommandsTitle">Fast Intelligence</h2>
+              </div>
+            </div>
+            <div class="intel-quick-command-tabs" aria-label="Intel quick commands">
+              <button class="intel-quick-command" type="button" data-quick-command="status" disabled>STATUS</button>
+              <button class="intel-quick-command" type="button" data-quick-command="scan" disabled>SCAN</button>
+              <button class="intel-quick-command" type="button" data-quick-command="pulse" disabled>PULSE</button>
+              <button class="intel-quick-command" type="button" data-quick-command="pressure" disabled>PRESSURE</button>
+              <button class="intel-quick-command" type="button" data-quick-command="live" disabled>LIVE</button>
+            </div>
+
+            <div class="intel-guide-subsection" aria-labelledby="intelAvailableCommandsTitle">
+              <div class="intel-subsection-heading">
+                <span class="portal-section-kicker">ALL TOOLS</span>
+                <h3 id="intelAvailableCommandsTitle">Available Commands</h3>
+              </div>
+              <div class="intel-command-guide-list" aria-label="Meme Intelligence Portal available commands">
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="status">Status</button><span>Cache build progress</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="scan">Scan</button><span>Complete market snapshot</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="pulse">Pulse</button><span>Market-state interpretation</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="pressure">Pressure</button><span>Buy/sell pressure (12h)</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="live">Live</button><span>Notable recent activity</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="fresh">Fresh</button><span>Newly observed buyer flow</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="holders">Holders</button><span>Distribution and movement</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="risk">Risk</button><span>Transparent risk metrics</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="methodology">Methodology</button><span>Signal rules and limits</span></div>
+                <div class="intel-command-guide-row"><button class="intel-command-name" type="button" data-guide-command="clear">Clear</button><span>Clears the current intelligence output.</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div id="terminal-prompt" class="terminal-area terminal-prompt portal-panel intel-output-card">
+          <div class="portal-section-heading compact">
+            <div>
+              <span class="portal-section-kicker">INTELLIGENCE OUTPUT</span>
+              <h2>Intel Console</h2>
+            </div>
+          </div>
+          <div id="history" class="intel-output intel-command-output" aria-live="polite"></div>
+          <div id="promptRow" class="intel-prompt-row visible">
+            <label class="intel-prompt-label" for="commandInput"><span data-project-prompt></span></label>
+            <input id="commandInput" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Meme intelligence command">
+          </div>
+        </div>
+
+        <div id="terminal-footer" class="terminal-area terminal-footer">
+          <footer class="footer"><span data-project-footer></span></footer>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="/project-config.js"></script>
+  <script src="/project-runtime.js"></script>
+  <script src="/intel.js?v=intel-ui-pass1"></script>
+</body>
+</html>

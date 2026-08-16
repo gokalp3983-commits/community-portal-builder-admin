@@ -1,0 +1,26 @@
+const fs=require('fs');
+const assert=require('assert');
+const css=fs.readFileSync('public/style.css','utf8');
+const js=fs.readFileSync('public/app.js','utf8');
+const boot=fs.readFileSync('public/cpb-boot.js','utf8');
+const html=fs.readFileSync('public/index.html','utf8');
+
+assert(css.includes('Chapter 22C — mobile fit + header animation test/fix cycle 1'),'Chapter 22C fix layer missing');
+assert(css.includes('grid-template-columns:repeat(4,minmax(0,1fr))!important'),'mobile four-step navigation must fit in viewport');
+assert(css.includes('body.guided-mode .guided-overview small{display:none!important}'),'mobile step helper copy should collapse before labels clip');
+assert(css.includes('width:calc(100% - 20px)!important'),'mobile footer must have safe viewport gutters');
+assert(css.includes('opacity:1;\n  transform:none;\n  filter:none;'),'motto must have a visible static fallback if replay JS does not run');
+assert(css.includes('@keyframes cpb-letter-reveal{from{opacity:0;transform:translateY(7px);filter:blur(2px)}'),'motto reveal must define its own hidden start state');
+assert(css.includes('body.guided-mode .cpb-motto .motto-word{'),'legacy motto-word wrapper must be neutralized');
+assert(css.includes('animation:none!important;'),'legacy word-level animation must be disabled');
+assert(css.includes('@keyframes cpb-motto-light-pass'),'full-motto light-pass animation missing');
+assert(css.includes('animation:cpb-motto-light-pass 2.9s 2.95s'),'light beam must begin after the reveal and remain watchable');
+assert(boot.includes('motto.classList.add("cpb-motto-animate")'),'early boot motto controller must opt into the animated state');
+assert(boot.includes('document.addEventListener("DOMContentLoaded",start,{once:true})'),'motto controller must wait for header markup when boot loads early');
+assert(boot.includes('window.setInterval(replay,10000)'),'motto story must replay every 10 seconds');
+assert(!js.includes('startCpbMottoLoop'),'large builder runtime must not own the motto animation controller');
+assert(css.includes('@media(prefers-reduced-motion:reduce)'),'reduced-motion fallback must remain supported');
+assert(html.includes('building<br class="rh-mobile-chain-break"> on <strong>Robinhood Chain</strong>.'),'mobile-only Robinhood Chain break marker missing');
+assert(css.includes('body.guided-mode .rh-chain-line .rh-mobile-chain-break{display:none}'),'Robinhood Chain break must stay hidden on desktop');
+assert(css.includes('body.guided-mode .rh-chain-line .rh-mobile-chain-break{display:block!important}'),'Robinhood Chain break must activate on mobile');
+console.log('Chapter 22C mobile/motto fix regression: PASS');

@@ -1,0 +1,12 @@
+const fs=require('fs');const path=require('path');const assert=require('assert');
+const base=__dirname;
+const app=fs.readFileSync(path.join(base,'public/app.js'),'utf8');
+const css=fs.readFileSync(path.join(base,'public/style.css'),'utf8');
+const gen=fs.readFileSync(path.join(base,'generator.js'),'utf8');
+const landing=fs.readFileSync(path.join(base,'../01_Landing-Page/public/style.css'),'utf8');
+assert(app.includes('link.removeAttribute("href")')&&app.includes('link.setAttribute("aria-disabled","true")'),'pre-success live link must be disabled');
+assert(css.includes('#deployment-success-title{color:#39ff14!important'),'success title must be neon green');
+assert(css.includes('.footer-title{font-size:.90rem!important')&&css.includes('.footer-tagline{font-size:.74rem!important'),'builder footer line emphasis missing');
+assert(landing.includes('min-height:68px!important')&&landing.includes('padding:18px 22px 17px!important'),'generated portal compact rules missing');
+assert(gen.includes('cpb-portal-footer-signature')&&gen.includes('𝕏 @Gokalp8339'),'generated creator signature missing');
+console.log('Chapter 22C Pass 12.21 focused polish checks passed.');

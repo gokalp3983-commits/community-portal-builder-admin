@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style id="ctb-style-guard">html{background:#020806}html:not(.ctb-styles-ready) body{visibility:hidden}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style id="critical-first-paint">
+    html{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+      -webkit-text-size-adjust:100%;
+      text-size-adjust:100%;
+    }
+    body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+      margin:0;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    .nft-terminal-workspace,
+    #terminal-frame,
+    .terminal,
+    .terminal-area,
+    .nft-sales-window{
+      min-width:0;
+      max-width:100%;
+    }
+    .community-divider{
+      width:100%;
+      max-width:100%;
+      overflow:hidden;
+      white-space:nowrap;
+    }
+    img,svg,canvas,video{max-width:100%}
+    @media(max-width:1220px){
+      .nft-terminal-workspace{grid-template-columns:1fr!important}
+    }
+  </style>
+  <meta name="theme-color" content="#020704">
+  <meta name="description" content="{{PROJECT_DESCRIPTION}}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{PROJECT_NAME}} NFT Portal">
+  <meta property="og:title" content="{{PROJECT_NAME}} NFT Portal">
+  <meta property="og:description" content="{{PROJECT_DESCRIPTION}}">
+  <meta property="og:url" content="{{PAGE_URL}}">
+  <meta property="og:image" content="{{SOCIAL_IMAGE_URL}}">
+  <meta property="og:image:alt" content="{{PROJECT_NAME}} NFT Portal mascot">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{PROJECT_NAME}} NFT Portal">
+  <meta name="twitter:description" content="{{PROJECT_DESCRIPTION}}">
+  <meta name="twitter:image" content="{{SOCIAL_IMAGE_URL}}">
+  <title>{{PROJECT_NAME}} NFT Portal</title>
+  <link rel="icon" type="image/png" href="__CTB_MASCOT_PATH__">
+  <link rel="stylesheet" href="/style.css?v=cpb-nft-final4">
+  <link rel="stylesheet" href="/countdown.css?v=cpb-nft-final4">
+  <script>
+(()=>{
+  const root=document.documentElement;
+  const links=[...document.querySelectorAll('link[rel="stylesheet"]')];
+  if(!links.length){ root.classList.add("ctb-styles-ready"); return; }
+  let remaining=links.length;
+  let revealed=false;
+  const settle=()=>{
+    remaining-=1;
+    if(remaining<=0 && !revealed){
+      revealed=true;
+      root.classList.add("ctb-styles-ready");
+    }
+  };
+  for(const link of links){
+    if(link.sheet){ settle(); continue; }
+    link.addEventListener("load",settle,{once:true});
+    link.addEventListener("error",settle,{once:true});
+  }
+  setTimeout(()=>{
+    if(!revealed){ revealed=true; root.classList.add("ctb-styles-ready"); }
+  },8000);
+})();
+</script>
+</head>
+<body>
+  <div class="nft-terminal-workspace launch-workspace">
+    <main id="terminal-frame" class="shell terminal-frame">
+      <section class="terminal" aria-label="__CTB_PROJECT_NAME_UPPER__ NFT Portal">
+        <div class="terminal-area terminal-header portal-hero">
+          <header class="header community-header">
+            <a data-project-home class="portal-brand" href="/" title="Return to __CTB_PROJECT_NAME__ Community Portal">
+              <img data-project-mascot class="mascot community-mascot" src="__CTB_MASCOT_PATH__" alt="__CTB_PROJECT_NAME__ mascot">
+            </a>
+            <div class="community-title-row">
+              <div class="portal-heading-copy">
+                <h1>__CTB_PROJECT_NAME_UPPER__ COMMUNITY PORTAL</h1>
+                <p class="community-subtitle">Independent Community Tools <span aria-hidden="true">•</span> Robinhood Chain Ecosystem</p>
+              </div>
+              <div class="module-status-stack">
+                <div class="module-subtitle">__CTB_PROJECT_NAME__ NFT Portal</div>
+                <span class="online-status"><span class="online-dot" aria-hidden="true">●</span> ONLINE</span>
+              </div>
+            </div>
+          </header>
+        </div>
+        <div class="portal-header-energy" aria-hidden="true"><span class="energy-line energy-lime"></span><span class="energy-line energy-violet"></span></div>
+
+        <div id="launchLivePanel" class="terminal-area terminal-live-panel launch-live-panel portal-panel nft-market-panel">
+          <section class="market-panel" aria-label="Pre-mint market data">
+            <div class="market-line"><span class="market-tag pending-tag">[ PENDING ]</span><span class="market-label">Floor Price</span><span class="market-colon">:</span><strong class="market-value">Pending mint...</strong></div>
+            <div class="market-line"><span class="market-tag pending-tag">[ PENDING ]</span><span class="market-label">Holders</span><span class="market-colon">:</span><strong class="market-value">Pending mint...</strong></div>
+            <div class="market-line"><span class="market-tag pending-tag">[ PENDING ]</span><span class="market-label">24h Volume</span><span class="market-colon">:</span><strong class="market-value">Pending mint...</strong></div>
+            <div id="phaseCommand-allowlist1" class="market-line market-countdown-line phase-command-line"><span class="market-tag countdown-tag">[ MINT ]</span><span class="market-label">Phase-1</span><span class="market-colon">:</span><strong id="phaseCommandValue-allowlist1" class="market-value">--:--:--</strong></div>
+            <div id="phaseCommand-allowlist2" class="market-line market-countdown-line phase-command-line"><span class="market-tag countdown-tag">[ MINT ]</span><span class="market-label">Phase-2</span><span class="market-colon">:</span><strong id="phaseCommandValue-allowlist2" class="market-value">--:--:--</strong></div>
+            <div id="phaseCommand-public" class="market-line market-countdown-line phase-command-line"><span class="market-tag countdown-tag">[ MINT ]</span><span class="market-label">Phase-3</span><span class="market-colon">:</span><strong id="phaseCommandValue-public" class="market-value">--:--:--</strong></div>
+          </section>
+        </div>
+
+        <div class="terminal-area launch-status-area portal-panel nft-status-panel nft-access-panel">
+          <div class="launch-access-grid" aria-label="NFT portal access">
+            <a id="postMintTerminalLine" class="launch-access-item project-launch-link" href="/terminal" hidden><span class="launch-access-kicker">NFT Portal</span><strong>Open live mint & collection activity</strong></a>
+            <a class="launch-access-item" href="__CTB_OPENSEA_URL__" target="_blank" rel="noopener noreferrer"><span class="launch-access-kicker">OpenSea</span><strong>View __CTB_PROJECT_NAME_UPPER__ NFT Collection</strong></a>
+          </div>
+          <div id="mintCommand" hidden aria-hidden="true"></div><div id="mintReady" hidden aria-hidden="true"></div>
+        </div>
+
+        <div class="terminal-area countdown-area portal-panel nft-countdown-panel">
+          <div class="pre-mint-state-text multi-pre-mint-state">MINT HAS NOT STARTED</div>
+          <div class="phase-countdown-grid" aria-label="__CTB_PROJECT_NAME__ three-phase mint schedule">
+            <section id="phaseCard-allowlist1" class="phase-countdown-card" data-phase="allowlist1">
+              <div class="phase-card-topline"><span class="phase-kind">[ PHASE-1 ]</span><span id="phaseStatus-allowlist1" class="phase-status">[ UPCOMING ]</span></div>
+              <h2>“Mint phase not configured”</h2>
+              <div class="phase-details phase-details-kv">
+                <div class="phase-detail-row"><span class="phase-detail-label">Mint Fee</span><span class="phase-detail-colon" aria-hidden="true">:</span><span class="phase-detail-value">—</span></div>
+                <div class="phase-detail-row"><span class="phase-detail-label">Mint per Wallet</span><span class="phase-detail-colon" aria-hidden="true">:</span><span class="phase-detail-value">—</span></div>
+              </div>
+              <div id="phaseCountdown-allowlist1" class="phase-countdown-value">--D --H --M --S</div>
+              <div class="phase-time">Schedule not configured.</div>
+            </section>
+
+            <section id="phaseCard-allowlist2" class="phase-countdown-card" data-phase="allowlist2">
+              <div class="phase-card-topline"><span class="phase-kind">[ PHASE-2 ]</span><span id="phaseStatus-allowlist2" class="phase-status">[ UPCOMING ]</span></div>
+              <h2>“Mint phase not configured”</h2>
+              <div class="phase-details phase-details-kv">
+                <div class="phase-detail-row"><span class="phase-detail-label">Mint Fee</span><span class="phase-detail-colon" aria-hidden="true">:</span><span class="phase-detail-value">—</span></div>
+                <div class="phase-detail-row"><span class="phase-detail-label">Mint per Wallet</span><span class="phase-detail-colon" aria-hidden="true">:</span><span class="phase-detail-value">—</span></div>
+              </div>
+              <div id="phaseCountdown-allowlist2" class="phase-countdown-value">--D --H --M --S</div>
+              <div class="phase-time">Schedule not configured.</div>
+            </section>
+
+            <section id="phaseCard-public" class="phase-countdown-card" data-phase="public">
+              <div class="phase-card-topline"><span class="phase-kind">[ PHASE-3 ]</span><span id="phaseStatus-public" class="phase-status">[ UPCOMING ]</span></div>
+              <h2>“Mint phase not configured”</h2>
+              <div class="phase-details phase-details-kv">
+                <div class="phase-detail-row"><span class="phase-detail-label">Mint Fee</span><span class="phase-detail-colon" aria-hidden="true">:</span><span class="phase-detail-value">—</span></div>
+                <div class="phase-detail-row"><span class="phase-detail-label">Mint per Wallet</span><span class="phase-detail-colon" aria-hidden="true">:</span><span class="phase-detail-value">—</span></div>
+              </div>
+              <div id="phaseCountdown-public" class="phase-countdown-value">--D --H --M --S</div>
+              <div class="phase-time">Schedule not configured.</div>
+            </section>
+          </div>
+          <div class="launch-actions">
+            <a class="terminal-action" href="__CTB_OPENSEA_URL__" target="_blank" rel="noopener noreferrer">VISIT OPENSEA</a>
+            <a id="terminalLink" class="terminal-action" href="/terminal">VISIT NFT PORTAL</a>
+          </div>
+        </div>
+
+        <div id="terminal-footer" class="terminal-area terminal-footer">
+
+          <footer class="footer">
+          <span class="ctb-footer-title">__CTB_PROJECT_NAME__ Community Portal</span>
+          <span class="ctb-footer-version">ver __CTB_PROJECT_VERSION__</span>
+          <span class="ctb-footer-opensea">NFT Collection statistics powered by OpenSea API.</span>
+          <div class="builder-signature" aria-label="Built by Gokalp @Gokalp8339">
+            <img class="builder-signature-avatar" src="assets/gokalp-hoodrat-signature.png" alt="Gokalp Hoodrat NFT avatar">
+            <div class="builder-signature-copy">
+              <span class="builder-signature-label">Built by</span>
+              <span class="builder-signature-name">Gokalp</span>
+              <a class="x-credit builder-signature-handle" href="https://x.com/Gokalp8339" target="_blank" rel="noopener noreferrer" aria-label="Gokalp8339 on X">𝕏 @Gokalp8339</a>
+            </div>
+          </div>
+          <div class="builder-signature-disclaimer">Not affiliated with or endorsed by the official __CTB_PROJECT_NAME__ team.</div>
+        </footer>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="preMintModal" class="launch-modal" hidden>
+    <div class="launch-modal-card" role="dialog" aria-modal="true" aria-labelledby="preMintTitle">
+      <div class="modal-tag">[ UPCOMING MINT ]</div>
+      <h2 id="preMintTitle">Mint has not started yet.</h2>
+      <p>Feel free to visit the NFT Portal now, but live mint and collection data will become available after the configured mint time.</p>
+      <div class="launch-actions"><a class="terminal-action" href="/terminal">VISIT NFT PORTAL</a><button id="preMintCancel" class="terminal-action button-reset" type="button">CANCEL</button></div>
+    </div>
+  </div>
+
+  <div id="phaseLiveModal" class="launch-modal" hidden>
+    <div class="launch-modal-card" role="dialog" aria-modal="true" aria-labelledby="phaseLiveTitle">
+      <div id="phaseLiveTag" class="modal-tag live-tag">[ PHASE LIVE ]</div>
+      <h2 id="phaseLiveTitle">A MINT PHASE IS NOW LIVE</h2>
+      <p id="phaseLiveText">A new __CTB_PROJECT_NAME_UPPER__ mint phase has started. Visit the NFT Portal for live activity, or stay here to follow the remaining countdowns.</p>
+      <div class="launch-actions"><a class="terminal-action" href="/terminal">VISIT NFT PORTAL</a><button id="phaseLiveStay" class="terminal-action button-reset" type="button">STAY HERE</button></div>
+    </div>
+  </div>
+
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="/project-config.js"></script>
+  <script src="/project-runtime.js?v=cpb-nft-final4"></script>
+  <script src="/countdown.js?v=cpb-nft-final5"></script>
+</body>
+</html>

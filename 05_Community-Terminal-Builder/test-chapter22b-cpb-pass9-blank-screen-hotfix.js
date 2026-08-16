@@ -1,0 +1,14 @@
+const assert=require('assert');
+const fs=require('fs');
+const path=require('path');
+const root=__dirname;
+const html=fs.readFileSync(path.join(root,'public','index.html'),'utf8');
+const boot=fs.readFileSync(path.join(root,'public','cpb-boot.js'),'utf8');
+const server=fs.readFileSync(path.join(root,'server.js'),'utf8');
+assert(html.includes('<body class="guided-mode">'),'Simplified CPB must be present at first paint');
+assert(html.includes('<script src="cpb-boot.js"></script>'),'self-hosted first-paint script missing');
+assert(!html.includes('cpb-boot-pending'),'body must never depend on a hidden boot state');
+assert(!/<script>\s*\(\(\)=>/.test(html),'inline boot JavaScript must not be used under CSP');
+assert(boot.includes('localStorage.getItem("ctb.ux-mode.v1")'),'boot script must preserve saved Builder-mode preference');
+assert(server.includes("script-src 'self'"),'test assumes production CSP remains self-only');
+console.log('PASS CPB blank-screen first-paint hotfix');

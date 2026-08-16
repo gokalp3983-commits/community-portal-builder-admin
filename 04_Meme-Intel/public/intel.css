@@ -1,0 +1,100 @@
+/* Meme Intelligence Portal UI — shared shell is owned by style.css. */
+
+.terminal-workspace{width:100%;display:block}
+.terminal-workspace>#terminal-frame{width:min(1100px,calc(100% - 24px));margin:12px auto;min-width:0}
+.intel-application{width:100%;min-width:0;display:grid;gap:10px}
+
+.trust,.green,.positive{color:var(--green)}
+.red,.negative{color:var(--red)}
+.orange{color:var(--orange)}
+.yellow{color:var(--yellow)}
+.cyan{color:var(--cyan)}
+.muted,.intel-note{color:var(--muted)}
+
+.intel-intro-card{margin-top:0!important}
+.intel-howto{margin:8px 0 12px;line-height:1.5;color:var(--portal-muted,#8d99ab)}
+.intel-howto-title{color:var(--portal-green,#39ff14);font-weight:850;margin-bottom:4px}
+.intel-howto .trust{margin-top:4px;color:#7fe7c4;font-size:.83rem}
+.intel-console{border:1px solid rgba(255,255,255,.075);border-radius:11px;padding:10px 12px;background:#080b12}
+.line,.boot-line{margin:2px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.boot-line{opacity:0;transform:translateY(3px);transition:.18s}
+.boot-line.visible{opacity:1;transform:none}
+
+.intel-command-hub{box-shadow:inset 3px 0 0 rgba(103,232,249,.70),0 12px 34px rgba(0,0,0,.15)!important}
+.intel-command-hub>.portal-section-heading .portal-section-kicker,
+.intel-command-hub>.portal-section-heading h2{color:var(--portal-aqua,#67e8f9)!important}
+.intel-quick-command-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+.intel-quick-command{min-width:0;padding:10px 8px;border:1px solid rgba(103,232,249,.38);border-radius:10px;background:rgba(103,232,249,.06);color:var(--portal-aqua,#67e8f9);font:inherit;font-size:.72rem;font-weight:900;letter-spacing:.04em;cursor:pointer}
+.intel-quick-command:nth-child(2){border-color:rgba(255,138,0,.36);background:rgba(255,138,0,.055);color:#ffc36f}
+.intel-quick-command:nth-child(3){border-color:rgba(185,156,255,.36);background:rgba(185,156,255,.055);color:#d7c7ff}
+.intel-quick-command:nth-child(4){border-color:rgba(57,255,20,.32);background:rgba(57,255,20,.05);color:#a8ff98}
+.intel-quick-command:nth-child(5){border-color:rgba(255,227,111,.30);background:rgba(255,227,111,.045);color:#ffe36f}
+.intel-quick-command:hover,.intel-quick-command:focus-visible,.intel-quick-command.active{transform:translateY(-1px);filter:brightness(1.18);outline:none}
+.intel-quick-command:disabled{opacity:.6;cursor:wait}
+
+.intel-guide-subsection{margin-top:14px;padding:14px 0 0 13px;border-top:1px solid rgba(255,255,255,.065);border-left:3px solid var(--portal-violet,#b99cff)}
+.intel-subsection-heading{margin-bottom:10px}
+.intel-subsection-heading .portal-section-kicker,
+.intel-subsection-heading h3{color:var(--portal-violet,#b99cff)!important}
+.intel-subsection-heading h3{margin:3px 0 0;font-size:1rem}
+.intel-command-guide-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.intel-command-guide-row{display:grid;grid-template-columns:minmax(120px,.62fr) minmax(0,1.38fr);align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:#080b12;min-width:0}
+.intel-command-guide-row:nth-child(4n+1){border-left:3px solid var(--portal-aqua,#67e8f9)}
+.intel-command-guide-row:nth-child(4n+2){border-left:3px solid var(--portal-orange,#ff8a00)}
+.intel-command-guide-row:nth-child(4n+3){border-left:3px solid var(--portal-violet,#b99cff)}
+.intel-command-guide-row:nth-child(4n){border-left:3px solid var(--portal-green,#39ff14)}
+.intel-command-guide-row>span{color:var(--portal-muted,#8d99ab);font-size:.78rem;overflow-wrap:anywhere}
+.intel-command-name{border:0;background:transparent;color:#edf5ff;font:inherit;font-size:.78rem;font-weight:850;text-align:left;padding:0;cursor:pointer}
+.intel-command-name::before{content:"> ";color:var(--portal-aqua,#67e8f9)}
+.intel-command-guide-row:nth-child(4n+2) .intel-command-name::before{color:var(--portal-orange,#ff8a00)}
+.intel-command-guide-row:nth-child(4n+3) .intel-command-name::before{color:var(--portal-violet,#b99cff)}
+.intel-command-guide-row:nth-child(4n) .intel-command-name::before{color:var(--portal-green,#39ff14)}
+.intel-command-name:hover,.intel-command-name:focus-visible{color:var(--portal-lime,#ccff00);outline:none}
+
+.intel-output-card{box-shadow:inset 3px 0 0 rgba(255,138,0,.72),0 12px 34px rgba(0,0,0,.15)!important}
+.intel-output-card>.portal-section-heading .portal-section-kicker,
+.intel-output-card>.portal-section-heading h2{color:var(--portal-orange,#ff8a00)!important}
+.intel-output{margin-top:10px;min-width:0;overflow-wrap:anywhere}
+.intel-block{margin:10px 0;padding:12px 14px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:#080b12}
+.intel-title{color:var(--portal-orange,#ff8a00);font-weight:900;margin-bottom:8px}
+.intel-row{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,1.2fr);gap:14px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.045)}
+.intel-row:last-of-type{border-bottom:0}
+.intel-row>span{color:var(--portal-muted,#8d99ab)}
+.intel-event{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.045)}
+.command-echo{color:var(--green);margin:8px 0}
+.prompt-echo{color:var(--green)}
+.status-warning{color:var(--yellow)}
+.status-error{color:var(--red)}
+.back-to-commands-row{margin:10px 0}
+.back-to-commands{border:1px solid rgba(103,232,249,.30);border-radius:9px;background:rgba(103,232,249,.05);color:var(--cyan);font:inherit;padding:7px 10px;cursor:pointer}
+
+.intel-prompt-row{display:none;gap:8px;margin-top:12px;padding:9px 0 4px;border-bottom:1px solid rgba(57,255,20,.55)}
+.intel-prompt-row.visible{display:flex}
+.intel-prompt-label{color:var(--green);white-space:nowrap}
+#commandInput{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font:inherit;padding:0}
+
+@media(max-width:720px){
+  .terminal-workspace>#terminal-frame{width:min(100% - 12px,1100px);margin:6px auto}
+  .intel-quick-command-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .intel-quick-command:last-child{grid-column:1/-1}
+  .intel-command-guide-list{grid-template-columns:1fr}
+  .intel-command-guide-row{grid-template-columns:minmax(110px,.62fr) minmax(0,1.38fr)}
+  .intel-row{grid-template-columns:1fr;gap:3px}
+  .intel-prompt-label{font-size:.82rem}
+}
+
+@media(max-width:520px){
+  .intel-howto{font-size:.77rem}
+  .intel-console{font-size:.72rem;padding:9px 10px}
+  .intel-command-guide-row{padding:8px 9px;gap:8px}
+  .intel-command-guide-row>span,.intel-command-name{font-size:.69rem}
+  .intel-block{padding:10px 11px;font-size:.76rem}
+}
+
+.command-output-start{scroll-margin-top:12px;outline:none}
+
+
+/* Intel card rhythm refinement — match accepted portal spacing. */
+.intel-application{display:grid!important;gap:14px!important}
+.intel-application>.portal-panel{margin-top:0!important}
+@media(max-width:720px){.intel-application{gap:12px!important}}

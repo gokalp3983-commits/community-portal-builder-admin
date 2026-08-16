@@ -1,0 +1,64 @@
+/* Community Pulse NEW UI — page-specific presentation only. Shared shell/header/footer live in style.css. */
+
+.terminal-workspace{width:100%;display:block}
+.terminal-workspace>#terminal-frame{width:min(1100px,calc(100% - 24px));margin:12px auto;min-width:0}
+.pulse-application{display:grid;gap:14px;width:100%;min-width:0}
+.pulse-application>.portal-panel{margin-top:0!important}
+
+.pulse-overview-panel{box-shadow:inset 3px 0 0 rgba(57,255,20,.72),0 12px 34px rgba(0,0,0,.15)!important}
+.pulse-overview-panel .portal-section-kicker,.pulse-overview-panel h2{color:var(--portal-green,#39ff14)!important}
+.pulse-purpose{color:var(--portal-muted,#8d99ab);font-size:.82rem;line-height:1.5}
+.pulse-purpose strong{display:block;margin-bottom:4px;color:var(--portal-green,#39ff14);font-weight:850}
+.pulse-purpose p{margin:0}
+.pulse-purpose p+p{margin-top:4px}
+.pulse-trust{color:#7fe7c4}
+.pulse-live-status{margin-top:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:#080b12;color:#7fe7c4;font-size:.74rem;line-height:1.45}
+
+.pulse-signals-panel{box-shadow:inset 3px 0 0 rgba(103,232,249,.72),0 12px 34px rgba(0,0,0,.15)!important}
+.pulse-signals-panel>.portal-section-heading .portal-section-kicker,.pulse-signals-panel>.portal-section-heading h2{color:var(--portal-aqua,#67e8f9)!important}
+.pulse-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.pulse-card{
+  --pulse-accent:var(--portal-aqua,#67e8f9);
+  min-width:0;
+  min-height:124px;
+  padding:13px 14px;
+  border:1px solid rgba(255,255,255,.075);
+  border-left:3px solid var(--pulse-accent);
+  border-radius:12px;
+  background:#080b12;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.pulse-card>span{color:var(--pulse-accent);font-size:.66rem;font-weight:900;letter-spacing:.07em}
+.pulse-card strong{color:#eef5ff;font-size:clamp(1rem,2vw,1.28rem);font-weight:900;line-height:1.15;overflow-wrap:anywhere}
+.pulse-card strong.positive{color:#a8ff98!important}
+.pulse-card strong.negative{color:#ff8787!important}
+.pulse-card small{margin-top:auto;color:var(--portal-muted,#8d99ab);font-size:.75rem;line-height:1.45}
+.pulse-market{--pulse-accent:var(--portal-orange,#ff8a00)}
+.pulse-holders{--pulse-accent:var(--portal-aqua,#67e8f9)}
+.pulse-whales{--pulse-accent:var(--portal-violet,#b99cff)}
+.pulse-fresh{--pulse-accent:var(--portal-green,#39ff14)}
+.pulse-nft{--pulse-accent:var(--portal-yellow,#ffe36f)}
+.pulse-overall{--pulse-accent:var(--portal-lime,#ccff00);grid-column:1/-1;min-height:112px}
+
+.pulse-method-panel{box-shadow:inset 3px 0 0 rgba(185,156,255,.72),0 12px 34px rgba(0,0,0,.15)!important}
+.pulse-method-panel .portal-section-kicker,.pulse-method-panel h2{color:var(--portal-violet,#b99cff)!important}
+.pulse-method-panel p{margin:0;color:var(--portal-muted,#8d99ab);font-size:.79rem;line-height:1.55}
+.pulse-method-panel p+p{margin-top:6px}
+.pulse-method-note{color:#c8b9ed!important}
+
+@media(max-width:720px){
+  .terminal-workspace>#terminal-frame{width:min(100% - 12px,1100px);margin:6px auto}
+  .pulse-application{gap:12px}
+  .pulse-grid{grid-template-columns:1fr;gap:8px}
+  .pulse-overall{grid-column:auto}
+  .pulse-card{min-height:108px;padding:12px}
+}
+
+@media(max-width:520px){
+  .pulse-purpose,.pulse-method-panel p{font-size:.75rem}
+  .pulse-live-status{font-size:.69rem;padding:9px 10px}
+  .pulse-card{min-height:100px}
+  .pulse-card small{font-size:.70rem}
+}

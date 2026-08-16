@@ -1,0 +1,21 @@
+const fs=require('fs');
+const assert=require('assert');
+const html=fs.readFileSync('public/index.html','utf8');
+const css=fs.readFileSync('public/style.css','utf8');
+const app=fs.readFileSync('public/app.js','utf8');
+
+const tagline=html.indexOf('Build a complete community portal without touching the code.');
+const motto=html.indexOf('class="cpb-motto simple-only"');
+const chain=html.indexOf('Designed for communities building<br class="rh-mobile-chain-break"> on <strong>Robinhood Chain</strong>.');
+assert(tagline>-1 && motto>tagline && chain>motto,'header order must be subtitle, motto, Robinhood Chain line');
+assert(app.includes("const wasChecked=input.checked"),'baseline click must inspect current selection');
+assert(app.includes('input.checked=false'),'active baseline must be cancellable');
+assert(app.includes('Baseline cleared · choose Token, NFT, or Token + NFT to unlock Modules'),'baseline clear state must be explicit');
+assert(app.includes('setTerminalBaseline(input.value)'),'clicking another baseline must move the single selection');
+assert(css.includes('background:#39ff14!important'),'selected baseline square must be neon green');
+assert(css.includes('.guided-overview a:nth-child(1) span{color:#f8ff91!important}'),'Project step label must be yellow');
+assert(css.includes('.guided-overview a:nth-child(2) span{color:#a8f3ff!important}'),'Modules step label must be ice blue');
+assert(css.includes('.guided-overview a:nth-child(3) span{color:#d6c8ff!important}'),'Details step label must be violet');
+assert(css.includes('.guided-overview a:nth-child(4) span{color:#ff9a62!important}'),'Deploy step label must start warm/red-orange');
+assert(css.includes('font-size:.72rem!important'),'Robinhood Chain context line must be smaller');
+console.log('PASS CPB Pass 12.2 interaction and header hierarchy');

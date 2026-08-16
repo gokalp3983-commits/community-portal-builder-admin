@@ -1,0 +1,928 @@
+
+/* Whale module only. Shared shell is owned exclusively by style.css. */
+
+body{
+  --whale-panel-width:280px;
+  --whale-panel-gap:4px;
+}
+
+.terminal-workspace{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:0;
+  align-items:stretch;
+}
+
+body.command-panel-open .terminal-workspace{
+  grid-template-columns:minmax(0,1fr) var(--whale-panel-width);
+  gap:var(--whale-panel-gap);
+}
+
+.terminal-workspace > #terminal-frame{
+  min-width:0;
+}
+
+/* Keep landing page centering until help panel opens */
+body:not(.command-panel-open) .terminal-workspace{
+  display:block;
+}
+
+body:not(.command-panel-open) .terminal-workspace > #terminal-frame{
+  width:min(1100px, calc(100% - 24px));
+  margin:12px auto;
+}
+
+body.command-panel-open .terminal-workspace > #terminal-frame{
+  width:100%;
+  margin:0;
+}
+
+.whale-application{
+  width:100%;
+  min-width:0;
+}
+
+.whale-terminal-column{
+  min-width:0;
+}
+
+.whale-howto{
+  margin:12px 0 18px;
+  line-height:1.55;
+}
+
+.whale-howto-title{
+  color:var(--yellow);
+  font-weight:700;
+}
+
+.trust,
+.green{
+  color:var(--green);
+}
+
+.red{
+  color:var(--red);
+}
+
+.orange{
+  color:var(--orange);
+}
+
+.yellow{
+  color:var(--yellow);
+}
+
+.cyan{
+  color:var(--cyan);
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.whale-console{
+  border:1px solid var(--border);
+  padding:14px 16px;
+  background:rgba(255,255,255,.012);
+}
+
+.line{
+  margin:2px 0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.boot-line{
+  opacity:0;
+  transform:translateY(3px);
+  transition:.18s;
+}
+
+.boot-line.visible{
+  opacity:1;
+  transform:none;
+}
+
+.whale-output{
+  margin-top:12px;
+}
+
+.block{
+  margin:12px 0;
+  padding:14px 16px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.012);
+}
+
+.kv{
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) minmax(0,1.2fr);
+  gap:14px;
+  padding:4px 0;
+}
+
+#terminal-application table,
+.whale-command-output table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+}
+
+#terminal-application th,
+#terminal-application td,
+.whale-command-output th,
+.whale-command-output td{
+  padding:8px 6px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  vertical-align:top;
+}
+
+#terminal-application th,
+.whale-command-output th{
+  color:var(--yellow);
+}
+
+.wallet-cell{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+}
+
+.copy-wallet{
+  border:0;
+  background:transparent;
+  color:var(--cyan);
+  font:inherit;
+  line-height:1;
+  padding:0;
+  cursor:pointer;
+}
+
+.copy-wallet:hover,
+.copy-wallet:focus{
+  color:var(--yellow);
+}
+
+.copy-notice{
+  color:var(--green);
+  margin:6px 0;
+}
+
+.whale-prompt-row{
+  display:none;
+  gap:8px;
+  margin-top:12px;
+  padding-bottom:4px;
+  border-bottom:1px solid var(--green);
+}
+
+.whale-prompt-row.visible{
+  display:flex;
+}
+
+.whale-prompt-label{
+  color:var(--green);
+  white-space:nowrap;
+}
+
+#commandInput{
+  flex:1;
+  min-width:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--text);
+  font:inherit;
+  padding:0;
+}
+
+.command-panel-slot{
+  display:none;
+  min-width:0;
+}
+
+body.command-panel-open .command-panel-slot{
+  display:flex;
+  align-items:stretch;
+}
+
+.command-panel{
+  width:100%;
+  height:100%;
+  border:1px solid var(--orange);
+  background:#020b07;
+  padding:14px;
+  overflow:auto;
+  box-shadow:0 0 0 1px rgba(255,138,0,.10);
+}
+
+.command-panel[hidden]{
+  display:none;
+}
+
+.command-panel.visible{
+  display:block;
+  animation:panel-in .18s ease-out;
+}
+
+.command-panel-title{
+  color:var(--yellow);
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.command-panel-note{
+  color:var(--muted);
+  font-size:.82em;
+  margin-bottom:10px;
+}
+
+.command-panel-list{
+  display:grid;
+  gap:5px;
+}
+
+.command-group{
+  margin-bottom:13px;
+}
+
+.command-group:last-child{
+  margin-bottom:0;
+}
+
+.command-group-title{
+  margin:4px 5px 5px;
+  padding-bottom:4px;
+  border-bottom:1px dashed rgba(255,193,7,.55);
+  color:var(--yellow);
+  font-size:.78em;
+  font-weight:700;
+  letter-spacing:.12em;
+}
+
+.command-panel button{
+  width:100%;
+  border:0;
+  border-bottom:1px solid rgba(57,255,20,.18);
+  background:transparent;
+  color:var(--cyan);
+  font:inherit;
+  text-align:left;
+  padding:7px 5px;
+  cursor:pointer;
+}
+
+.command-panel button:hover,
+.command-panel button:focus-visible,
+.command-panel button.active{
+  color:var(--yellow);
+  background:rgba(57,255,20,.06);
+}
+
+.command-panel button.active::before{
+  content:"▶ ";
+  color:var(--yellow);
+}
+
+.command-panel button span{
+  display:block;
+  color:var(--muted);
+  font-size:.78em;
+  margin-top:2px;
+}
+
+.help-open-copy{
+  margin-top:10px;
+  color:var(--cyan);
+}
+
+.rank-col,
+.status-col{
+  text-align:center;
+  white-space:nowrap;
+}
+
+.balance-col{
+  color:var(--cyan);
+}
+
+.whales12-summary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px 18px;
+  margin:12px 0;
+}
+
+.status-accumulating{color:var(--green)}
+.status-distributing{color:var(--red)}
+.status-balanced{color:var(--yellow)}
+.status-dormant{color:var(--muted)}
+
+@keyframes panel-in{
+  from{opacity:0;transform:translateX(10px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+@media(max-width:900px){
+  body.command-panel-open .terminal-workspace{
+    grid-template-columns:minmax(0,1fr);
+    gap:4px;
+  }
+
+  body.command-panel-open .command-panel-slot{
+    display:block;
+  }
+
+  .command-panel{
+    height:auto;
+    max-height:45vh;
+  }
+}
+
+@media(max-width:720px){
+  /* Mobile-only containment for wide command results. Keep the page frame
+     within the viewport and let data-heavy results scroll internally. */
+  .terminal,
+  .terminal-workspace,
+  #terminal-application,
+  .whale-command-output{
+    min-width:0;
+    max-width:100%;
+  }
+
+  .whale-command-output{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .whale-command-output table{
+    min-width:720px;
+  }
+
+  .kv,
+  .whales12-summary{
+    grid-template-columns:1fr;
+  }
+
+  #terminal-application table{
+    font-size:.8rem;
+  }
+
+  .whale-prompt-label{
+    font-size:.84rem;
+  }
+}
+
+
+/* =========================================================
+   ver 1.0 — CENTERED SPLIT VIEW + INDEPENDENT SCROLLING
+   ========================================================= */
+
+/* Keep the whole workspace centered instead of fitting the viewport */
+body.command-panel-open .terminal-workspace{
+  width:min(
+    calc(1100px + var(--whale-panel-width) + var(--whale-panel-gap)),
+    calc(100% - 24px)
+  );
+  margin:12px auto;
+  grid-template-columns:
+    minmax(0,1100px)
+    var(--whale-panel-width);
+  gap:var(--whale-panel-gap);
+  align-items:start;
+}
+
+/* Main terminal keeps its normal master-template width */
+body.command-panel-open .terminal-workspace > #terminal-frame{
+  width:100%;
+  margin:0;
+}
+
+/* Commands window has its own viewport-height scroll area */
+body.command-panel-open .command-panel-slot{
+  display:block;
+  position:sticky;
+  top:12px;
+  height:calc(100vh - 24px);
+  min-height:0;
+  overflow:hidden;
+}
+
+body.command-panel-open .command-panel{
+  height:100%;
+  min-height:0;
+  max-height:none;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+
+/* Main page scrolls normally and independently */
+body.command-panel-open{
+  overflow-y:auto;
+}
+
+@media(max-width:900px){
+  body.command-panel-open .terminal-workspace{
+    width:calc(100% - 2px);
+    margin:1px auto;
+    grid-template-columns:minmax(0,1fr);
+    gap:4px;
+  }
+
+  body.command-panel-open .command-panel-slot{
+    position:static;
+    height:auto;
+    overflow:visible;
+  }
+
+  body.command-panel-open .command-panel{
+    height:auto;
+    max-height:45vh;
+    overflow-y:auto;
+  }
+}
+
+
+/* Chapter 15A acceptance corrections — canonical frame / CA copy / footer */
+.terminal{border:1px solid var(--green)!important;box-shadow:0 0 0 1px rgba(57,255,20,.10)!important}
+.copy-contract{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:0 2px!important;color:var(--cyan)!important}
+.copy-contract:hover,.copy-contract:focus-visible{border:0!important;outline:0!important;box-shadow:none!important;color:#fff!important}
+#terminal-footer{margin-top:10px!important;padding:0 8px 8px!important;border-top:1px solid rgba(25,75,45,.7)!important;text-align:center!important}
+#terminal-footer .footer-version{margin:0!important;padding:10px 0 0!important;border:0!important;color:var(--orange)!important;text-align:center!important;font-size:.94em!important;font-weight:700!important;letter-spacing:.035em!important;text-shadow:0 0 7px rgba(255,138,0,.18)!important}
+#terminal-footer .powered-by{margin-top:12px!important;text-align:center!important;color:var(--muted)!important;font-size:.78em!important;line-height:1.45!important}
+#terminal-footer .powered-by .orange{color:var(--orange)!important}
+#terminal-footer .footer{padding:7px 4px 0!important;color:#d8e0dc!important;opacity:1!important;text-align:center!important;font-size:.72em!important;line-height:1.45!important}
+#terminal-footer .footer a{color:var(--green)!important;text-decoration:none!important;border:0!important}
+#terminal-footer .footer a:hover{text-decoration:underline!important;text-shadow:0 0 8px rgba(57,255,20,.35)!important}
+
+/* Chapter 18 acceptance — non-NFT sub-terminal title parity */
+.module-title{color:var(--green)!important}
+
+
+/* Chapter 18 — inline quick commands + command guide */
+.whale-section-separator{
+  height:1px;
+  margin:14px 0 12px;
+  background:rgba(255,138,0,.55);
+}
+
+.whale-section-label{
+  margin:0 0 9px;
+  color:var(--green);
+  text-align:left;
+  font-size:.86em;
+  font-weight:700;
+  letter-spacing:.06em;
+}
+
+.whale-quick-commands{
+  margin:0;
+}
+
+.whale-quick-command-tabs{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  align-items:center;
+}
+
+.whale-quick-command{
+  appearance:none;
+  border:1px solid #6FD3FF;
+  background:transparent;
+  color:#6FD3FF;
+  padding:7px 13px;
+  min-width:0;
+  cursor:pointer;
+  text-align:center;
+  font:inherit;
+  font-weight:700;
+  letter-spacing:.035em;
+  line-height:1.2;
+}
+
+.whale-quick-command:hover,
+.whale-quick-command:focus-visible,
+.whale-quick-command.active{
+  background:rgba(111,211,255,.08);
+  color:#fff;
+  border-color:#fff;
+  outline:none;
+}
+
+.whale-quick-command:disabled{
+  opacity:.45;
+  cursor:wait;
+}
+
+.whale-command-guide{
+  margin:0;
+}
+
+.whale-command-guide-list{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.whale-command-guide-row{
+  display:grid;
+  grid-template-columns:minmax(16ch, 0.7fr) minmax(0,1.4fr);
+  column-gap:12px;
+  align-items:baseline;
+  padding:3px 0;
+  color:var(--muted);
+  font-size:.84em;
+  line-height:1.35;
+}
+
+.whale-command-name{
+  color:var(--cyan);
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.whale-prompt-info{
+  margin:0 0 8px;
+  color:var(--muted);
+  font-size:.84em;
+  line-height:1.4;
+}
+
+@media(max-width:760px){
+  .whale-quick-command-tabs{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .whale-command-guide-row{
+    grid-template-columns:1fr;
+    gap:1px;
+    padding:5px 0;
+  }
+}
+
+@media(max-width:420px){
+  .whale-quick-command-tabs{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* Chapter 18 — clickable command guide + landing-page frame parity */
+.terminal-workspace,
+body.command-panel-open .terminal-workspace,
+body:not(.command-panel-open) .terminal-workspace{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+}
+
+.terminal-workspace > #terminal-frame,
+body.command-panel-open .terminal-workspace > #terminal-frame,
+body:not(.command-panel-open) .terminal-workspace > #terminal-frame{
+  width:min(1100px,calc(100% - 24px))!important;
+  margin:12px auto!important;
+}
+
+.whale-command-name{
+  appearance:none;
+  -webkit-appearance:none;
+  display:inline-block;
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--cyan);
+  font:inherit;
+  font-weight:700;
+  text-align:left;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.whale-command-name:hover,
+.whale-command-name:focus-visible{
+  color:#fff;
+  text-shadow:0 0 8px rgba(111,211,255,.45);
+}
+
+.whale-command-name:disabled{
+  opacity:.45;
+  cursor:default;
+  color:var(--cyan);
+  text-shadow:none;
+}
+
+@media(max-width:760px){
+  .terminal-workspace > #terminal-frame,
+  body.command-panel-open .terminal-workspace > #terminal-frame,
+  body:not(.command-panel-open) .terminal-workspace > #terminal-frame{
+    width:min(100% - 8px,1100px)!important;
+    margin:4px auto!important;
+  }
+}
+
+/* Chapter 18 — single command console: all command output lives with the manual prompt */
+.whale-command-output:not(:empty){
+  margin:0 0 10px;
+}
+
+/* Chapter 18 parameterized-command guidance. */
+.whale-command-input-hint{
+  margin-left:8px;
+  color:var(--muted);
+  font-style:italic;
+  font-weight:400;
+  opacity:.86;
+  white-space:nowrap;
+}
+@media(max-width:760px){
+  .whale-command-input-hint{
+    margin-left:6px;
+  }
+}
+
+
+
+/* Chapter 18A final UX — lightweight return link after command output. */
+.back-to-commands-row{margin:12px 0 2px!important}
+.back-to-commands{border:0!important;background:transparent!important;padding:0!important;color:var(--cyan,#6fd3ff)!important;font:inherit!important;font-style:italic!important;cursor:pointer!important;text-decoration:none!important}
+.back-to-commands:hover,.back-to-commands:focus-visible{color:#fff!important;text-decoration:underline!important;outline:none!important}
+
+/* =========================================================
+   CPB WHALE ACTIVITY TRACKER — NEW UI PASS 1
+   Landing Page design language + preserved tracker behavior.
+   ========================================================= */
+
+body{
+  --whale-card-border:rgba(185,156,255,.18);
+  --whale-card-bg:linear-gradient(145deg,rgba(17,22,34,.98),rgba(10,13,20,.98));
+  --whale-orange:#ff8a00;
+  --whale-aqua:#67e8f9;
+  --whale-violet:#b99cff;
+  --whale-lime:#ccff00;
+}
+
+.terminal-workspace,
+body.command-panel-open .terminal-workspace,
+body:not(.command-panel-open) .terminal-workspace{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+}
+
+.terminal-workspace > #terminal-frame,
+body.command-panel-open .terminal-workspace > #terminal-frame,
+body:not(.command-panel-open) .terminal-workspace > #terminal-frame{
+  width:min(1080px,calc(100% - 24px))!important;
+  margin:12px auto 18px!important;
+}
+
+/* Header styling is canonical in shared style.css. */
+
+.portal-workspace{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:start!important;
+  margin-top:10px!important;
+}
+
+.portal-workspace > .portal-panel{margin-top:0!important;height:100%}
+.whale-intro-card{grid-column:1 / -1;box-shadow:inset 3px 0 0 rgba(57,255,20,.62),0 12px 34px rgba(0,0,0,.15)!important}
+.whale-quick-card{box-shadow:inset 3px 0 0 rgba(103,232,249,.62),0 12px 34px rgba(0,0,0,.15)!important}
+.whale-guide-card{box-shadow:inset 3px 0 0 rgba(185,156,255,.62),0 12px 34px rgba(0,0,0,.15)!important}
+.whale-output-card{box-shadow:inset 3px 0 0 rgba(255,138,0,.72),0 12px 34px rgba(0,0,0,.15)!important}
+
+.whale-howto{margin:0 0 11px!important;display:grid;gap:5px;color:var(--portal-muted,#8d99ab)!important;line-height:1.45!important;font-size:.78rem!important}
+.whale-howto-title{color:#fff!important;font-weight:850!important;font-size:.82rem!important}
+.whale-howto .trust{color:#a8ff98!important}
+
+.whale-console{
+  border:1px solid rgba(255,255,255,.055)!important;
+  border-radius:12px!important;
+  padding:9px 11px!important;
+  background:#080b12!important;
+}
+#boot{display:grid!important;gap:6px!important}
+#boot .line{margin:0!important;padding:7px 9px!important;border:1px solid rgba(255,255,255,.045)!important;border-radius:9px!important;background:rgba(255,255,255,.015)!important;color:#aeb8ca!important;font-size:.72rem!important}
+
+.whale-quick-command-tabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important}
+.whale-quick-command{
+  min-height:38px!important;
+  border:1px solid rgba(103,232,249,.28)!important;
+  border-radius:10px!important;
+  background:rgba(103,232,249,.05)!important;
+  color:#9ceffd!important;
+  padding:8px 9px!important;
+  font-size:.72rem!important;
+  font-weight:850!important;
+  letter-spacing:.035em!important;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease,color .16s ease!important;
+}
+.whale-quick-command:nth-child(2){border-color:rgba(255,138,0,.30)!important;color:#ffc36f!important;background:rgba(255,138,0,.055)!important}
+.whale-quick-command:nth-child(3){border-color:rgba(185,156,255,.30)!important;color:#d7c7ff!important;background:rgba(185,156,255,.055)!important}
+.whale-quick-command:nth-child(4){border-color:rgba(57,255,20,.28)!important;color:#a8ff98!important;background:rgba(57,255,20,.05)!important}
+.whale-quick-command:nth-child(5){border-color:rgba(255,227,111,.28)!important;color:#ffe36f!important;background:rgba(255,227,111,.045)!important}
+.whale-quick-command:hover,.whale-quick-command:focus-visible,.whale-quick-command.active{transform:translateY(-1px)!important;border-color:#fff!important;color:#fff!important;background:rgba(255,255,255,.075)!important;outline:none!important}
+.whale-quick-command:disabled{opacity:.42!important;transform:none!important}
+
+.whale-command-guide-list{display:grid!important;gap:6px!important}
+.whale-command-guide-row{
+  display:grid!important;
+  grid-template-columns:minmax(118px,.7fr) minmax(0,1.3fr)!important;
+  gap:8px 11px!important;
+  align-items:center!important;
+  padding:8px 9px!important;
+  border:1px solid rgba(255,255,255,.055)!important;
+  border-radius:10px!important;
+  background:rgba(7,10,17,.42)!important;
+  color:var(--portal-muted,#8d99ab)!important;
+  font-size:.72rem!important;
+  line-height:1.35!important;
+}
+.whale-command-guide-row:nth-child(4n+1){border-left:3px solid var(--whale-aqua)!important}
+.whale-command-guide-row:nth-child(4n+2){border-left:3px solid var(--whale-orange)!important}
+.whale-command-guide-row:nth-child(4n+3){border-left:3px solid var(--whale-violet)!important}
+.whale-command-guide-row:nth-child(4n){border-left:3px solid #39ff14!important}
+.whale-command-name{color:#fff!important;font-size:.72rem!important;font-weight:850!important;white-space:normal!important}
+.whale-command-name::before{content:"> ";color:var(--whale-aqua)}
+.whale-command-name:hover,.whale-command-name:focus-visible{color:var(--whale-lime)!important;text-shadow:none!important}
+.whale-command-input-hint{display:block;margin:2px 0 0!important;font-size:.9em!important;color:#6f7d90!important;white-space:normal!important}
+
+#terminal-prompt{margin-top:10px!important}
+.whale-output-card{min-height:0!important}
+.whale-command-output{margin:0!important;min-width:0;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.whale-command-output:empty{display:none}
+.whale-command-output .block{
+  margin:9px 0!important;
+  padding:11px 12px!important;
+  border:1px solid rgba(255,255,255,.065)!important;
+  border-radius:11px!important;
+  background:#080b12!important;
+}
+.whale-command-output .line{margin:5px 0!important}
+.whale-command-output table{margin-top:8px!important;font-size:.73rem!important}
+.whale-command-output th{color:#ffe36f!important}
+.whale-command-output th,.whale-command-output td{padding:7px 6px!important;border-bottom:1px solid rgba(185,156,255,.13)!important}
+
+.whale-prompt-row{
+  gap:8px!important;
+  margin-top:10px!important;
+  padding:10px 12px!important;
+  border:1px solid rgba(57,255,20,.20)!important;
+  border-radius:10px!important;
+  background:#080b12!important;
+}
+.whale-prompt-row.visible{display:flex!important}
+.whale-prompt-label{color:#a8ff98!important;font-size:.72rem!important}
+#commandInput{color:#fff!important;font-size:.76rem!important}
+
+.kv{grid-template-columns:minmax(140px,.8fr) minmax(0,1.2fr)!important;gap:10px!important;padding:4px 0!important}
+.wallet-cell{max-width:100%;flex-wrap:wrap}
+.copy-wallet{color:var(--whale-aqua)!important}
+.back-to-commands-row{margin:10px 0 0!important}
+.back-to-commands{color:var(--whale-aqua)!important}
+
+/* The old command-side-panel shell is no longer part of this layout, but keep
+   its behavior safe if a legacy path toggles the class. */
+body.command-panel-open .terminal-workspace{display:block!important}
+.command-panel-slot{display:none!important}
+
+@media(max-width:820px){
+  .portal-workspace{grid-template-columns:1fr!important}
+  .whale-intro-card{grid-column:auto}
+  .whale-quick-command-tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+
+@media(max-width:600px){
+  .terminal-workspace > #terminal-frame,
+  body.command-panel-open .terminal-workspace > #terminal-frame,
+  body:not(.command-panel-open) .terminal-workspace > #terminal-frame{width:min(100% - 8px,1080px)!important;margin:4px auto 12px!important}
+  .module-status-stack{gap:3px!important}
+  .module-subtitle{font-size:.72rem!important}
+  .whale-quick-command-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .whale-command-guide-row{grid-template-columns:1fr!important;gap:2px!important;padding:8px!important}
+  .kv{grid-template-columns:1fr!important;gap:2px!important}
+  .whale-command-output table{min-width:620px}
+}
+
+@media(max-width:390px){.whale-quick-command-tabs{grid-template-columns:1fr!important}}
+
+/* Whale UI Pass 2 — merged command hub, market momentum, adaptive visuals. */
+.whale-command-hub{
+  grid-column:1 / -1!important;
+  box-shadow:inset 3px 0 0 rgba(103,232,249,.72),0 12px 34px rgba(0,0,0,.15)!important;
+}
+.whale-command-hub>.portal-section-heading .portal-section-kicker,
+.whale-command-hub>.portal-section-heading h2{
+  color:var(--whale-aqua)!important;
+}
+.whale-guide-subsection{
+  margin-top:12px;
+  padding:11px 0 0 12px;
+  border-top:1px solid rgba(255,255,255,.055);
+  border-left:3px solid var(--whale-violet);
+}
+.whale-subsection-heading{margin:0 0 9px}
+.whale-subsection-heading .portal-section-kicker,
+.whale-subsection-heading h3{color:var(--whale-violet)!important}
+.whale-subsection-heading h3{margin:2px 0 0;font-size:clamp(.95rem,2vw,1.16rem);line-height:1.15}
+
+.market-price-wrap{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap}
+.market-price-change{
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:3px 7px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;
+  background:rgba(255,255,255,.025);
+  color:var(--muted);
+  font-size:.61rem;
+  font-weight:850;
+  letter-spacing:.035em;
+  white-space:nowrap;
+}
+.market-price-change.positive{color:#a8ff98;border-color:rgba(57,255,20,.26);background:rgba(57,255,20,.055)}
+.market-price-change.negative{color:#ff8787;border-color:rgba(255,92,92,.28);background:rgba(255,92,92,.055)}
+.market-price-change.neutral{color:#ffe36f;border-color:rgba(255,227,111,.20)}
+
+.whale-visual-summary{
+  margin:0 0 12px;
+  padding:10px 11px;
+  border:1px solid rgba(103,232,249,.12);
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(103,232,249,.035),rgba(185,156,255,.018));
+  overflow:hidden;
+}
+.whale-visual-title{margin:0 0 9px;color:var(--whale-aqua);font-size:.68rem;font-weight:900;letter-spacing:.055em;text-transform:uppercase}
+.whale-visual-row{display:grid;grid-template-columns:minmax(88px,140px) minmax(80px,1fr) minmax(62px,auto);align-items:center;gap:8px;margin:6px 0;min-width:0}
+.whale-visual-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#b8c4d6;font-size:.65rem}
+.whale-visual-track{height:7px;border-radius:999px;background:rgba(255,255,255,.055);overflow:hidden}
+.whale-visual-fill{display:block;height:100%;min-width:4px;border-radius:inherit;background:var(--whale-aqua);box-shadow:0 0 10px rgba(103,232,249,.16)}
+.whale-visual-value{text-align:right;font-size:.64rem;color:#fff;white-space:nowrap}
+.whale-visual-fill.tone-green{background:#39ff14}.whale-visual-fill.tone-red{background:#ff6262}.whale-visual-fill.tone-yellow{background:#ffe36f}.whale-visual-fill.tone-muted{background:#64748b}.whale-visual-fill.tone-aqua{background:var(--whale-aqua)}
+.tone-text-green{color:#a8ff98!important}.tone-text-red{color:#ff8787!important}.tone-text-yellow{color:#ffe36f!important}.tone-text-muted{color:#8d99ab!important}.tone-text-aqua{color:#9ceffd!important}
+.whale-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.whale-stat-tile{min-width:0;padding:9px;border:1px solid rgba(255,255,255,.06);border-radius:9px;background:#080b12;display:grid;gap:5px}
+.whale-stat-tile span{color:#78869a;font-size:.56rem;font-weight:800;letter-spacing:.04em}
+.whale-stat-tile strong{color:#fff;font-size:.78rem;overflow-wrap:anywhere}
+
+@media(max-width:600px){
+  .market-price-line{align-items:flex-start!important}
+  .market-price-wrap{width:100%;display:grid;grid-template-columns:1fr;gap:5px}
+  .market-price-change{justify-self:start;font-size:.57rem;max-width:100%;white-space:normal}
+  .whale-guide-subsection{padding-left:9px}
+  .whale-visual-row{grid-template-columns:minmax(62px,88px) minmax(54px,1fr) auto;gap:6px}
+  .whale-visual-label,.whale-visual-value{font-size:.59rem}
+  .whale-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:390px){
+  .whale-visual-row{grid-template-columns:64px minmax(46px,1fr) auto}
+  .whale-stat-grid{grid-template-columns:1fr}
+}
+
+/* Context note for holder-rank statuses shown in activity outputs. */
+.holder-rank-note{
+  margin-top:10px;padding:9px 11px;border:1px solid rgba(255,227,111,.14);
+  border-left:3px solid #ffe36f;border-radius:9px;background:rgba(255,227,111,.025);
+  color:var(--portal-muted,#8d99ab);font-size:.68rem;line-height:1.48
+}
+.holder-rank-note div+div{margin-top:3px}
+.holder-rank-note strong{color:#ffe36f;font-weight:850}
+.command-output-start{scroll-margin-top:12px;outline:none}
+@media(max-width:600px){
+  .holder-rank-note{font-size:.64rem;padding:8px 9px}
+}
+
+
+/* Pass 3 mobile price alignment override. */
+@media(max-width:600px){
+  #terminal-live-panel .market-price-wrap{
+    grid-area:value!important;
+    width:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    gap:5px!important;
+    text-align:left!important;
+  }
+  #terminal-live-panel .market-price-change{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    align-self:flex-start!important;
+    white-space:nowrap!important;
+    font-size:.61rem!important;
+    line-height:1.25!important;
+  }
+}

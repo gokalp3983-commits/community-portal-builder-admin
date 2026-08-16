@@ -1,0 +1,16 @@
+{
+  "name": "ctb-nft-terminal-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "__CTB_PROJECT_NAME__ Ethereum NFT mint countdown and OpenSea collection terminal.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

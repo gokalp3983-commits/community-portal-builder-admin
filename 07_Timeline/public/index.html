@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <style id="ctb-style-guard">html{background:#000}html:not(.ctb-styles-ready) body{visibility:hidden}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="{{PROJECT_NAME}} Community Timeline — chronological project and community milestones.">
+  <title>{{PROJECT_NAME}} Community Timeline</title>
+  <link rel="stylesheet" href="/style.css?v=timeline-ui-pass1">
+  <link rel="stylesheet" href="/timeline.css?v=timeline-ui-pass1">
+  <script>
+(()=>{const root=document.documentElement,links=[...document.querySelectorAll('link[rel="stylesheet"]')];if(!links.length){root.classList.add("ctb-styles-ready");return;}let remaining=links.length,revealed=false;const settle=()=>{remaining-=1;if(remaining<=0&&!revealed){revealed=true;root.classList.add("ctb-styles-ready");}};for(const link of links){if(link.sheet){settle();continue;}link.addEventListener("load",settle,{once:true});link.addEventListener("error",settle,{once:true});}setTimeout(()=>{if(!revealed){revealed=true;root.classList.add("ctb-styles-ready");}},8000);})();
+  </script>
+</head>
+<body>
+  <div id="terminal-workspace" class="terminal-workspace">
+    <main id="terminal-frame" class="shell terminal-frame">
+      <section class="terminal portal-shell" aria-label="{{PROJECT_NAME}} Community Timeline">
+        <div id="terminal-header" class="terminal-area terminal-header portal-hero">
+          <header class="header community-header">
+            <a data-project-home class="portal-brand" href="#" title="Return to {{PROJECT_NAME}} Community Portal">
+              <img data-project-mascot class="mascot community-mascot" src="" alt="">
+            </a>
+            <div class="community-title-row">
+              <div class="portal-heading-copy">
+                <h1>{{PROJECT_NAME}} COMMUNITY PORTAL</h1>
+                <p class="community-subtitle">Independent Community Tools <span aria-hidden="true">•</span> {{PROJECT_ECOSYSTEM}} Ecosystem</p>
+              </div>
+              <div class="module-status-stack">
+                <div class="module-subtitle">Community Timeline</div>
+                <span class="online-status"><span class="online-dot" aria-hidden="true">●</span> ONLINE</span>
+              </div>
+            </div>
+          </header>
+        </div>
+
+        <div class="portal-header-energy" aria-hidden="true"><span class="energy-line energy-lime"></span><span class="energy-line energy-violet"></span></div>
+
+        <div id="terminal-application" class="terminal-area terminal-application timeline-application">
+          <section class="portal-panel timeline-overview-panel" aria-labelledby="timelineOverviewTitle">
+            <div class="portal-section-heading compact"><div><span class="portal-section-kicker">PROJECT HISTORY</span><h2 id="timelineOverviewTitle">Community Timeline</h2></div><span class="portal-status-chip portal-status-ready">LIVE</span></div>
+            <div class="timeline-purpose"><strong>Milestones that matter</strong><p>A chronological record of portal, project, NFT and community milestones. System-known milestones are added automatically; curated owner milestones can be added as the project grows.</p></div>
+          </section>
+
+          <section class="portal-panel timeline-feed-panel" aria-labelledby="timelineFeedTitle">
+            <div class="portal-section-heading compact"><div><span class="portal-section-kicker">CHRONOLOGY</span><h2 id="timelineFeedTitle">Milestone Feed</h2></div></div>
+            <div id="timelineList" class="timeline-list" aria-live="polite"></div>
+          </section>
+
+          <section class="portal-panel timeline-note-panel" aria-labelledby="timelineNoteTitle">
+            <div class="portal-section-heading compact"><div><span class="portal-section-kicker">HOW IT GROWS</span><h2 id="timelineNoteTitle">Automatic + Curated</h2></div></div>
+            <p>CPB can add objective milestones it already knows, such as portal creation and configured NFT schedule events. Future owner-added milestones will be managed from CPB rather than edited on the public portal.</p>
+          </section>
+        </div>
+
+        <div id="terminal-footer" class="terminal-area terminal-footer"><footer class="footer"><span data-project-footer></span></footer></div>
+      </section>
+    </main>
+  </div>
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  <script src="/project-config.js"></script>
+  <script src="/project-runtime.js"></script>
+  <script src="/timeline.js?v=timeline-ui-pass1"></script>
+</body>
+</html>

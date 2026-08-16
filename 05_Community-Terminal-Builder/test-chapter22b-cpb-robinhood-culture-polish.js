@@ -1,0 +1,12 @@
+const fs = require('fs');
+const assert = require('assert');
+const html = fs.readFileSync('public/index.html','utf8');
+const css = fs.readFileSync('public/style.css','utf8');
+assert(!html.includes('simple-only simple-brand-mark'), 'floating CPB logo must be removed from Simplified header');
+assert(css.includes('--rh-lime:#ccff00'), 'Robinhood lime reference must be #CCFF00');
+assert(css.includes('@keyframes cpb-title-shine'), 'header shine animation missing');
+assert(css.includes('background-image:') && css.includes("stroke='%23ccff00'"), 'crypto-culture SVG background motifs missing');
+assert(css.includes('body.guided-mode .rh-chain-line{') && css.includes('border:0;border-radius:0;background:none;box-shadow:none'), 'Robinhood header line must be unboxed');
+assert(css.includes('background:#ccff00!important'), 'slim footer must use Robinhood lime');
+assert(css.includes('padding:10px 18px!important'), 'footer should use slim desktop padding');
+console.log('PASS: CPB Robinhood lime / culture backdrop / slim footer contract');

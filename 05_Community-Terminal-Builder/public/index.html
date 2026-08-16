@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#020806">
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#020806">
+  <title>Community Portal Builder</title>
+  <link rel="stylesheet" href="style.css?v=22c-pass1229">
+</head>
+<body class="guided-mode">
+  <script src="cpb-boot.js"></script>
+  <main class="shell">
+    <div class="terminal-window">
+
+      <header class="hero">
+        <h1><span class="simple-only">Community Portal Builder</span><span class="advanced-only">COMMUNITY PORTAL BUILDER</span></h1>
+        <p class="tagline simple-only">Build a complete community portal without touching the code.</p>
+        <div class="cpb-motto simple-only" aria-label="Build. Launch. Grow."><span class="motto-word motto-build"><span class="motto-letter" style="--letter-index:0">B</span><span class="motto-letter" style="--letter-index:1">u</span><span class="motto-letter" style="--letter-index:2">i</span><span class="motto-letter" style="--letter-index:3">l</span><span class="motto-letter" style="--letter-index:4">d</span><span class="motto-letter" style="--letter-index:5">.</span></span><span class="motto-word motto-launch"><span class="motto-letter" style="--letter-index:6">L</span><span class="motto-letter" style="--letter-index:7">a</span><span class="motto-letter" style="--letter-index:8">u</span><span class="motto-letter" style="--letter-index:9">n</span><span class="motto-letter" style="--letter-index:10">c</span><span class="motto-letter" style="--letter-index:11">h</span><span class="motto-letter" style="--letter-index:12">.</span></span><span class="motto-word motto-grow"><span class="motto-letter" style="--letter-index:13">G</span><span class="motto-letter" style="--letter-index:14">r</span><span class="motto-letter" style="--letter-index:15">o</span><span class="motto-letter" style="--letter-index:16">w</span><span class="motto-letter" style="--letter-index:17">.</span></span></div>
+        <p class="rh-chain-line simple-only">Designed for communities building<br class="rh-mobile-chain-break"> on <strong>Robinhood Chain</strong>.</p>
+        <p class="tagline advanced-only">CONFIGURE <span>//</span> GENERATE <span>//</span> DEPLOY</p>
+      </header>
+
+      <form id="builder" autocomplete="off">
+
+        <section class="project-toolbar" aria-label="Project workspace">
+          <div class="project-current">
+            <span class="workspace-label">PROJECT WORKSPACE</span>
+            <strong id="current-project">UNSAVED PROJECT</strong>
+            <b id="project-state">DRAFT</b>
+          </div>
+          <div class="project-controls">
+            <select id="saved-projects" aria-label="Saved projects"><option value="">LOAD SAVED PROJECT...</option></select>
+            <button id="new-project" type="button">NEW</button>
+            <button id="save-project" type="button">SAVE</button>
+            <button data-advanced-control id="duplicate-project" type="button">DUPLICATE</button>
+            <button data-advanced-control id="export-project" type="button">EXPORT</button>
+            <button data-advanced-control id="import-project" type="button">IMPORT</button>
+            <button data-advanced-control id="delete-project" class="danger-button" type="button">DELETE</button>
+            <input id="import-project-file" class="upload-native" type="file" accept="application/json,.json">
+          </div>
+        </section>
+
+        <!-- TEMPORARY CHAPTER 22C QA FIELD: remove after functional testing. -->
+        <section class="qa-transfer-tools simple-only" aria-label="Temporary QA project transfer tools">
+          <span class="qa-transfer-label">TEMP QA · PROJECT TRANSFER</span>
+          <div class="qa-transfer-actions">
+            <button id="qa-export-project" type="button">EXPORT TEST CONFIG</button>
+            <button id="qa-import-project" type="button">IMPORT TEST CONFIG</button>
+          </div>
+        </section>
+
+        <section class="builder-mode-bar" aria-label="Builder experience mode">
+          <div class="builder-mode-copy">
+            <span>BUILDER EXPERIENCE</span>
+            <strong id="builder-mode-title">GUIDED MODE</strong>
+            <small id="builder-mode-description">Shows the settings most people need. Your advanced Builder controls stay available and unchanged.</small>
+          </div>
+          <div class="builder-mode-switch" role="group" aria-label="Choose builder experience">
+            <button id="guided-mode" class="active" type="button" aria-pressed="true">SIMPLIFIED V1</button>
+            <button id="advanced-mode" type="button" aria-pressed="false">BUILDER MODE</button>
+          </div>
+        </section>
+
+        <nav class="guided-overview" aria-label="Simplified v1 setup steps">
+          <a href="#guided-project"><b>1</b><span>PROJECT<small>Name &amp; identity</small></span></a>
+          <a href="#guided-modules"><b>2</b><span>MODULES<small>Choose what to build</small></span></a>
+          <a href="#guided-token"><b>3</b><span>DETAILS<small>Only what is needed</small></span></a>
+          <a href="#guided-deploy"><b>4</b><span>DEPLOY<small>Preview, create &amp; publish</small></span></a>
+        </nav>
+
+        <section class="deployment-dashboard advanced-only" aria-label="Deployment dashboard">
+          <div class="deployment-dashboard-head">
+            <div><span>MANUAL HANDOFF</span><strong>DEPLOYMENT DASHBOARD</strong></div>
+            <b id="deployment-state">NOT DEPLOYED</b>
+          </div>
+          <div class="deployment-grid">
+            <label><span>GitHub repository URL</span><input id="github-repository-url" type="url" placeholder="https://github.com/username/project"></label>
+            <label><span>Public Render URL</span><input id="public-terminal-url" type="url" placeholder="https://project.onrender.com"></label>
+          </div>
+          <div class="deployment-dashboard-actions">
+            <button id="save-deployment" type="button">SAVE DEPLOYMENT</button>
+            <button id="open-github" type="button">OPEN GITHUB</button>
+            <button id="open-render" type="button">OPEN PUBLIC PORTAL</button>
+            <button id="verify-public-terminal" type="button">RUN PUBLIC ACCEPTANCE</button>
+          </div>
+          <pre id="deployment-result">[ WAIT ] Add the GitHub and Render URLs after deployment.</pre>
+        </section>
+
+        <section class="connected-dashboard advanced-only" aria-label="Connected deployment prototype">
+          <div class="deployment-dashboard-head">
+            <div><span>SERVER-SIDE PUBLISHING</span><strong>CONNECTED DEPLOYMENT</strong></div>
+            <b id="integration-state">CHECKING</b>
+          </div>
+          <p class="connected-note">GitHub and Render credentials remain on the builder server. They are never returned to or stored by the browser.</p>
+          <div class="deployment-grid">
+            <label><span>Repository name</span><input id="connected-repo-name" placeholder="auto-derived from project name"></label>
+            <label><span>Render service name</span><input id="connected-service-name" placeholder="auto-derived from project name"></label>
+          </div>
+          <div class="deployment-grid">
+            <label><span>Release action</span><select id="connected-release-mode"><option value="create" selected>CREATE NEW RELEASE</option><option value="update">UPDATE EXISTING RELEASE</option></select></label>
+            <label class="connected-private-option"><span>Repository visibility</span><span><input id="connected-private" type="checkbox"> Private GitHub repository</span></label>
+          </div>
+          <div class="deployment-dashboard-actions">
+            <button id="refresh-integrations" type="button">CHECK CONNECTIONS</button>
+            <button id="prepare-release" type="button" disabled>PREPARE RELEASE</button>
+            <button id="connected-deploy" type="button" disabled>CONFIRM PUBLISH &amp; DEPLOY</button>
+          </div>
+          <div id="release-confirmation" class="release-confirmation" hidden>
+            <div class="confirmation-instruction"><span>Confirmation phrase:</span> <code id="release-confirmation-phrase"></code></div>
+            <label><span>Type the phrase exactly</span><input id="release-confirmation-text" autocomplete="off" spellcheck="false"></label>
+            <small>Authorization is one-time, expires after five minutes, and is invalidated if the project or release target changes. Press Enter to validate an incorrect phrase; three failed attempts lock the authorization.</small>
+          </div>
+          <div id="release-alert" class="release-alert" role="alert" hidden></div>
+          <pre id="connected-result">[ WAIT ] Configure server-side GitHub and Render credentials to enable connected deployment.</pre>
+        </section>
+
+        <section class="release-control advanced-only" aria-label="Secure release control">
+          <div class="deployment-dashboard-head">
+            <div><span>RELEASE READINESS</span><strong>SECURE RELEASE CONTROL</strong></div>
+            <b id="release-state">NOT CHECKED</b>
+          </div>
+          <p class="connected-note">Release readiness is evaluated before any connected publish action can become eligible. Release actions remain policy-locked by default.</p>
+          <div id="release-checks" class="release-checks" aria-live="polite">
+            <div><span>Project configuration</span><b>WAIT</b></div>
+            <div><span>Generated build</span><b>WAIT</b></div>
+            <div><span>Repository target</span><b>WAIT</b></div>
+            <div><span>GitHub connection</span><b>WAIT</b></div>
+            <div><span>Render connection</span><b>WAIT</b></div>
+            <div><span>Public acceptance</span><b>WAIT</b></div>
+            <div><span>Server credentials protected</span><b>WAIT</b></div>
+          </div>
+          <div class="deployment-dashboard-actions">
+            <button id="check-release-readiness" type="button">CHECK RELEASE READINESS</button>
+          </div>
+          <pre id="release-result" class="deployment-result">[ LOCKED ] Release control has not been evaluated.</pre>
+        </section>
+        <div class="workspace">
+
+          <div class="form-stack">
+            <section class="panel" data-section="identity" id="guided-project" data-simple-stage="01" data-simple-title="PROJECT" data-simple-subtitle="NAME &amp; IDENTITY">
+              <div class="section-heading"><span>01</span><h2>PROJECT</h2><small>NAME, IDENTITY &amp; DESCRIPTION</small></div><p class="guided-step-note">Start with the basics. CPB handles the portal identity automatically.</p>
+              <fieldset class="terminal-baseline simple-only" id="terminal-baseline">
+                <legend>Please select your portal baseline</legend>
+                <p>Choose the foundation first. CPB will unlock the modules and project details that fit your build.</p>
+                <div class="terminal-baseline-options">
+                  <label><input type="radio" name="terminalBaseline" value="token"><span><strong>TOKEN</strong><small>Token market data and community tools</small></span></label>
+                  <label><input type="radio" name="terminalBaseline" value="nft"><span><strong>NFT</strong><small>NFT collection portal without token requirements</small></span></label>
+                  <label><input type="radio" name="terminalBaseline" value="both"><span><strong>TOKEN + NFT</strong><small>One portal for both sides of the project</small></span></label>
+                </div>
+              </fieldset>
+              <div class="grid">
+                <label><span>Project name *</span><input name="projectName" required placeholder="Enter project name"></label>
+                <label><span>Ticker *</span><input name="ticker" required placeholder="Enter ticker"></label>
+                <label class="advanced-field"><span>Version</span><input name="version" value="1.0.0"></label>
+                <label class="advanced-field"><span>Portal identity</span><input name="promptUser" placeholder="ticker@robinhood — auto-derived" readonly></label>
+                <label class="advanced-field"><span>Portal host</span><input name="promptHost" value="robinhood" readonly></label>
+                <label class="advanced-field"><span>Ecosystem</span><input name="ecosystem" value="Robinhood Chain"></label>
+              </div>
+              <label class="wide"><span>Description</span><textarea name="description" placeholder="Enter a short project description"></textarea></label>
+            </section>
+
+            <section class="panel" data-section="contracts" id="guided-token" data-simple-stage="03" data-simple-title="CONTRACTS" data-simple-subtitle="TOKEN / NFT ADDRESSES">
+              <div class="section-heading"><span>02</span><h2>TOKEN &amp; NFT</h2><small>PROJECT CONTRACTS</small></div><p class="guided-step-note">Contract fields follow your selected portal baseline. Token projects use Token CA; NFT projects unlock NFT contract and collection details.</p>
+              <div class="grid">
+                <label class="span-2 contract-field simple-token-config"><span>Token contract address <b class="evm-badge">EVM</b></span><input name="tokenContract" placeholder="0x..." autocomplete="off" spellcheck="false"><small class="field-help">Required for token-based portals. NFT-only projects do not need this field.</small><output id="token-format-check" class="contract-check wait" aria-live="polite">Enter a 42-character 0x contract address.</output><output id="contract-check" class="contract-check wait" aria-live="polite">Market check starts after a valid EVM address is entered.</output></label>
+                <label class="span-2 contract-field simple-nft-config"><span>NFT contract address <b class="evm-badge">EVM</b></span><input name="nftContract" placeholder="0x..." autocomplete="off" spellcheck="false"><small class="field-help">Available when your portal includes NFTs. A valid NFT contract also starts safe Robinhood Chain discovery.</small><output id="nft-contract-check" class="contract-check" aria-live="polite">NFT contract not added yet.</output><output id="nft-discovery-check" class="contract-check" aria-live="polite">Collection discovery starts after you add the NFT contract.</output><input type="hidden" name="nftStandard"><input type="hidden" name="nftSymbol"><input type="hidden" name="nftMetadataUriMethod"></label>
+                <div class="span-2 simple-nft-locked" role="note"><strong>NFT details are inactive</strong><span>Select an NFT or Token + NFT baseline to add an NFT contract, OpenSea collection link, and mint details.</span></div>
+                <label class="advanced-field"><span>DexScreener chain ID</span><input name="dexScreenerChainId" value="robinhood"></label>
+                <label class="advanced-field"><span>Blockscout API base</span><input name="blockscoutApiBase" value="https://robinhoodchain.blockscout.com/api/v2"></label>
+              </div>
+            </section>
+
+            <section class="panel" data-section="branding" id="guided-brand" data-simple-stage="03" data-simple-title="BRANDING" data-simple-subtitle="LOGO / MASCOT">
+              <div class="section-heading"><span>03</span><h2>BRANDING</h2><small>MASCOT / PROJECT IDENTITY</small></div><p class="guided-step-note">Upload your project mascot or logo. Your generated Community Portal will carry the same project identity.</p>
+              <div class="upload">
+                <span class="upload-label">Mascot / logo</span>
+                <input id="mascot" class="upload-native" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                <label class="upload-control" for="mascot">
+                  <strong>[ SELECT FILE ]</strong>
+                  <span id="mascot-file-name">No file selected</span>
+                </label>
+                <em>PNG, JPG, WEBP or SVG</em>
+                <div class="mascot-background-tools">
+                  <button id="remove-mascot-background" type="button">REMOVE BACKGROUND</button>
+                  <button id="use-original-mascot" type="button">USE ORIGINAL</button>
+                  <small id="mascot-background-state">Optional · Preview a transparent version before generating.</small>
+                </div>
+                <p id="mascot-warning" class="inline-warning" role="note">Logo recommended · You can continue without one, but a logo improves project identity, recognition, and social previews.</p>
+              </div>
+            </section>
+
+            <section class="panel" data-section="links" id="guided-links" data-simple-stage="03" data-simple-title="LINKS" data-simple-subtitle="COMMUNITY ROUTES">
+              <div class="section-heading"><span>04</span><h2>LINKS</h2><small>COMMUNITY &amp; MARKET ROUTES</small></div><p class="guided-step-note">Add the community links you actually use. Leave anything else blank.</p>
+              <div class="grid">
+                <label class="advanced-field"><span>Home URL</span><input name="home" placeholder="Optional home URL"></label>
+                <label><span>Website</span><input name="website" placeholder="Paste URL"></label>
+                <label><span>X / Twitter</span><input name="x" placeholder="Paste X / Twitter URL"></label>
+                <label><span>Telegram</span><input name="telegram" placeholder="Paste Telegram URL"></label>
+                <label class="advanced-field"><span>Explorer</span><input name="explorer" placeholder="Paste URL"></label>
+                <label class="advanced-field"><span>DexScreener</span><input name="dexScreener" placeholder="Paste DexScreener URL"></label>
+                <label class="nft-config"><span>OpenSea collection link</span><input name="openSea" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"><small class="field-help simple-only">Paste the full OpenSea collection URL.</small><small id="open-sea-error" class="field-error" hidden></small></label>
+                <input type="hidden" name="openSeaSlug" value="">
+
+              </div>
+              <div class="additional-links-builder">
+                <div class="additional-links-heading">
+                  <div><strong>Additional Links</strong><small>Optional extra portal links. Highlighted links use the featured action style.</small></div>
+                  <button id="add-additional-link" type="button">+ ADD LINK</button>
+                </div>
+                <div id="additional-links-list" class="additional-links-list"></div>
+                <small class="field-help">Up to 5 links. Example: BOT · Click to access Sniper Bot. · https://...</small>
+              </div>
+            </section>
+
+            <section class="panel nft-config" data-section="nft-mint" id="guided-nft-mint" data-simple-stage="03" data-simple-title="NFT MINT" data-simple-subtitle="COLLECTION / LAUNCH">
+              <div class="section-heading"><span>05</span><h2>NFT MINT DETAILS</h2><small>COLLECTION &amp; LAUNCH CONFIGURATION</small></div>
+              <p class="guided-step-note">Configure the NFT collection and launch schedule, then explicitly confirm the mint details before creating the portal.</p>
+              <div class="grid">
+                <label><span>NFT collection name</span><input name="nftCollectionName" placeholder="Optional — derived from project name"></label>
+                <label><span>NFT total supply</span><input name="nftSupply" type="number" min="1" step="1" placeholder="Enter total supply"></label>
+                <div class="span-2 nft-mint-schedule" id="nft-mint-schedule">
+                  <div class="nft-mint-heading"><span>NFT mint structure</span><small>Choose Single Phase, Multiple Phases, or Portal Only when the mint has ended / no countdown page is needed.</small></div>
+                  <div class="nft-mint-mode-row">
+                    <label><span>Mint structure</span><select name="nftMintMode" id="nft-mint-mode"><option value="" selected disabled>Please select mint structure</option><option value="single">Single Phase</option><option value="multiple">Multiple Phases</option><option value="terminal">Portal Only / Mint Ended</option></select></label>
+                  </div>
+                  <div id="nft-single-phase-fields">
+                    <div class="nft-mint-grid">
+                      <label><span>Mint start date</span><input name="nftMintDate" type="date"></label>
+                      <label><span>Mint start time</span><input name="nftMintTime" type="time" step="60"></label>
+                      <label><span>Mint end date</span><input name="nftMintEndDate" type="date"></label>
+                      <label><span>Mint end time</span><input name="nftMintEndTime" type="time" step="60"></label>
+                      <label><span>Mint Price</span><input name="nftMintPrice" placeholder="e.g. FREE or 0.05 ETH"></label>
+                      <label><span>Mint Per Wallet</span><input name="nftMintLimit" placeholder="e.g. 1"></label>
+                      <label class="nft-timezone-field"><span>Timezone</span><input name="nftMintTimezone" list="nft-timezone-options" placeholder="e.g. UTC or Europe/Bucharest" autocomplete="off"><datalist id="nft-timezone-options"></datalist></label>
+                      <button class="timezone-button" id="use-local-timezone" type="button">USE MY TIMEZONE</button>
+                    </div>
+                  </div>
+                  <div id="nft-terminal-only-fields" hidden>
+                    <div class="nft-phase-help"><strong>Portal Only:</strong> no mint countdown page, schedule, price, or wallet-limit fields are required. NFT links open the NFT Portal directly.</div>
+                  </div>
+                  <div id="nft-multiple-phase-fields" hidden>
+                    <div class="nft-phase-help">Add 2–6 mint phases. Each phase can use its own timezone, price and wallet limit.</div>
+                    <div id="nft-phase-list"></div>
+                    <button class="phase-add-button" id="add-nft-phase" type="button">+ ADD MINT PHASE</button>
+                  </div>
+                  <input name="nftMintAt" type="hidden">
+                  <output id="nft-mint-check" class="contract-check" aria-live="polite">Complete the NFT mint schedule.</output>
+                  <div class="nft-mint-explicit-confirm">
+                    <button id="confirm-nft-mint-details" type="button">CONFIRM NFT MINT DETAILS</button>
+                    <output id="nft-mint-confirmed-state" class="contract-check" aria-live="polite">Mint details still need confirmation.</output>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel" data-section="features" id="guided-modules" data-simple-stage="02" data-simple-title="MODULES" data-simple-subtitle="CHOOSE WHAT TO BUILD">
+              <div class="section-heading"><span>06</span><h2>MODULES</h2><small>CHOOSE WHAT YOUR PORTAL INCLUDES</small></div><p class="guided-step-note">Choose the tools your community needs. CPB keeps baseline essentials selected automatically.</p>
+              <div class="baseline-modules-lock simple-only"><strong>Choose your portal baseline first</strong><span>Modules unlock after you choose Token, NFT, or Token + NFT above.</span></div>
+              <div class="checks">
+                <label data-module="landing"><input name="liveMarket" type="checkbox"><span><strong>LANDING PAGE MARKET DATA</strong><small>Live price, market cap, holders and 24h volume</small></span></label>
+                <label data-module="whales"><input name="whaleTracker" type="checkbox"><span><strong>WHALE TRACKER</strong><small>Holder and transfer intelligence</small></span></label>
+                <label data-module="intel"><input name="memeIntel" type="checkbox"><span><strong>MEME INTEL</strong><small>Risk, concentration and market commands</small></span></label>
+                <label data-module="nft"><input name="nftTerminal" type="checkbox"><span><strong>NFT PORTAL</strong><small>Collection, mint and NFT analytics</small></span></label>
+                <label data-module="timeline"><input name="timeline" type="checkbox"><span><strong>TIMELINE</strong><small>Project, NFT and community milestones</small></span></label>
+                <label data-module="pulse"><input name="communityPulse" type="checkbox"><span><strong>COMMUNITY PULSE</strong><small>Explainable cross-signal community health</small></span></label>
+              </div>
+            </section>
+          </div>
+
+          <aside class="console-panel">
+            <div class="console-heading"><span>BUILD STATUS <em>/ LIVE CHECKS</em></span><b id="readiness">WAITING</b></div>
+            <div id="builder-brand-preview" class="builder-brand-preview" hidden><span>Brand preview</span><img id="builder-mascot-preview" alt="Project logo preview"></div>
+            <pre id="preview" aria-live="polite">Complete the required fields to continue.</pre>
+            <div class="console-status-line"><span>Live</span><small>Checks update automatically as your project configuration changes.</small></div>
+          </aside>
+        </div>
+
+        <div class="action-bar guided-deploy-stage" id="guided-deploy" data-simple-stage="04" data-simple-title="DEPLOY">
+          <div class="action-copy"><span class="ok">Ready</span><p>Preview your portal, create the current build, then publish it with the secure GitHub + Render deployment flow.</p></div>
+          <div class="action-buttons">
+            <button class="preview-button" id="open-preview" type="button"><span aria-hidden="true">◌</span> PREVIEW PORTAL</button>
+            <button type="submit"><span aria-hidden="true">✦</span> CREATE PORTAL</button>
+          </div>
+        </div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+    <div class="cpb-prefooter-energy simple-only" aria-hidden="true"><span class="energy-line energy-lime"></span><span class="energy-line energy-violet"></span></div>
+    <footer class="builder-footer ctb-canonical-builder-footer">
+      <div class="cpb-footer-copy">
+        <div class="footer-title">Community Portal Builder</div>
+        <div class="footer-chain">Built for Robinhood Chain Communities</div>
+        <div class="footer-tagline">Build. Launch. Grow.</div>
+      </div>
+      <div class="builder-signature" aria-label="Built by Gokalp @Gokalp8339">
+        <span class="builder-signature-avatar-wrap"><img class="builder-signature-avatar" src="/assets/gokalp-hoodrat-signature.png" alt="Gokalp Hoodrat NFT avatar"></span>
+        <div class="builder-signature-copy"><span>Built by</span> <strong>Gokalp</strong> <a href="https://x.com/Gokalp8339" target="_blank" rel="noopener noreferrer">𝕏 @Gokalp8339</a></div>
+      </div>
+    </footer>
+    <button id="back-to-top" class="back-to-top simple-only" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  </main>
+
+    <dialog id="nft-past-warning" class="nft-mint-confirm" aria-labelledby="nft-past-warning-title">
+      <div class="nft-mint-confirm-panel">
+        <div class="nft-mint-confirm-head"><span>Mint schedule warning</span><button id="nft-past-warning-close" type="button" aria-label="Close">×</button></div>
+        <div class="nft-mint-confirm-body">
+          <strong id="nft-past-warning-title">MINT START TIME IS IN THE PAST</strong>
+          <p>The selected mint start is earlier than your current computer date and time. Keep it only when you are intentionally rebuilding or maintaining an already-started collection.</p>
+          <div class="nft-time-review">
+            <span>Selected mint start</span><b id="nft-past-warning-mint">—</b>
+            <span>Your computer time</span><b id="nft-past-warning-now">—</b>
+          </div>
+        </div>
+        <div class="nft-mint-confirm-actions">
+          <button id="nft-past-warning-edit" type="button">GO BACK AND EDIT</button>
+          <button id="nft-past-warning-keep" type="button">KEEP THIS SCHEDULE</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="nft-disable-warning" class="nft-mint-confirm" aria-labelledby="nft-disable-warning-title">
+      <div class="nft-mint-confirm-panel">
+        <div class="nft-mint-confirm-head"><span>Disable NFT Portal?</span><button id="nft-disable-close" type="button" aria-label="Close">×</button></div>
+        <div class="nft-mint-confirm-body">
+          <strong id="nft-disable-warning-title">NFT CONFIGURATION IS ACTIVE</strong>
+          <p>Disabling the NFT Portal will remove the NFT module from this generated Community Portal. Your entered NFT contract and mint configuration will remain saved and can be restored by enabling the module again.</p>
+        </div>
+        <div class="nft-mint-confirm-actions nft-disable-actions">
+          <button id="nft-disable-keep" type="button">KEEP NFT PORTAL</button>
+          <button id="nft-disable-confirm" type="button">DISABLE NFT PORTAL</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="nft-mint-confirm" class="nft-mint-confirm" aria-labelledby="nft-mint-confirm-title">
+      <div class="nft-mint-confirm-panel">
+        <div class="nft-mint-confirm-head"><span>NFT mint details</span><button id="nft-mint-confirm-close" type="button" aria-label="Close">×</button></div>
+        <div class="nft-mint-confirm-body">
+          <strong id="nft-mint-confirm-title">Confirm NFT mint details</strong>
+          <p>Review the collection mint schedule below. This confirmation is required before the portal can be created, and any later mint-detail change will require confirmation again.</p>
+          <div class="nft-time-review">
+            <span>NFT mint time</span><b id="nft-mint-confirm-value">—</b>
+            <span>Your computer time</span><b id="nft-local-time-value">—</b>
+            <span>Mint countdown</span><b id="nft-mint-countdown-value">—</b>
+            <span>Time check</span><b id="nft-mint-confirm-state">—</b>
+          </div>
+          <p class="nft-mint-confirm-note">The Builder will not silently alter these values. Confirm only when the mint details are final.</p>
+        </div>
+        <div class="nft-mint-confirm-actions">
+          <button id="nft-mint-edit" type="button">CHANGE</button>
+          <button id="nft-mint-proceed" type="button">CONFIRM</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="build-complete" class="build-complete">
+      <div class="build-modal">
+        <div class="build-modal-head"><span>Portal ready to deploy</span><button id="close-build-complete" type="button" aria-label="Close">×</button></div>
+        <div class="build-summary">
+          <strong id="built-project">COMMUNITY PORTAL</strong>
+          <p>Your portal is being created with the modules listed below.</p>
+          <p class="build-deploy-wait">Please wait a couple minutes while the webpage is being deployed.</p>
+          <div id="built-modules" class="built-modules"></div>
+        </div>
+        <div class="terminal-ready-link" id="built-live-panel">
+          <span>LIVE PORTAL</span>
+          <a id="built-terminal-url" aria-disabled="true">Not deployed yet</a>
+        </div>
+        <div id="quick-deploy-state" class="quick-deploy-state" aria-live="polite">Current portal build is ready for deployment.</div>
+        <div id="quick-deploy-confirmation" class="quick-deploy-confirmation" hidden>
+          <div><span>Confirmation phrase</span><code id="quick-deploy-phrase"></code></div>
+          <label><span>Type the phrase exactly</span><input id="quick-deploy-confirmation-text" autocomplete="off" spellcheck="false"></label>
+          <small>This authorization is one-time and expires after five minutes.</small>
+        </div>
+        <div class="build-actions final-product-actions">
+          <button id="deploy-built-terminal" type="button">DEPLOY PORTAL</button>
+          <button id="confirm-deploy-built-terminal" type="button" hidden>CONFIRM &amp; DEPLOY PORTAL</button>
+          <button id="close-build-complete-action" type="button">CLOSE</button>
+        </div>
+        <p class="build-note">Secure deployment is handled automatically by Community Portal Builder.</p>
+      </div>
+    </dialog>
+
+    <dialog id="deployment-close-confirm" class="deployment-close-confirm" aria-labelledby="deployment-close-title">
+      <div class="deployment-close-panel">
+        <span class="deployment-close-kicker">Deployment in progress</span>
+        <strong id="deployment-close-title">Keep this deployment open?</strong>
+        <p>Closing now may interrupt the current deployment flow before CPB confirms that your portal is live.</p>
+        <div class="deployment-close-actions">
+          <button id="keep-deployment-open" type="button">KEEP DEPLOYMENT OPEN</button>
+          <button id="close-deployment-anyway" type="button">CLOSE ANYWAY</button>
+        </div>
+      </div>
+    </dialog>
+  <script src="app.js?v=22c-pass1229"></script>
+  <div id="auto-save-toast" class="auto-save-toast" role="status" aria-live="polite"><strong>Saved</strong> Latest project configuration saved ✓</div>
+  <div id="deployment-toast" class="deployment-toast" role="status" aria-live="polite" hidden><strong>Deployment started</strong><span>Your website is being deployed. Please wait until the deployment completes successfully before making further release changes.</span></div>
+
+  <dialog id="deployment-success-dialog" class="deployment-success-dialog" aria-labelledby="deployment-success-title">
+    <div class="deployment-success-panel">
+      <header class="deployment-success-header">
+        <div>
+          <span>Release complete</span>
+          <strong id="deployment-success-title">Deployment successful</strong>
+        </div>
+        <form method="dialog"><button type="submit" class="deployment-success-x" aria-label="Close deployment success dialog">×</button></form>
+      </header>
+      <div class="deployment-success-body">
+        <p>Your website has been deployed successfully and is now live.</p>
+        <label>Public URL</label>
+        <a id="deployment-success-url" target="_blank" rel="noopener noreferrer"></a>
+        <p class="deployment-success-note">You can open the live website now, then run Public Acceptance to complete verification.</p>
+      </div>
+      <div class="deployment-success-actions">
+        <a id="deployment-success-open" class="deployment-success-open" aria-disabled="true">OPEN PORTAL</a>
+        <form method="dialog"><button type="submit" id="deployment-success-close" value="close">CLOSE</button></form>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,28 @@
+"use strict";
+const fs=require("fs");
+const path=require("path");
+const root=__dirname;
+const app=fs.readFileSync(path.join(root,"public/app.js"),"utf8");
+const html=fs.readFileSync(path.join(root,"public/index.html"),"utf8");
+const css=fs.readFileSync(path.join(root,"public/style.css"),"utf8");
+function ok(condition,message){if(!condition)throw new Error(message)}
+const readyDecl=app.indexOf('let currentPortalBuildReady=false;');
+const updateDecl=app.indexOf('function update(){');
+ok(readyDecl>=0&&readyDecl<updateDecl,"currentPortalBuildReady must be initialized before update() can run");
+const submitGuard=app.indexOf('form.addEventListener("submit",event=>event.preventDefault());');
+const startup=app.indexOf('syncMascotFileName();refreshBuilderMascotPreview();refreshProjectList();validateContractField();');
+ok(submitGuard>=0&&submitGuard<startup,"native submit safety guard must bind before startup");
+ok(html.includes('id="remove-mascot-background" type="button">REMOVE BACKGROUND</button>'),"Remove Background label must not contain BETA");
+ok(!html.includes('REMOVE BACKGROUND (BETA)'),"legacy BETA label must be removed");
+ok(app.includes('warning.textContent=selected?"Logo selected."'),"selected logo must show explicit success copy");
+ok(css.includes('.inline-warning.success'),"selected logo status must have success styling");
+const previewFn=app.indexOf('async function openLandingPreview(){');
+const popupOpen=app.indexOf('window.open("","_blank")',previewFn);
+const mascotAwait=app.indexOf('const mascot=await mascotDataUrl();',previewFn);
+ok(popupOpen>previewFn&&popupOpen<mascotAwait,"Preview window must open synchronously before async mascot work");
+ok(app.includes('const RECOVERY_KEY="cpb.workspace-recovery.v1";'),"reload recovery key missing");
+ok(app.includes('navigationIsReload()&&Boolean(readRecoveryDraft())'),"reload-only recovery gate missing");
+ok(app.includes('restoreRecoveryDraft();'),"recovery restore path missing");
+ok(html.includes('id="saved-projects"'),"Load Saved Project control missing");
+ok(app.includes('form.addEventListener("submit",async e=>{'),"Create Portal generation handler missing");
+console.log("PASS Chapter 22C Test-1 repair regression");
