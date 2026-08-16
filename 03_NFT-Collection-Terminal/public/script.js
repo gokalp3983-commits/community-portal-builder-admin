@@ -313,6 +313,7 @@ function setMarketLineStatus(element, text, state = ""){
   if(!element) return;
   element.textContent = `[ ${text} ]`;
   element.classList.toggle("error", state === "error");
+  element.classList.toggle("live", text === "LIVE" && state !== "error");
 }
 
 function setPendingMarketPanel() {

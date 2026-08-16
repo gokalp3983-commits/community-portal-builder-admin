@@ -3513,3 +3513,32 @@ html,body{background:#000000!important;background-color:#000000!important;backgr
   border-radius:13px!important;
   overflow:hidden!important;
 }
+
+
+/* CPB V19 — hard lock compact NFT sales + rounded floor + neon LIVE status */
+.nft-sales-window .nft-sales-list{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:9px!important;
+  min-height:0!important;
+}
+.nft-sales-window .nft-sales-list>.nft-sale-row{
+  flex:0 0 auto!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:10px 11px!important;
+  border-radius:16px!important;
+  clip-path:inset(0 round 16px)!important;
+}
+.sales-floor-summary{
+  border-radius:14px!important;
+  clip-path:inset(0 round 14px)!important;
+  overflow:hidden!important;
+}
+#terminal-live-panel .market-tag.live,
+.launch-live-panel .market-tag.live{
+  color:var(--green,#39ff14)!important;
+  text-shadow:0 0 8px rgba(57,255,20,.45)!important;
+}
