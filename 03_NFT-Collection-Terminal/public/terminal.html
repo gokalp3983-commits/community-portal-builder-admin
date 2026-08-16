@@ -328,7 +328,7 @@
       </section>
 
 
-      <section id="collectionPulsePanel" class="collection-market collection-pulse-panel collapsible-panel" aria-label="Collection Pulse since last visit">
+      <section id="collectionPulsePanel" class="collection-market collection-pulse-panel collapsible-panel is-collapsed" aria-label="Collection Pulse since last visit">
         <div class="dashboard-header collapsible-panel-header">
           <h3>Collection Pulse / Since Last Visit</h3>
           <div class="collapsible-panel-controls">
@@ -336,11 +336,11 @@
               <span id="collectionPulseStatus" class="data-status">BASELINE SET</span>
               <span id="collectionPulseUpdated" class="collection-updated">Local browser baseline</span>
             </div>
-            <button id="collectionPulseToggle" class="panel-toggle" type="button" aria-expanded="true" aria-controls="collectionPulseBody">[ COLLAPSE ]</button>
+            <button id="collectionPulseToggle" class="panel-toggle" type="button" aria-expanded="false" aria-controls="collectionPulseBody">[ EXPAND ]</button>
           </div>
         </div>
-        <div id="collectionPulseSummary" class="collapsed-panel-summary" hidden>[ PULSE ] Return-visit comparison</div>
-        <div id="collectionPulseBody" class="collapsible-panel-body">
+        <div id="collectionPulseSummary" class="collapsed-panel-summary">[ PULSE ] Return-visit comparison</div>
+        <div id="collectionPulseBody" class="collapsible-panel-body" hidden>
 
         <div id="collectionPulseBaseline" class="collection-pulse-baseline">
           <span class="cyan">[ BASELINE SET ]</span>

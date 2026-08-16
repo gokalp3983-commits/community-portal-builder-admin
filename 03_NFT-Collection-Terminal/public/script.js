@@ -1086,7 +1086,7 @@ function setCollectionPulseCollapsed(collapsed){
   elements.collectionPulseToggle.textContent=collapsed?"[ EXPAND ]":"[ COLLAPSE ]";elements.collectionPulseToggle.setAttribute("aria-expanded",collapsed?"false":"true");
   try{localStorage.setItem(COLLECTION_PULSE_COLLAPSE_KEY,collapsed?"1":"0")}catch(_){}
 }
-try{setCollectionPulseCollapsed(localStorage.getItem(COLLECTION_PULSE_COLLAPSE_KEY)==="1")}catch(_){setCollectionPulseCollapsed(false)}
+try{const saved=localStorage.getItem(COLLECTION_PULSE_COLLAPSE_KEY);setCollectionPulseCollapsed(saved===null?true:saved==="1")}catch(_){setCollectionPulseCollapsed(true)}
 elements.collectionPulseToggle?.addEventListener("click",()=>setCollectionPulseCollapsed(elements.collectionPulseToggle.getAttribute("aria-expanded")!=="false"));
 renderCollectionPulse();
 

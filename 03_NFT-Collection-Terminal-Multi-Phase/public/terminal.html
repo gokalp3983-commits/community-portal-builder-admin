@@ -333,7 +333,7 @@
 
 
 
-      <section id="collectionPulsePanel" class="collection-pulse-panel collapsible-panel" aria-label="Collection activity since last visit">
+      <section id="collectionPulsePanel" class="collection-pulse-panel collapsible-panel is-collapsed" aria-label="Collection activity since last visit">
         <div class="collection-pulse-header collapsible-panel-header">
           <div>
             <div class="collection-pulse-kicker">[ COLLECTION PULSE ]</div>
@@ -341,11 +341,11 @@
           </div>
           <div class="collapsible-panel-controls">
             <span id="collectionPulseAge" class="collection-pulse-age">BASELINE</span>
-            <button id="collectionPulseToggle" class="panel-toggle" type="button" aria-expanded="true" aria-controls="collectionPulseContent">[ COLLAPSE ]</button>
+            <button id="collectionPulseToggle" class="panel-toggle" type="button" aria-expanded="false" aria-controls="collectionPulseContent">[ EXPAND ]</button>
           </div>
         </div>
-        <div id="collectionPulseSummary" class="collapsed-panel-summary" hidden>[ PULSE ] Return-visit comparison</div>
-        <div id="collectionPulseContent" class="collapsible-panel-body">
+        <div id="collectionPulseSummary" class="collapsed-panel-summary">[ PULSE ] Return-visit comparison</div>
+        <div id="collectionPulseContent" class="collapsible-panel-body" hidden>
 
         <div id="collectionPulseFirstVisit" class="collection-pulse-baseline">
           <span class="green">[ BASELINE SET ]</span>
