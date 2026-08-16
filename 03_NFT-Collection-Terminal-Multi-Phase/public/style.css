@@ -3561,3 +3561,14 @@ html,body{background:#000000!important;background-color:#000000!important;backgr
   align-self: stretch !important;
   box-sizing: border-box !important;
 }
+
+/* CPB V21 — mobile header color lock: desktop and mobile use the same canonical lime title */
+@media(max-width:820px){
+  .community-title-row h1,
+  .community-title-row h1 *{
+    color:#ccff00!important;
+    -webkit-text-fill-color:#ccff00!important;
+    background:none!important;
+    background-image:none!important;
+  }
+}
