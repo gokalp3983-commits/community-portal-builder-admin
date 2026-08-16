@@ -364,30 +364,37 @@ async function removeMascotBackground(){
   const source=file?await fileDataUrl(file):mascotDataUriFromPayload(persistedMascot);
   if(!source)throw new Error("Select a mascot/logo first.");
   const image=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=source});
-  const max=512,scale=Math.min(1,max/Math.max(image.naturalWidth||1,image.naturalHeight||1));
+  const max=640,scale=Math.min(1,max/Math.max(image.naturalWidth||1,image.naturalHeight||1));
   const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
-  const ctx=canvas.getContext("2d",{alpha:true,willReadFrequently:true});ctx.drawImage(image,0,0,canvas.width,canvas.height);
+  const ctx=canvas.getContext("2d",{alpha:true,willReadFrequently:true});ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,canvas.width,canvas.height);
   const frame=ctx.getImageData(0,0,canvas.width,canvas.height),d=frame.data,w=canvas.width,h=canvas.height;
-  const samples=[];const take=(x,y)=>{const i=(y*w+x)*4;samples.push([d[i],d[i+1],d[i+2]])};
-  for(let x=0;x<w;x+=Math.max(1,Math.floor(w/24))){take(x,0);take(x,h-1)}
-  for(let y=0;y<h;y+=Math.max(1,Math.floor(h/24))){take(0,y);take(w-1,y)}
-  // Use the dominant edge colour instead of averaging every border pixel.
-  // Averaging can be pulled toward the artwork itself when a mascot touches an edge,
-  // which makes a clearly solid background survive the REMOVE BACKGROUND action.
+
+  // Build a small palette from the most common colours around the full image edge.
+  // Using several edge colours (rather than one averaged/dominant colour) handles
+  // solid, lightly shaded and simple gradient logo backgrounds much more reliably.
+  const edge=[],step=Math.max(1,Math.floor(Math.min(w,h)/80));
+  const read=(x,y)=>{const i=(y*w+x)*4;if(d[i+3]>8)edge.push([d[i],d[i+1],d[i+2]])};
+  for(let x=0;x<w;x+=step){read(x,0);read(x,h-1)}
+  for(let y=0;y<h;y+=step){read(0,y);read(w-1,y)}
+  if(!edge.length)throw new Error("Unable to read the mascot/logo background.");
   const buckets=new Map();
-  for(const [r,g,b] of samples){
-    const key=`${Math.round(r/24)*24},${Math.round(g/24)*24},${Math.round(b/24)*24}`;
-    buckets.set(key,(buckets.get(key)||0)+1);
-  }
-  const dominant=[...buckets.entries()].sort((a,b)=>b[1]-a[1])[0]?.[0]||"0,0,0";
-  const bg=dominant.split(",").map(Number);
-  const tolerance=58,soft=34,visited=new Uint8Array(w*h),queue=[];
-  const distanceAt=(x,y)=>{const i=(y*w+x)*4,dr=d[i]-bg[0],dg=d[i+1]-bg[1],db=d[i+2]-bg[2];return Math.sqrt(dr*dr+dg*dg+db*db)};
-  const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(visited[n]||distanceAt(x,y)>tolerance+soft)return;visited[n]=1;queue.push(n)};
+  for(const [r,g,b] of edge){const q=[Math.round(r/18)*18,Math.round(g/18)*18,Math.round(b/18)*18];const key=q.join(",");const hit=buckets.get(key)||{count:0,r:0,g:0,b:0};hit.count++;hit.r+=r;hit.g+=g;hit.b+=b;buckets.set(key,hit)}
+  const palette=[...buckets.values()].sort((a,b)=>b.count-a.count).slice(0,6).map(x=>[x.r/x.count,x.g/x.count,x.b/x.count]);
+  // Always include corners because many uploaded logos use a background colour that
+  // is strongest there, even when artwork touches another edge.
+  for(const [x,y] of [[0,0],[w-1,0],[0,h-1],[w-1,h-1]]){const i=(y*w+x)*4;if(d[i+3]>8)palette.push([d[i],d[i+1],d[i+2]])}
+  const colorDistance=(i,c)=>{const dr=d[i]-c[0],dg=d[i+1]-c[1],db=d[i+2]-c[2];return Math.sqrt(dr*dr+dg*dg+db*db)};
+  const bgDistance=(x,y)=>{const i=(y*w+x)*4;let best=1e9;for(const c of palette)best=Math.min(best,colorDistance(i,c));return best};
+  const visited=new Uint8Array(w*h),queue=[];const hard=66,soft=42;
+  const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(visited[n])return;const i=n*4;if(d[i+3]<=8){visited[n]=1;queue.push(n);return}if(bgDistance(x,y)>hard+soft)return;visited[n]=1;queue.push(n)};
   for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
-  for(let q=0;q<queue.length;q++){const n=queue[q],x=n%w,y=Math.floor(n/w),i=n*4,dist=distanceAt(x,y);d[i+3]=dist<=tolerance?0:Math.round(255*(dist-tolerance)/soft);push(x-1,y);push(x+1,y);push(x,y-1);push(x,y+1)}
+  for(let q=0;q<queue.length;q++){
+    const n=queue[q],x=n%w,y=Math.floor(n/w),i=n*4,dist=bgDistance(x,y);
+    if(d[i+3]>8)d[i+3]=dist<=hard?0:Math.min(d[i+3],Math.round(255*(dist-hard)/soft));
+    push(x-1,y);push(x+1,y);push(x,y-1);push(x,y+1);
+  }
   ctx.putImageData(frame,0,0);const out=canvas.toDataURL("image/png");
-  processedMascot={dataBase64:out.split(",")[1],extension:"png",name:(file?.name||persistedMascot?.name||"mascot").replace(/\.[^.]+$/,"")+"-transparent.png",optimized:true,width:w,height:h,backgroundRemoved:true};
+  processedMascot={dataBase64:out.split(",")[1],extension:"png",name:(file?.name||persistedMascot?.name||"mascot").replace(/\.[^.]+$/,'')+"-transparent.png",optimized:true,width:w,height:h,backgroundRemoved:true};
   await refreshBuilderMascotPreview();
   const state=document.querySelector("#mascot-background-state");if(state)state.textContent="[ PREVIEW ] Transparent version ready. Use Original to undo.";
 }

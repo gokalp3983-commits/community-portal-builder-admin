@@ -1353,7 +1353,7 @@ body{background:radial-gradient(circle at 14% 0%,rgba(204,255,0,.035),transparen
 
 @media(max-width:820px){
   .portal-hero{padding:9px 13px 8px!important}
-  .community-header .mascot,.community-header .community-mascot,.mascot.community-mascot{width:min(104px,38vw)!important;height:42px!important}
+  .community-header .mascot,.community-header .community-mascot,.mascot.community-mascot{width:min(130px,47.5vw)!important;height:53px!important}
   .portal-modules-grid>.portal-panel{height:auto!important}
 }
 
@@ -1652,8 +1652,8 @@ body{background:radial-gradient(circle at 14% 0%,rgba(204,255,0,.035),transparen
 .community-header>a:hover .community-mascot,
 .community-header>a:focus-visible .community-mascot{
   display:block!important;
-  width:min(112px,30vw)!important;
-  height:44px!important;
+  width:min(140px,37.5vw)!important;
+  height:55px!important;
   max-width:100%!important;
   max-height:none!important;
   object-fit:contain!important;
@@ -1731,7 +1731,7 @@ body{background:radial-gradient(circle at 14% 0%,rgba(204,255,0,.035),transparen
 }
 @media(max-width:820px){
   .portal-hero{padding:9px 13px 8px!important}
-  .community-header .mascot,.community-header .community-mascot,.mascot.community-mascot,.community-header>a:hover .community-mascot,.community-header>a:focus-visible .community-mascot{width:min(104px,38vw)!important;height:42px!important}
+  .community-header .mascot,.community-header .community-mascot,.mascot.community-mascot,.community-header>a:hover .community-mascot,.community-header>a:focus-visible .community-mascot{width:min(130px,47.5vw)!important;height:53px!important}
 }
 @media(max-width:600px){
   .community-title-row h1{font-size:clamp(1.18rem,7vw,1.75rem)!important}

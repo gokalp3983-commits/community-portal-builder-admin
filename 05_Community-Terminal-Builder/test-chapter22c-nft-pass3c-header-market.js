@@ -12,6 +12,6 @@ for (const mod of modules) {
   if (!/\.community-title-row h1\s*\{[^}]*color:#ccff00!important;/s.test(css)) throw new Error(`${mod}: final canonical #ccff00 title lock missing`);
   if (!runtime.includes('"NFT MARKET UPDATE"')) throw new Error(`${mod}: runtime NFT MARKET UPDATE label missing`);
   if (!/\.nft-sales-window::before\s*\{[^}]*text-align:center!important;/s.test(css)) throw new Error(`${mod}: centered market update heading missing`);
-  if (!index.includes('cpb-nft-final6') || !terminal.includes('cpb-nft-final6')) throw new Error(`${mod}: pass3c asset cache version missing`);
+  if (!index.includes('cpb-nft-final7') || !terminal.includes('cpb-nft-final7')) throw new Error(`${mod}: pass3c asset cache version missing`);
 }
 console.log('PASS Chapter 22C NFT Pass 3C header + market update lock');

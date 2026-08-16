@@ -16,5 +16,5 @@ assert(!liveBlock.includes('mintLivePhaseSummary'));
 assert(pendingBlock.includes('<div class="countdown-value">MINT HAS NOT STARTED</div>'));
 assert(js.includes('}else{\n    setOverallPending();'));
 assert(html.includes('<div class="pre-mint-state-text multi-pre-mint-state">MINT HAS NOT STARTED</div>'));
-assert(html.includes('/countdown.js?v=cpb-nft-final6'));
+assert(html.includes('/countdown.js?v=cpb-nft-final7'));
 console.log("PASS Chapter 22C NFT final5 clean multi-phase status hero");

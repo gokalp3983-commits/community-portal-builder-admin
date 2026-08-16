@@ -269,3 +269,10 @@ Simplified mode now begins with a required **Terminal Baseline** choice: **Token
 ### NFT NEW UI Pass 3B acceptance lock (16 Aug 2026)
 
 Generated module route prefixing now preserves asset query strings so redeploys cannot silently reuse stale NFT CSS/JS. The canonical generated footer detects the NFT two-column workspace and spans below both the main portal and Market Update sidebar. The deployment-success CLOSE action uses the standard red CPB close styling.
+
+### OpenSea V16 final UI polish
+- Rounded NFT sale cards to match the accepted modern card language.
+- Vertically centered Wallet Check input/action controls.
+- Matched NFT Additional Link main-copy typography to Collection Access.
+- Strengthened mascot/logo background removal using a multi-colour edge palette.
+- Increased canonical header mascot/logo size by 25% across all portal pages.

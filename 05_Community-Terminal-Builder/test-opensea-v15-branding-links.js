@@ -3,7 +3,7 @@ const assert=require("assert"),fs=require("fs"),path=require("path");
 const ROOT=__dirname;
 const app=fs.readFileSync(path.join(ROOT,"public/app.js"),"utf8");
 const gen=fs.readFileSync(path.join(ROOT,"generator.js"),"utf8");
-assert(app.includes("Use the dominant edge colour instead of averaging every border pixel"),"dominant-edge background removal missing");
+assert(app.includes("Build a small palette from the most common colours around the full image edge"),"multi-colour edge background removal missing");
 assert(gen.includes("function nftAdditionalLinksMarkup"),"NFT additional links generator missing");
 assert(gen.includes('id="additionalLinks" class="nft-additional-links"'),"NFT additional links markup missing");
 assert(gen.includes('public/terminal.html'),"NFT terminal injection missing");
