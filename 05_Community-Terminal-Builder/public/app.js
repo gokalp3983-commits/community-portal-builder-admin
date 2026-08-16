@@ -19,6 +19,7 @@ let activeProjectId="";
 let persistedMascot=null;
 let processedMascot=null;
 let nftMintConfirmResolver=null;
+let mascotReminderAcknowledged=false,mascotReminderResolver=null;
 let confirmedMintSignature="";
 let pastScheduleWarningSignature="";
 let pastScheduleAcknowledgedSignature="";
@@ -31,6 +32,15 @@ let currentPortalBuildReady=false;
 const RECOVERY_KEY="cpb.workspace-recovery.v1";
 // Safety guard: CPB must never fall back to native form submission/reload if a later runtime error occurs.
 form.addEventListener("submit",event=>event.preventDefault());
+// Critical NFT/create controls are bound immediately. This keeps the core creation
+// path alive even if a later optional/admin initializer throws at runtime.
+document.addEventListener("click",event=>{
+  const trigger=event.target?.closest?.("#confirm-nft-mint-details");
+  if(!trigger)return;
+  event.preventDefault();event.stopPropagation();
+  requestMintConfirmation().catch(error=>{status.textContent=`[ ERROR ] NFT confirmation failed: ${error.message}`});
+});
+form.addEventListener("submit",handleCreatePortalSubmit);
 
 function val(name){return form.elements[name]?.value?.trim()||""}
 function checked(name){return Boolean(form.elements[name]?.checked)}
@@ -886,7 +896,6 @@ async function showBuildComplete(project){
 
 function mintSignature(schedule){return schedule&&schedule.ok?`${val("nftContract")}|${val("nftCollectionName")}|${val("nftSupply")}|${schedule.mode||"single"}|${schedule.iso}|${schedule.endIso||""}|${schedule.timeZone}|${schedule.price||""}|${schedule.limit||""}|${JSON.stringify((schedule.phases||[]).map(x=>[x.label,x.name,x.startsAt,x.endsAt,x.price,x.limit,x.timezone]))}`:""}
 function pastScheduleTimeSignature(schedule){return schedule&&schedule.ok?`${schedule.mode||"single"}|${schedule.iso||""}|${schedule.endIso||""}|${schedule.timeZone||""}|${JSON.stringify((schedule.phases||[]).map(x=>[x.startsAt||"",x.endsAt||"",x.timezone||""]))}`:""}
-let mascotReminderAcknowledged=false,mascotReminderResolver=null;
 function hasMascotSelection(){return Boolean(processedMascot||persistedMascot||mascotInput?.files?.[0])}
 function closeMascotOptionalReminder(result){const dialog=document.querySelector("#mascot-optional-reminder");if(dialog?.open)dialog.close();const resolve=mascotReminderResolver;mascotReminderResolver=null;if(resolve)resolve(result)}
 function confirmMascotOptionalReminder(){if(hasMascotSelection()||mascotReminderAcknowledged)return Promise.resolve(true);const dialog=document.querySelector("#mascot-optional-reminder");if(!dialog)return Promise.resolve(true);if(!dialog.open)dialog.showModal();return new Promise(resolve=>{mascotReminderResolver=resolve})}
@@ -930,7 +939,6 @@ function warnIfPastSchedule(){
 function mintScheduleTargetChangesTime(target){const name=String(target?.name||"");if(["nftMintDate","nftMintTime","nftMintEndDate","nftMintEndTime","nftMintTimezone"].includes(name))return true;return ["startDate","startTime","endDate","endTime","timezone"].includes(String(target?.dataset?.phaseField||""))}
 function invalidateMintConfirmation({warnPast=false}={}){confirmedMintSignature="";syncNftMintSchedule();syncMintConfirmationState();if(warnPast)setTimeout(warnIfPastSchedule,0)}
 document.querySelector("#nft-mint-edit").addEventListener("click",()=>closeNftMintConfirmation(false));document.querySelector("#nft-mint-confirm-close").addEventListener("click",()=>closeNftMintConfirmation(false));document.querySelector("#nft-mint-proceed").addEventListener("click",()=>closeNftMintConfirmation(true));document.querySelector("#nft-mint-confirm").addEventListener("cancel",event=>{event.preventDefault();closeNftMintConfirmation(false)});
-document.querySelector("#confirm-nft-mint-details").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();requestMintConfirmation()});
 document.querySelector("#nft-past-warning-edit").addEventListener("click",()=>closePastScheduleWarning(true));document.querySelector("#nft-past-warning-close").addEventListener("click",()=>closePastScheduleWarning(true));document.querySelector("#nft-past-warning-keep").addEventListener("click",()=>closePastScheduleWarning(false));document.querySelector("#nft-past-warning").addEventListener("cancel",event=>{event.preventDefault();closePastScheduleWarning(true)});
 document.querySelector("#mascot-reminder-back")?.addEventListener("click",()=>closeMascotOptionalReminder(false));
 document.querySelector("#mascot-reminder-continue")?.addEventListener("click",()=>{mascotReminderAcknowledged=true;closeMascotOptionalReminder(true)});
@@ -940,7 +948,7 @@ mintScheduleBlock.addEventListener("input",()=>invalidateMintConfirmation());
 mintScheduleBlock.addEventListener("change",event=>invalidateMintConfirmation({warnPast:mintScheduleTargetChangesTime(event.target)}));
 for(const name of ["nftCollectionName","nftSupply"]){form.elements[name]?.addEventListener("input",()=>{confirmedMintSignature="";syncMintConfirmationState()});form.elements[name]?.addEventListener("change",()=>{confirmedMintSignature="";syncMintConfirmationState()})}
 
-form.addEventListener("submit",async e=>{
+async function handleCreatePortalSubmit(e){
   e.preventDefault();
   if(checked("nftTerminal")){
     if(!isEvmAddress(val("nftContract"))){confirmedMintSignature="";status.textContent="[ WAIT ] NFT Contract Address is required while NFT Terminal is enabled.";syncMintConfirmationState();form.elements.nftContract?.focus();return}
@@ -956,7 +964,7 @@ form.addEventListener("submit",async e=>{
     const blob=await response.blob(); const disposition=response.headers.get("content-disposition")||""; const filename=/filename="([^"]+)"/.exec(disposition)?.[1]||"Community_Terminal.zip"; const fingerprint=response.headers.get("x-ctb-build-fingerprint")||"";
     if(lastBuild.url)URL.revokeObjectURL(lastBuild.url);lastBuild={url:URL.createObjectURL(blob),filename,project,fingerprint};setCurrentPortalBuildReady(true);const autoSaved=noteGenerated(project,fingerprint);status.textContent=`[ DONE ] Community Portal created${autoSaved?" · project auto-saved":""} · ready to deploy`;if(autoSaved)showAutoSaveToast();await showBuildComplete(project);
   }catch(err){status.textContent=`[ ERROR ] ${err.message}`}finally{button.disabled=false}
-});
+}
 document.querySelector("#close-build-complete").addEventListener("click",requestBuildModalClose);
 document.querySelector("#close-build-complete-action").addEventListener("click",requestBuildModalClose);
 document.querySelector("#keep-deployment-open").addEventListener("click",()=>document.querySelector("#deployment-close-confirm").close());
