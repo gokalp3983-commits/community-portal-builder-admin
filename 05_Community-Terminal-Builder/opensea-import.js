@@ -283,7 +283,6 @@ async function importOpenSeaCollection(input, options = {}) {
   nft.drop = normalizeDrop(dropDetails);
   const warnings = [];
   if (!nft.contractAddress) warnings.push("OpenSea did not return a contract address. Add it manually before creating the portal.");
-  if (!nft.symbol) warnings.push("Collection symbol was not returned. Review the project ticker manually.");
   if (!nft.links.website) warnings.push("No project website was returned by OpenSea.");
 
   return {

@@ -585,6 +585,13 @@ async function importOpenSeaIntoNftMint(){
     const nft=result.nft||{};
     if(nft.openSeaUrl)setValue("openSea",nft.openSeaUrl);
     if(nft.collectionName){setValue("nftCollectionName",nft.collectionName);nftAutoFields.collectionName=true}
+    if(terminalBaseline()==="nft"&&nft.collectionName){
+      const nftProjectName=String(nft.collectionName).trim();
+      setValue("projectName",nftProjectName);
+      setValue("description",`${nftProjectName} NFT Collection Portal`);
+      const slugTicker=String(nft.slug||"").trim().replace(/[^a-z0-9]+/gi,"").toUpperCase();
+      if(slugTicker)setValue("ticker",slugTicker);
+    }
     if(nft.supply){setValue("nftSupply",nft.supply);nftAutoFields.supply=true}
     if(nft.contractAddress)setValue("nftContract",nft.contractAddress);
     if(nft.standard)setValue("nftStandard",nft.standard);if(nft.symbol)setValue("nftSymbol",nft.symbol);

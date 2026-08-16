@@ -29,6 +29,11 @@ assert.ok(app.includes('checked:fresh?true:'),"Token + NFT fresh baseline must s
 assert.ok(app.includes('setTerminalBaseline("");\n  baselineSelectionHandled=false;\n  syncTerminalBaseline();'),"Builder reload/start must clear any recovered baseline selection");
 assert.ok(html.includes('id="check-opensea" class="cpb-action-button cpb-action-violet"'),"CHECK OPENSEA must use standard CPB action-button geometry");
 assert.ok(html.includes('id="opensea-import-confirm-button" class="cpb-action-button cpb-action-green"'),"CONFIRM IMPORT must use standard CPB action-button geometry");
+
+assert.ok(app.includes('if(terminalBaseline()==="nft"&&nft.collectionName)'),"NFT-only OpenSea import must mirror NFT collection identity into Project Details");
+assert.ok(app.includes('setValue("projectName",nftProjectName)'),"NFT-only import must fill Project Name from NFT Mint collection name");
+assert.ok(app.includes('setValue("description",`${nftProjectName} NFT Collection Portal`)'),"NFT-only import must synthesize NFT Collection Portal description");
+assert.ok(app.includes('replace(/[^a-z0-9]+/gi,"").toUpperCase()'),"NFT-only internal ticker must derive from OpenSea slug");
 (async()=>{
   process.env.OPENSEA_API_KEY="test-key";
   const responses=[
