@@ -535,8 +535,8 @@ form.elements.openSea?.addEventListener("input",()=>{syncOpenSeaValidation();upd
 form.elements.openSea?.addEventListener("change",()=>{syncOpenSeaValidation();update()});
 document.querySelector("#check-opensea")?.addEventListener("click",importOpenSeaIntoNftMint);
 form.elements.openSea?.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();importOpenSeaIntoNftMint()}});
-document.querySelector("#opensea-import-confirm-button")?.addEventListener("click",closeOpenSeaImportConfirmation);
-document.querySelector("#opensea-import-confirm-close")?.addEventListener("click",closeOpenSeaImportConfirmation);
+document.querySelector("#opensea-import-confirm-button")?.addEventListener("click",()=>closeOpenSeaImportConfirmation({confirmImport:true}));
+document.querySelector("#opensea-import-confirm-close")?.addEventListener("click",()=>closeOpenSeaImportConfirmation());
 document.querySelector("#opensea-import-confirm")?.addEventListener("cancel",event=>{event.preventDefault();closeOpenSeaImportConfirmation()});
 
 const mascotInput=document.querySelector("#mascot");
@@ -627,11 +627,21 @@ async function importOpenSeaIntoNftMint(){
     const scheduleResult=applyOpenSeaMintSchedule(nft.drop||{});
     confirmedMintSignature="";pastScheduleWarningSignature="";nftExplicitlyDisabled=false;syncNftContractMirror();syncNftContractState({fromContractInput:true});syncNftConfigVisibility();syncNftMintSchedule();syncMintConfirmationState();if(nft.contractAddress)scheduleNftDiscovery();update();scheduleRecoveryDraft();
     renderOpenSeaImportConfirmation(result,scheduleResult,importedLinks);
-    if(out){out.className="contract-check pass";out.textContent="[ IMPORTED ] NFT Mint data filled from OpenSea. Review every value before confirming."}status.textContent="[ IMPORTED ] OpenSea NFT Mint data filled · review before CONFIRM NFT MINT DETAILS.";
+    if(out){out.className="contract-check pass";out.textContent="[ IMPORTED ] NFT Mint data filled from OpenSea. Review the values, then use CONFIRM IMPORT."}status.textContent="[ IMPORTED ] OpenSea NFT Mint data filled · review and use CONFIRM IMPORT.";
   }catch(error){if(out){out.className="contract-check fail";out.textContent=`[ ERROR ] ${error.message} · Manual entry remains available below.`}status.textContent=`[ ERROR ] OpenSea auto-fill unavailable: ${error.message}`}
   finally{if(button)button.disabled=false}
 }
-function closeOpenSeaImportConfirmation(){const dialog=document.querySelector("#opensea-import-confirm");if(dialog?.open)dialog.close();setTimeout(()=>document.querySelector("#guided-nft-mint")?.scrollIntoView({behavior:"smooth",block:"start"}),80)}
+function closeOpenSeaImportConfirmation({confirmImport=false}={}){
+  if(confirmImport&&checked("nftTerminal")){
+    const schedule=syncNftMintSchedule();
+    if(schedule.ok&&!schedule.disabled){
+      confirmedMintSignature=schedule.mode==="terminal"?"":mintSignature(schedule);
+      syncMintConfirmationState();
+      status.textContent=schedule.mode==="terminal"?"[ CONFIRMED ] OpenSea import confirmed · Portal Only / Mint Ended is ready to create.":"[ CONFIRMED ] OpenSea import confirmed · NFT mint details are ready to create.";
+    }
+  }
+  const dialog=document.querySelector("#opensea-import-confirm");if(dialog?.open)dialog.close();setTimeout(()=>document.querySelector("#guided-nft-mint")?.scrollIntoView({behavior:"smooth",block:"start"}),80)
+}
 
 function applyPayload(p){
   confirmedMintSignature="";pastScheduleWarningSignature="";nftExplicitlyDisabled=Boolean(p.nftContract&&!p.features?.nftTerminal);lastNftContractValue=String(p.nftContract||"").trim();

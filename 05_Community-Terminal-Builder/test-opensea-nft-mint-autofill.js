@@ -46,6 +46,12 @@ assert.ok(app.includes('form.elements.openSea?.focus({preventScroll:true})'),"NF
 assert.ok(app.includes('form.elements.nftContract?.classList.remove("contract-state-wait","contract-state-pass","contract-state-fail")'),"NFT CA must remain visually neutral before OpenSea import");
 assert.ok(app.includes('window.addEventListener("beforeunload"'),"In-progress work must warn before accidental refresh/navigation");
 assert.ok(!app.includes('const recoverAfterReload='),"Confirmed refresh must not restore in-progress draft");
+
+assert.ok(app.includes('closeOpenSeaImportConfirmation({confirmImport=false}={})'),"OpenSea confirmation must distinguish confirm from close/cancel");
+assert.ok(app.includes('confirmedMintSignature=schedule.mode==="terminal"?"":mintSignature(schedule)'),"CONFIRM IMPORT must satisfy the NFT mint confirmation requirement for imported schedules");
+assert.ok(app.includes('()=>closeOpenSeaImportConfirmation({confirmImport:true})'),"CONFIRM IMPORT button must record confirmation before closing");
+assert.ok(app.indexOf('if(!await confirmMascotOptionalReminder())')>app.indexOf('if(schedule.mode!=="terminal"&&confirmedMintSignature!==mintSignature(schedule))'),"Mascot reminder must run only after NFT validation succeeds");
+assert.ok(html.includes('Selecting a mascot/logo is not mandatory.'),"Mascot reminder must explicitly state that logo selection is not mandatory");
 (async()=>{
   process.env.OPENSEA_API_KEY="test-key";
   const responses=[
