@@ -62,3 +62,9 @@
   .pulse-card{min-height:100px}
   .pulse-card small{font-size:.70rem}
 }
+
+
+/* CPB FINAL PORTAL CANVAS + HEADER BRAND CONTRACT (V17) */
+html,body{background:#000000!important;background-color:#000000!important;background-image:none!important}
+.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot,.community-header>a:hover .community-mascot,.community-header>a:focus-visible .community-mascot{width:min(175px,46.9vw)!important;height:69px!important;max-height:none!important;object-fit:contain!important}
+@media(max-width:820px){.community-header .mascot,.community-header .community-mascot,.mascot.community-mascot,.community-header>a:hover .community-mascot,.community-header>a:focus-visible .community-mascot{width:min(163px,59.4vw)!important;height:66px!important}}

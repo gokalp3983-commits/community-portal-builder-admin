@@ -364,39 +364,44 @@ async function removeMascotBackground(){
   const source=file?await fileDataUrl(file):mascotDataUriFromPayload(persistedMascot);
   if(!source)throw new Error("Select a mascot/logo first.");
   const image=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=source});
-  const max=640,scale=Math.min(1,max/Math.max(image.naturalWidth||1,image.naturalHeight||1));
+  const max=768,scale=Math.min(1,max/Math.max(image.naturalWidth||1,image.naturalHeight||1));
   const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
   const ctx=canvas.getContext("2d",{alpha:true,willReadFrequently:true});ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,canvas.width,canvas.height);
   const frame=ctx.getImageData(0,0,canvas.width,canvas.height),d=frame.data,w=canvas.width,h=canvas.height;
-
-  // Build a small palette from the most common colours around the full image edge.
-  // Using several edge colours (rather than one averaged/dominant colour) handles
-  // solid, lightly shaded and simple gradient logo backgrounds much more reliably.
-  const edge=[],step=Math.max(1,Math.floor(Math.min(w,h)/80));
-  const read=(x,y)=>{const i=(y*w+x)*4;if(d[i+3]>8)edge.push([d[i],d[i+1],d[i+2]])};
-  for(let x=0;x<w;x+=step){read(x,0);read(x,h-1)}
-  for(let y=0;y<h;y+=step){read(0,y);read(w-1,y)}
-  if(!edge.length)throw new Error("Unable to read the mascot/logo background.");
-  const buckets=new Map();
-  for(const [r,g,b] of edge){const q=[Math.round(r/18)*18,Math.round(g/18)*18,Math.round(b/18)*18];const key=q.join(",");const hit=buckets.get(key)||{count:0,r:0,g:0,b:0};hit.count++;hit.r+=r;hit.g+=g;hit.b+=b;buckets.set(key,hit)}
-  const palette=[...buckets.values()].sort((a,b)=>b.count-a.count).slice(0,6).map(x=>[x.r/x.count,x.g/x.count,x.b/x.count]);
-  // Always include corners because many uploaded logos use a background colour that
-  // is strongest there, even when artwork touches another edge.
-  for(const [x,y] of [[0,0],[w-1,0],[0,h-1],[w-1,h-1]]){const i=(y*w+x)*4;if(d[i+3]>8)palette.push([d[i],d[i+1],d[i+2]])}
-  const colorDistance=(i,c)=>{const dr=d[i]-c[0],dg=d[i+1]-c[1],db=d[i+2]-c[2];return Math.sqrt(dr*dr+dg*dg+db*db)};
-  const bgDistance=(x,y)=>{const i=(y*w+x)*4;let best=1e9;for(const c of palette)best=Math.min(best,colorDistance(i,c));return best};
-  const visited=new Uint8Array(w*h),queue=[];const hard=66,soft=42;
-  const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(visited[n])return;const i=n*4;if(d[i+3]<=8){visited[n]=1;queue.push(n);return}if(bgDistance(x,y)>hard+soft)return;visited[n]=1;queue.push(n)};
-  for(let x=0;x<w;x++){push(x,0);push(x,h-1)}for(let y=0;y<h;y++){push(0,y);push(w-1,y)}
+  const px=(x,y)=>{const i=(y*w+x)*4;return [d[i],d[i+1],d[i+2]]};
+  const avgPatch=(x0,y0,x1,y1)=>{let r=0,g=0,b=0,n=0;for(let y=y0;y<y1;y++){for(let x=x0;x<x1;x++){const i=(y*w+x)*4;if(d[i+3]<16)continue;r+=d[i];g+=d[i+1];b+=d[i+2];n++}}return n?[r/n,g/n,b/n]:[0,0,0]};
+  // Sample slightly inside each corner so decorative 1-3 px borders do not become the background model.
+  const insetX=Math.max(3,Math.round(w*.025)),insetY=Math.max(3,Math.round(h*.025));
+  const patchW=Math.max(5,Math.round(w*.06)),patchH=Math.max(5,Math.round(h*.06));
+  const tl=avgPatch(insetX,insetY,Math.min(w,insetX+patchW),Math.min(h,insetY+patchH));
+  const tr=avgPatch(Math.max(0,w-insetX-patchW),insetY,Math.max(1,w-insetX),Math.min(h,insetY+patchH));
+  const bl=avgPatch(insetX,Math.max(0,h-insetY-patchH),Math.min(w,insetX+patchW),Math.max(1,h-insetY));
+  const br=avgPatch(Math.max(0,w-insetX-patchW),Math.max(0,h-insetY-patchH),Math.max(1,w-insetX),Math.max(1,h-insetY));
+  const expected=(x,y)=>{const u=w>1?x/(w-1):0,v=h>1?y/(h-1):0;return [
+    tl[0]*(1-u)*(1-v)+tr[0]*u*(1-v)+bl[0]*(1-u)*v+br[0]*u*v,
+    tl[1]*(1-u)*(1-v)+tr[1]*u*(1-v)+bl[1]*(1-u)*v+br[1]*u*v,
+    tl[2]*(1-u)*(1-v)+tr[2]*u*(1-v)+bl[2]*(1-u)*v+br[2]*u*v
+  ]};
+  const dist=(a,b)=>{const dr=a[0]-b[0],dg=a[1]-b[1],db=a[2]-b[2];return Math.sqrt(dr*dr+dg*dg+db*db)};
+  const residual=(x,y)=>dist(px(x,y),expected(x,y));
+  const visited=new Uint8Array(w*h),queue=[];
+  const hard=54,soft=42;
+  const push=(x,y)=>{if(x<0||y<0||x>=w||y>=h)return;const n=y*w+x;if(visited[n])return;const i=n*4;if(d[i+3]<=8){visited[n]=1;queue.push(n);return}if(residual(x,y)>hard+soft)return;visited[n]=1;queue.push(n)};
+  // Seed the outside edge plus a shallow inner band. This skips thin decorative frames while still requiring edge connectivity.
+  const bands=[0,1,2,Math.min(insetX,w-1),Math.min(insetY,h-1)];
+  for(const b of bands){for(let x=0;x<w;x++){push(x,Math.min(b,h-1));push(x,Math.max(0,h-1-b))}for(let y=0;y<h;y++){push(Math.min(b,w-1),y);push(Math.max(0,w-1-b),y)}}
   for(let q=0;q<queue.length;q++){
-    const n=queue[q],x=n%w,y=Math.floor(n/w),i=n*4,dist=bgDistance(x,y);
-    if(d[i+3]>8)d[i+3]=dist<=hard?0:Math.min(d[i+3],Math.round(255*(dist-hard)/soft));
+    const n=queue[q],x=n%w,y=Math.floor(n/w),i=n*4,r=residual(x,y);
+    if(d[i+3]>8)d[i+3]=r<=hard?0:Math.min(d[i+3],Math.round(255*(r-hard)/soft));
     push(x-1,y);push(x+1,y);push(x,y-1);push(x,y+1);
   }
+  // Clear a thin outer frame unconditionally; it is background by definition for a logo/mascot crop.
+  const trim=Math.max(1,Math.round(Math.min(w,h)*.006));
+  for(let y=0;y<h;y++){for(let x=0;x<w;x++){if(x<trim||y<trim||x>=w-trim||y>=h-trim)d[(y*w+x)*4+3]=0}}
   ctx.putImageData(frame,0,0);const out=canvas.toDataURL("image/png");
   processedMascot={dataBase64:out.split(",")[1],extension:"png",name:(file?.name||persistedMascot?.name||"mascot").replace(/\.[^.]+$/,'')+"-transparent.png",optimized:true,width:w,height:h,backgroundRemoved:true};
   await refreshBuilderMascotPreview();
-  const state=document.querySelector("#mascot-background-state");if(state)state.textContent="[ PREVIEW ] Transparent version ready. Use Original to undo.";
+  const state=document.querySelector("#mascot-background-state");if(state)state.textContent="[ PREVIEW ] Transparent version ready. Review it before creating the portal; use Original to undo.";
 }
 function useOriginalMascot(){processedMascot=null;refreshBuilderMascotPreview();const state=document.querySelector("#mascot-background-state");if(state)state.textContent="[ ORIGINAL ] Uploaded image will be used as-is.";}
 

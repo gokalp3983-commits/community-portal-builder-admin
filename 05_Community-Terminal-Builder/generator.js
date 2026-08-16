@@ -138,8 +138,8 @@ function nftAdditionalLinksMarkup(p) {
     const label = escapeHtml(item.label || "LINK");
     const copy = escapeHtml(item.text || item.label || "Open link");
     const url = escapeHtml(item.url || "#");
-    const cls = item.highlight ? " nft-extra-link is-highlighted" : " nft-extra-link";
-    return `        <a class="${cls.trim()}" href="${url}" target="_blank" rel="noopener noreferrer"><span class="nft-extra-link-label">${label}</span><span class="nft-extra-link-copy">${copy}</span><span class="nft-extra-link-action">OPEN ↗</span></a>`;
+    const cls = item.highlight ? "official-mint nft-extra-link-row is-highlighted" : "official-mint nft-extra-link-row";
+    return `        <section class="${cls}" aria-label="${label}"><span class="official-mint-label">${label}</span><a href="${url}" target="_blank" rel="noopener noreferrer">${copy}</a></section>`;
   }).join("\n");
   return `      <section id="additionalLinks" class="nft-additional-links" aria-label="Additional project links">\n${rows}\n      </section>\n`;
 }
