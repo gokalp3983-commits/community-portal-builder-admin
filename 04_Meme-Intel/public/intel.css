@@ -95,6 +95,6 @@
 
 
 /* Intel card rhythm refinement — match accepted portal spacing. */
-.intel-application{display:grid!important;gap:14px!important}
+.intel-application{display:grid!important;gap:14px!important;margin-top:10px!important}
 .intel-application>.portal-panel{margin-top:0!important}
 @media(max-width:720px){.intel-application{gap:12px!important}}
