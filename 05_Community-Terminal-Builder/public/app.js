@@ -254,7 +254,7 @@ function nftMintSchedule(){
 function syncNftMintModeUI(){
   const mode=nftMintMode(),multiple=mode==="multiple",single=mode==="single",terminal=mode==="terminal";
   const singlePanel=document.querySelector("#nft-single-phase-fields"),multiPanel=document.querySelector("#nft-multiple-phase-fields"),terminalPanel=document.querySelector("#nft-terminal-only-fields");
-  if(singlePanel)singlePanel.hidden=!single;if(multiPanel)multiPanel.hidden=!multiple;if(terminalPanel)terminalPanel.hidden=!terminal;const confirmButton=document.querySelector("#confirm-nft-mint-details");if(confirmButton)confirmButton.hidden=terminal;
+  if(singlePanel)singlePanel.hidden=!single;if(multiPanel)multiPanel.hidden=!multiple;if(terminalPanel)terminalPanel.hidden=!terminal;const confirmButton=document.querySelector("#confirm-nft-mint-details");if(confirmButton)confirmButton.hidden=false;
 }
 function phaseValuesFromIso(phase={},fallbackZone){
   const zone=validTimeZone(phase.timezone)?phase.timezone:(validTimeZone(fallbackZone)?fallbackZone:browserTimeZone());
@@ -448,8 +448,8 @@ function syncMintConfirmationState(){
   if(!isEvmAddress(val("nftContract"))){out.className="contract-check fail";out.textContent="[ WAIT ] A valid NFT Contract Address is required before mint confirmation.";return}
   const schedule=nftMintSchedule();
   if(!schedule.ok){out.className="contract-check fail";out.textContent="[ WAIT ] Complete valid NFT mint details before confirmation.";return}
-  if(schedule.mode==="terminal"){out.className="contract-check pass";out.textContent="[ SKIP ] Terminal Only · mint confirmation not required.";return}
   const confirmed=confirmedMintSignature&&confirmedMintSignature===mintSignature(schedule);
+  if(schedule.mode==="terminal"){out.className=`contract-check ${confirmed?"pass":"warn"}`;out.textContent=confirmed?"[ CONFIRMED ] Portal Only / Mint Ended details confirmed.":"CONFIRMATION REQUIRED — confirm NFT mint details before creating the portal.";const confirmButton=document.querySelector("#confirm-nft-mint-details");if(confirmButton)confirmButton.classList.toggle("is-confirmed",confirmed);return}
   out.className=`contract-check ${confirmed?"pass":"warn"}`;out.textContent=confirmed?"[ CONFIRMED ] NFT mint details confirmed.":"CONFIRMATION REQUIRED — confirm NFT mint details before creating the portal.";const confirmButton=document.querySelector("#confirm-nft-mint-details");if(confirmButton)confirmButton.classList.toggle("is-confirmed",confirmed);
 }
 
@@ -633,12 +633,9 @@ async function importOpenSeaIntoNftMint(){
 }
 function closeOpenSeaImportConfirmation({confirmImport=false}={}){
   if(confirmImport&&checked("nftTerminal")){
-    const schedule=syncNftMintSchedule();
-    if(schedule.ok&&!schedule.disabled){
-      confirmedMintSignature=schedule.mode==="terminal"?"":mintSignature(schedule);
-      syncMintConfirmationState();
-      status.textContent=schedule.mode==="terminal"?"[ CONFIRMED ] OpenSea import confirmed · Portal Only / Mint Ended is ready to create.":"[ CONFIRMED ] OpenSea import confirmed · NFT mint details are ready to create.";
-    }
+    confirmedMintSignature="";
+    syncMintConfirmationState();
+    status.textContent="[ IMPORT CONFIRMED ] OpenSea data accepted · now review and select CONFIRM NFT MINT DETAILS.";
   }
   const dialog=document.querySelector("#opensea-import-confirm");if(dialog?.open)dialog.close();setTimeout(()=>document.querySelector("#guided-nft-mint")?.scrollIntoView({behavior:"smooth",block:"start"}),80)
 }
@@ -896,15 +893,25 @@ function confirmMascotOptionalReminder(){if(hasMascotSelection()||mascotReminder
 
 function closeNftMintConfirmation(result){const dialog=document.querySelector("#nft-mint-confirm");if(dialog.open)dialog.close();const resolve=nftMintConfirmResolver;nftMintConfirmResolver=null;if(resolve)resolve(result)}
 function confirmNftMintSchedule(schedule){
-  const dialog=document.querySelector("#nft-mint-confirm"),state=document.querySelector("#nft-mint-confirm-state"),diff=schedule.instant.getTime()-Date.now();
-  document.querySelector("#nft-mint-confirm-value").textContent=schedule.mode==="multiple"?`${schedule.phases.length} PHASES · ${formatMintForReview(schedule)} → ${humanDateTime(schedule.endInstant,schedule.phases.at(-1).timezone)}`:formatMintForReview(schedule);document.querySelector("#nft-local-time-value").textContent=formatComputerTime();document.querySelector("#nft-mint-countdown-value").textContent=diff<0?`Mint occurred ${relativeMintTime(schedule)}`:`Mint begins in ${relativeMintTime(schedule)}`;state.className="";
-  if(diff<0){state.textContent=schedule.mode==="multiple"?"[ WARN ] This mint schedule has already started.":"[ WARN ] This mint time is already in the past.";state.classList.add("warn")}else if(diff<60*60*1000){state.textContent="[ CHECK ] Mint starts in less than 1 hour.";state.classList.add("warn")}else{state.textContent=schedule.mode==="multiple"?"[ OK ] Multi-phase mint schedule is configured in the future.":"[ OK ] Mint is scheduled in the future.";state.classList.add("pass")}
+  const dialog=document.querySelector("#nft-mint-confirm"),state=document.querySelector("#nft-mint-confirm-state");
+  state.className="";
+  document.querySelector("#nft-local-time-value").textContent=formatComputerTime();
+  if(schedule.mode==="terminal"){
+    document.querySelector("#nft-mint-confirm-value").textContent="Portal Only / Mint Ended";
+    document.querySelector("#nft-mint-countdown-value").textContent="No mint countdown required";
+    state.textContent="[ OK ] Mint ended · NFT Portal will open directly.";state.classList.add("pass");
+  }else{
+    const diff=schedule.instant.getTime()-Date.now();
+    document.querySelector("#nft-mint-confirm-value").textContent=schedule.mode==="multiple"?`${schedule.phases.length} PHASES · ${formatMintForReview(schedule)} → ${humanDateTime(schedule.endInstant,schedule.phases.at(-1).timezone)}`:formatMintForReview(schedule);
+    document.querySelector("#nft-mint-countdown-value").textContent=diff<0?`Mint occurred ${relativeMintTime(schedule)}`:`Mint begins in ${relativeMintTime(schedule)}`;
+    if(diff<0){state.textContent=schedule.mode==="multiple"?"[ WARN ] This mint schedule has already started.":"[ WARN ] This mint time is already in the past.";state.classList.add("warn")}else if(diff<60*60*1000){state.textContent="[ CHECK ] Mint starts in less than 1 hour.";state.classList.add("warn")}else{state.textContent=schedule.mode==="multiple"?"[ OK ] Multi-phase mint schedule is configured in the future.":"[ OK ] Mint is scheduled in the future.";state.classList.add("pass")}
+  }
   dialog.showModal();return new Promise(resolve=>{nftMintConfirmResolver=resolve});
 }
 async function requestMintConfirmation(){
   if(!checked("nftTerminal"))return false;
   if(!isEvmAddress(val("nftContract"))){confirmedMintSignature="";status.textContent="[ WAIT ] NFT Contract Address is required before confirming NFT mint details.";syncMintConfirmationState();form.elements.nftContract?.focus();return false}
-  const schedule=syncNftMintSchedule();if(schedule.ok&&schedule.mode==="terminal"){confirmedMintSignature="";status.textContent="[ READY ] Terminal Only selected · mint confirmation skipped.";syncMintConfirmationState();return true}if(!schedule.ok||schedule.disabled){status.textContent=`[ WAIT ] ${schedule.error||"Complete valid NFT mint details."}`;if(nftMintMode()==="single"){if(!val("nftMintPrice"))form.elements.nftMintPrice?.focus();else if(!val("nftMintLimit"))form.elements.nftMintLimit?.focus();}return false;}const sig=mintSignature(schedule);if(confirmedMintSignature===sig)return true;const confirmed=await confirmNftMintSchedule(schedule);if(confirmed){confirmedMintSignature=sig;status.textContent="[ CONFIRMED ] NFT mint details confirmed.";syncMintConfirmationState();return true}status.textContent="[ EDIT ] Review the NFT mint details.";setTimeout(()=>{if(nftMintMode()==="multiple")document.querySelector("#nft-phase-list input")?.focus();else form.elements.nftMintDate?.focus()},0);syncMintConfirmationState();return false}
+  const schedule=syncNftMintSchedule();if(!schedule.ok||schedule.disabled){status.textContent=`[ WAIT ] ${schedule.error||"Complete valid NFT mint details."}`;if(nftMintMode()==="single"){if(!val("nftMintPrice"))form.elements.nftMintPrice?.focus();else if(!val("nftMintLimit"))form.elements.nftMintLimit?.focus();}return false;}const sig=mintSignature(schedule);if(confirmedMintSignature===sig)return true;const confirmed=await confirmNftMintSchedule(schedule);if(confirmed){confirmedMintSignature=sig;status.textContent=schedule.mode==="terminal"?"[ CONFIRMED ] Portal Only / Mint Ended details confirmed.":"[ CONFIRMED ] NFT mint details confirmed.";syncMintConfirmationState();return true}status.textContent="[ EDIT ] Review the NFT mint details.";setTimeout(()=>{if(nftMintMode()==="multiple")document.querySelector("#nft-phase-list input")?.focus();else form.elements.nftMintDate?.focus()},0);syncMintConfirmationState();return false}
 function closePastScheduleWarning(edit){const dialog=document.querySelector("#nft-past-warning");if(dialog?.open)dialog.close();const schedule=nftMintSchedule();const sig=pastScheduleTimeSignature(schedule);if(sig){pastScheduleAcknowledgedSignature=sig;pastScheduleWarningSignature=sig;}if(edit)setTimeout(()=>{if(nftMintMode()==="multiple")document.querySelector("#nft-phase-list [data-phase-field=startDate]")?.focus();else form.elements.nftMintDate?.focus()},0)}
 function warnIfPastSchedule(){
   if(!checked("nftTerminal"))return;const schedule=nftMintSchedule();if(!schedule.ok||schedule.mode==="terminal"||!schedule.instant||schedule.instant.getTime()>=Date.now())return;
@@ -929,7 +936,7 @@ form.addEventListener("submit",async e=>{
   if(checked("nftTerminal")){
     if(!isEvmAddress(val("nftContract"))){confirmedMintSignature="";status.textContent="[ WAIT ] NFT Contract Address is required while NFT Terminal is enabled.";syncMintConfirmationState();form.elements.nftContract?.focus();return}
     const schedule=syncNftMintSchedule();if(!schedule.ok||schedule.disabled){status.textContent=`[ WAIT ] ${schedule.error||"Complete the NFT mint schedule."}`;return}
-    if(schedule.mode!=="terminal"&&confirmedMintSignature!==mintSignature(schedule)){status.textContent="[ WAIT ] Confirm NFT Mint Details before creating the terminal.";syncMintConfirmationState();document.querySelector("#confirm-nft-mint-details")?.focus();return}
+    if(confirmedMintSignature!==mintSignature(schedule)){status.textContent="[ WAIT ] Confirm NFT Mint Details before creating the terminal.";syncMintConfirmationState();document.querySelector("#confirm-nft-mint-details")?.focus();return}
   }
   if(!await confirmMascotOptionalReminder()){status.textContent="[ REVIEW ] Mascot/logo is optional. Add one if desired, then create the portal when ready.";mascotInput?.focus();return}
   status.textContent="[ SAVE ] Saving latest configuration..."; button.disabled=true;

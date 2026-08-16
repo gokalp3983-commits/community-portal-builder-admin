@@ -48,7 +48,10 @@ assert.ok(app.includes('window.addEventListener("beforeunload"'),"In-progress wo
 assert.ok(!app.includes('const recoverAfterReload='),"Confirmed refresh must not restore in-progress draft");
 
 assert.ok(app.includes('closeOpenSeaImportConfirmation({confirmImport=false}={})'),"OpenSea confirmation must distinguish confirm from close/cancel");
-assert.ok(app.includes('confirmedMintSignature=schedule.mode==="terminal"?"":mintSignature(schedule)'),"CONFIRM IMPORT must satisfy the NFT mint confirmation requirement for imported schedules");
+assert.ok(app.includes('status.textContent="[ IMPORT CONFIRMED ] OpenSea data accepted · now review and select CONFIRM NFT MINT DETAILS."'),"CONFIRM IMPORT must hand control back to the original NFT mint confirmation flow");
+assert.ok(app.includes('if(confirmedMintSignature!==mintSignature(schedule))'),"Create Portal must require the original NFT mint confirmation for every NFT mode, including Portal Only");
+assert.ok(app.includes('if(confirmButton)confirmButton.hidden=false'),"CONFIRM NFT MINT DETAILS must remain available for Portal Only / Mint Ended");
+assert.ok(app.includes('document.querySelector("#nft-mint-confirm-value").textContent="Portal Only / Mint Ended"'),"Portal Only confirmation dialog must support mint-ended mode without historical timestamps");
 assert.ok(app.includes('()=>closeOpenSeaImportConfirmation({confirmImport:true})'),"CONFIRM IMPORT button must record confirmation before closing");
 assert.ok(app.indexOf('if(!await confirmMascotOptionalReminder())')>app.indexOf('if(schedule.mode!=="terminal"&&confirmedMintSignature!==mintSignature(schedule))'),"Mascot reminder must run only after NFT validation succeeds");
 assert.ok(html.includes('Selecting a mascot/logo is not mandatory.'),"Mascot reminder must explicitly state that logo selection is not mandatory");
