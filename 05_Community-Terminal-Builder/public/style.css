@@ -2194,7 +2194,12 @@ body.guided-mode #status:not(:empty){
 }
 
 /* OpenSea NFT Mint auto-fill — additive only; preserves the accepted NFT Mint workflow. */
-.nft-opensea-autofill{margin:14px 0 16px;padding:14px 16px;border:1px solid rgba(185,156,255,.18);border-radius:12px;background:rgba(185,156,255,.025)}
+.nft-opensea-autofill{position:relative;margin:14px 0 18px;padding:16px 16px 15px;border:1px solid rgba(185,156,255,.48);border-radius:12px;background:linear-gradient(135deg,rgba(185,156,255,.095),rgba(57,255,20,.018) 58%,rgba(0,0,0,.02));box-shadow:0 0 0 1px rgba(185,156,255,.055) inset,0 0 24px rgba(185,156,255,.055)}
+.nft-opensea-autofill::before{content:"";position:absolute;left:-1px;top:12px;bottom:12px;width:3px;border-radius:0 4px 4px 0;background:var(--violet,#b99cff);box-shadow:0 0 13px rgba(185,156,255,.42)}
+.nft-opensea-kicker{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 5px;padding-left:2px}
+.nft-opensea-kicker span{color:var(--violet,#b99cff);font-size:.72rem;font-weight:900;letter-spacing:.085em}
+.nft-opensea-kicker small{color:var(--green,#39ff14);font-size:.60rem;font-weight:800;letter-spacing:.08em}
+.nft-opensea-lead{margin:0 0 12px;padding-left:2px;color:#dfe5ef;font-size:.79rem;font-weight:650;line-height:1.45}
 .nft-opensea-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
 .nft-opensea-row label{min-width:0;margin:0}
 #check-opensea{min-height:43px;white-space:nowrap;border-color:rgba(185,156,255,.42);color:var(--violet,#b99cff);background:rgba(185,156,255,.055)}

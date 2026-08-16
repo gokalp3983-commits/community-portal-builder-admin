@@ -156,8 +156,46 @@ function priceText(stage = {}) {
 }
 
 function limitText(stage = {}) {
-  const value = first(stage.max_mint_per_wallet, stage.max_mint_per_address, stage.max_per_wallet, stage.maxPerWallet, stage.wallet_limit, stage.walletLimit, stage.mint_limit, stage.mintLimit, stage.max_mintable);
+  // Only stage-specific PER-WALLET fields belong here. Never fall back to stage/collection
+  // max supply (for example max_mintable), because that can be the full collection supply.
+  const value = first(
+    stage.max_mint_per_wallet,
+    stage.max_mints_per_wallet,
+    stage.max_mintable_per_wallet,
+    stage.max_mint_per_address,
+    stage.max_per_wallet,
+    stage.maxPerWallet,
+    stage.wallet_limit,
+    stage.walletLimit,
+    stage.mint_limit_per_wallet,
+    stage.mintLimitPerWallet,
+    stage.mint_limit,
+    stage.mintLimit,
+    stage.mint_limits?.per_wallet,
+    stage.mintLimits?.perWallet
+  );
   return value === null || value === undefined ? null : String(value);
+}
+
+function stageLabel(stage = {}, index = 0) {
+  const raw = first(
+    text(stage.stage_type), text(stage.stageType), text(stage.phase_type), text(stage.phaseType),
+    text(stage.sale_type), text(stage.saleType), text(stage.type), text(stage.kind), text(stage.access_type), text(stage.accessType)
+  );
+  if (raw) return raw.replace(/[_-]+/g, " ").trim().toUpperCase();
+  const fallback = text(stage.label);
+  if (fallback && /allow|public|private|presale|pre sale|team|og|holder|token gate|token-gate|whitelist/i.test(fallback)) return fallback.toUpperCase();
+  const numbered = first(text(stage.name), text(stage.stage_name), text(stage.stageName), text(stage.title));
+  if (numbered && /^(?:phase|stage)\s*[-#:]?\s*\d+$/i.test(numbered)) return numbered.replace(/\s+/g, " ").toUpperCase();
+  return `PHASE ${index + 1}`;
+}
+
+function stageName(stage = {}, label = "") {
+  const candidate = first(text(stage.name), text(stage.stage_name), text(stage.stageName), text(stage.title), text(stage.display_name), text(stage.displayName));
+  if (candidate && candidate.toUpperCase() !== String(label || "").toUpperCase()) return candidate;
+  const fallback = text(stage.label);
+  if (fallback && fallback.toUpperCase() !== String(label || "").toUpperCase()) return fallback;
+  return null;
 }
 
 function stageArray(drop = {}) {
@@ -173,14 +211,18 @@ function phaseNumber(label) {
 }
 
 function normalizeDrop(drop = {}) {
-  const stages = stageArray(drop).map((stage, index) => ({
-    label: first(text(stage.label), text(stage.name), text(stage.stage_name), text(stage.stage_type), text(stage.title), `PHASE ${index + 1}`),
-    startsAt: pickTime(stage, ["start_time", "startTime", "starts_at", "startsAt", "start_date", "startDate", "start"]),
-    endsAt: pickTime(stage, ["end_time", "endTime", "ends_at", "endsAt", "end_date", "endDate", "end"]),
-    price: priceText(stage),
-    limit: limitText(stage),
-    _sourceIndex: index,
-  })).filter(stage => stage.startsAt || stage.endsAt || stage.price || stage.limit || stage.label);
+  const stages = stageArray(drop).map((stage, index) => {
+    const label = stageLabel(stage, index);
+    return {
+      label,
+      name: stageName(stage, label),
+      startsAt: pickTime(stage, ["start_time", "startTime", "starts_at", "startsAt", "start_date", "startDate", "start"]),
+      endsAt: pickTime(stage, ["end_time", "endTime", "ends_at", "endsAt", "end_date", "endDate", "end"]),
+      price: priceText(stage),
+      limit: limitText(stage),
+      _sourceIndex: index,
+    };
+  }).filter(stage => stage.startsAt || stage.endsAt || stage.price || stage.limit || stage.label || stage.name);
 
   // OpenSea does not guarantee mint-stage array order. CPB phase order is chronological:
   // earliest start first, then earliest end, then an explicit Phase/Stage number, finally source order.

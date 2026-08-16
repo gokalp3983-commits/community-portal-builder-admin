@@ -553,8 +553,8 @@ function setValue(name,value){const el=form.elements[name];if(!el)return;if(el.t
 
 function openSeaImportPhaseDraft(stage,index){
   const zone=browserTimeZone();
-  const values=phaseValuesFromIso({startsAt:stage?.startsAt||"",endsAt:stage?.endsAt||"",timezone:zone,label:stage?.label||`PHASE ${index+1}`,name:stage?.label||"",price:stage?.price||"",limit:stage?.limit||""},zone);
-  return {...values,label:stage?.label||values.label||`PHASE ${index+1}`,name:stage?.label||values.name||"",price:stage?.price||values.price||"",limit:stage?.limit||values.limit||""};
+  const values=phaseValuesFromIso({startsAt:stage?.startsAt||"",endsAt:stage?.endsAt||"",timezone:zone,label:stage?.label||`PHASE ${index+1}`,name:stage?.name||"",price:stage?.price||"",limit:stage?.limit||""},zone);
+  return {...values,label:stage?.label||values.label||`PHASE ${index+1}`,name:stage?.name||values.name||"",price:stage?.price||values.price||"",limit:stage?.limit||values.limit||""};
 }
 function applyOpenSeaMintSchedule(drop={}){
   const stages=Array.isArray(drop.stages)?drop.stages.slice(0,6):[];
@@ -653,7 +653,7 @@ document.querySelectorAll('.terminal-baseline-options label').forEach(label=>lab
   baselineSelectionHandled=true;
   update();
   status.textContent=`Baseline selected · ${input.value==="both"?"Token + NFT":input.value.toUpperCase()} portal`;
-  if(firstChoice){const target=input.value==="nft"?"#guided-nft-mint":"#guided-modules";window.setTimeout(()=>document.querySelector(target)?.scrollIntoView({behavior:"smooth",block:"start"}),180)}
+  if(firstChoice){const target=input.value==="nft"?"#nft-opensea-autofill":"#guided-modules";window.setTimeout(()=>document.querySelector(target)?.scrollIntoView({behavior:"smooth",block:"start"}),180)}
 }));
 
 form.elements.projectName?.addEventListener("input",()=>update());
@@ -725,7 +725,15 @@ initializeBuilderExperience();
 // last unsaved workspace so accidental refreshes cannot destroy in-progress configuration.
 const recoverAfterReload=navigationIsReload()&&Boolean(readRecoveryDraft());
 resetForm({clearRecovery:!recoverAfterReload});
-if(recoverAfterReload)restoreRecoveryDraft();
+if(recoverAfterReload){
+  restoreRecoveryDraft();
+  // Baseline selection is always an explicit user choice on builder start/reload.
+  // Preserve recovered form values, but never carry a previous Token/NFT/Both selection into a fresh session.
+  setTerminalBaseline("");
+  baselineSelectionHandled=false;
+  syncTerminalBaseline();
+  update();
+}
 refreshProjectList();
 
 function escapeHtml(value){return String(value||"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}

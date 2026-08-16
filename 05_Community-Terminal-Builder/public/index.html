@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#020806">
   <title>Community Portal Builder</title>
-  <link rel="stylesheet" href="style.css?v=opensea-autofill2">
+  <link rel="stylesheet" href="style.css?v=opensea-autofill5">
 </head>
 <body class="guided-mode">
   <script src="cpb-boot.js"></script>
@@ -220,11 +220,13 @@
               <div class="section-heading"><span>05</span><h2>NFT MINT DETAILS</h2><small>COLLECTION &amp; LAUNCH CONFIGURATION</small></div>
               <p class="guided-step-note">Configure the NFT collection and launch schedule, then explicitly confirm the mint details before creating the portal.</p>
               <div class="nft-opensea-autofill" id="nft-opensea-autofill">
+                <div class="nft-opensea-kicker"><span>OPENSEA AUTO-FILL</span><small>FAST SETUP</small></div>
+                <p class="nft-opensea-lead">Paste your OpenSea collection link and CPB can automatically fill the NFT Mint data below.</p>
                 <div class="nft-opensea-row">
                   <label><span>OpenSea collection link</span><input name="openSea" type="url" placeholder="https://opensea.io/collection/your-collection" autocomplete="off" spellcheck="false"><small id="open-sea-error" class="field-error" hidden></small></label>
                   <button id="check-opensea" class="cpb-action-button cpb-action-violet" type="button">CHECK OPENSEA</button>
                 </div>
-                <small class="nft-opensea-help">NFT Mint data can be filled automatically from OpenSea. Please check all imported information before confirming the NFT Mint details. If auto-fill is unavailable, every field below remains available for manual entry.</small>
+                <small class="nft-opensea-help">Please review all imported information before confirming the NFT Mint details. If auto-fill is unavailable, every field below remains available for manual entry.</small>
                 <output id="opensea-import-status" class="contract-check" aria-live="polite">Paste an OpenSea collection link, then select CHECK OPENSEA.</output>
               </div>
               <div class="grid">
@@ -420,7 +422,7 @@
         </div>
       </div>
     </dialog>
-  <script src="app.js?v=opensea-autofill2"></script>
+  <script src="app.js?v=opensea-autofill4"></script>
   <div id="auto-save-toast" class="auto-save-toast" role="status" aria-live="polite"><strong>Saved</strong> Latest project configuration saved ✓</div>
   <div id="deployment-toast" class="deployment-toast" role="status" aria-live="polite" hidden><strong>Deployment started</strong><span>Your website is being deployed. Please wait until the deployment completes successfully before making further release changes.</span></div>
 

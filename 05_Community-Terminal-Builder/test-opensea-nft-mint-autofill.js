@@ -11,8 +11,12 @@ assert.ok(html.includes('id="nft-contract-mirror"')&&html.includes('readonly'),"
 assert.equal((html.match(/name="nftContract"/g)||[]).length,1,"There must be one editable/source NFT contract field");
 assert.ok(app.includes("applyOpenSeaMintSchedule")&&app.includes('setValue("nftMintMode","multiple")'),"OpenSea stages should auto-select mint structure");
 assert.ok(app.includes("renderOpenSeaImportConfirmation"),"Successful auto-fill must show confirmation dialog");
-const drop=normalizeDrop({status:"active",stages:[{name:"ALLOWLIST",start_time:"2026-08-20T10:00:00Z",end_time:"2026-08-20T12:00:00Z",price:0,max_mint_per_wallet:2},{name:"PUBLIC",start_time:"2026-08-20T12:00:00Z",end_time:"2026-08-22T12:00:00Z",price:"0.05",currency_symbol:"ETH",wallet_limit:5}]});
-assert.equal(drop.stages.length,2);assert.equal(drop.stages[0].price,"FREE");assert.equal(drop.stages[1].price,"0.05 ETH");assert.equal(drop.stages[1].limit,"5");
+const drop=normalizeDrop({status:"active",stages:[{stage_type:"allowlist",name:"Team",start_time:"2026-08-20T10:00:00Z",end_time:"2026-08-20T12:00:00Z",price:0,max_mint_per_wallet:2},{stage_type:"public",name:"Public Mint",start_time:"2026-08-20T12:00:00Z",end_time:"2026-08-22T12:00:00Z",price:"0.05",currency_symbol:"ETH",wallet_limit:5}]});
+assert.equal(drop.stages.length,2);assert.equal(drop.stages[0].label,"ALLOWLIST");assert.equal(drop.stages[0].name,"Team");assert.equal(drop.stages[0].price,"FREE");assert.equal(drop.stages[1].label,"PUBLIC");assert.equal(drop.stages[1].name,"Public Mint");assert.equal(drop.stages[1].price,"0.05 ETH");assert.equal(drop.stages[1].limit,"5");
+const noSupplyLeak=normalizeDrop({stages:[{stage_type:"allowlist",name:"Community",max_mintable:2222,max_mint_per_wallet:1}]});
+assert.equal(noSupplyLeak.stages[0].limit,"1","Per-wallet limit must win over collection/stage max supply");
+const supplyOnly=normalizeDrop({stages:[{stage_type:"allowlist",name:"Community",max_mintable:2222}]});
+assert.equal(supplyOnly.stages[0].limit,null,"Collection/stage max supply must never become wallet limit");
 const rotated=normalizeDrop({stages:[
   {name:"PHASE 3",start_time:"2026-08-23T10:00:00Z",end_time:"2026-08-24T10:00:00Z",price:"0.03"},
   {name:"PHASE 1",start_time:"2026-08-20T10:00:00Z",end_time:"2026-08-21T10:00:00Z",price:"0.01"},
@@ -20,8 +24,9 @@ const rotated=normalizeDrop({stages:[
 ]});
 assert.deepEqual(rotated.stages.map(s=>s.label),["PHASE 1","PHASE 2","PHASE 3"],"OpenSea stages must be ordered chronologically before filling CPB phases");
 assert.ok(app.includes('for(const name of ["timeline","communityPulse"])setModuleState(name,{checked:false,disabled:true,state:"unavailable"})'),"NFT-only baseline must disable Timeline and Community Pulse");
-assert.ok(app.includes('const target=input.value==="nft"?"#guided-nft-mint":"#guided-modules"'),"NFT-only baseline must jump directly to NFT Mint");
+assert.ok(app.includes('const target=input.value==="nft"?"#nft-opensea-autofill":"#guided-modules"'),"NFT-only baseline must jump directly to OpenSea entry");
 assert.ok(app.includes('checked:fresh?true:'),"Token + NFT fresh baseline must start with all optional modules enabled");
+assert.ok(app.includes('setTerminalBaseline("");\n  baselineSelectionHandled=false;\n  syncTerminalBaseline();'),"Builder reload/start must clear any recovered baseline selection");
 assert.ok(html.includes('id="check-opensea" class="cpb-action-button cpb-action-violet"'),"CHECK OPENSEA must use standard CPB action-button geometry");
 assert.ok(html.includes('id="opensea-import-confirm-button" class="cpb-action-button cpb-action-green"'),"CONFIRM IMPORT must use standard CPB action-button geometry");
 (async()=>{
